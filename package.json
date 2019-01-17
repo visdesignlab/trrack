@@ -22,7 +22,11 @@
     "dev-lib": "npm run clean && npm install && npm-run-all --parallel tsc-dev",
     "dev-lib-esm": "npm run clean && npm install && npm-run-all --parallel tsc-esm-dev",
     "dev-web": "npm run clean && npm install && npm-run-all --parallel webpack-dev serve",
-    "dev": "npm run clean && npm install && npm-run-all --parallel tsc-dev tsc-esm-dev webpack-dev serve"
+    "dev": "npm run clean && npm install && npm-run-all --parallel tsc-dev tsc-esm-dev webpack-dev serve",
+    "push-to-npm": "npm publish --access public",
+    "publish-patch": "npm version patch && npm run push-to-npm",
+    "publish-minor": "npm version minor && npm run push-to-npm",
+    "publish-major": "npm version major && npm run push-to-npm"
   },
   "repository": {
     "type": "git",
