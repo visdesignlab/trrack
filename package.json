@@ -60,5 +60,8 @@
     "webpack-cli": "^3.2.1",
     "webpack-md5-hash": "^0.0.6",
     "webpack-merge": "^4.2.1"
+  },
+  "dependencies": {
+    "reactivityframework": "^3.0.0"
   }
 }
