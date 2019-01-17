@@ -5,7 +5,9 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "lib-esm",
+    "_bundles"
   ],
   "scripts": {
     "clean": "shx rm -rf _bundles lib lib-esm",
