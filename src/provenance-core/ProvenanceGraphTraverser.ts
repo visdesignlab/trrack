@@ -1,9 +1,8 @@
 import { IProvenanceGraphTraverser } from "./IProvenanceGraphTraverser";
 import { IActionFunctionRegistry } from "./IActionFunctionRegistry";
-import { IProvenanceGraph } from "./../../lib/provenance-core/IProvenanceGraph.d";
-import { ProvenanceNode, isStateNode, StateNode } from "./Nodes";
+import { ProvenanceNode, isStateNode, StateNode, NodeID } from "./Nodes";
 import { ActionFunctionWithThis, isReversibleAction } from "./Actions";
-import { NodeID } from "../../lib/provenance-core/Nodes";
+import { IProvenanceGraph } from "./IProvenanceGraph";
 
 function isNextNodeInTrackUp(
   currentNode: ProvenanceNode,

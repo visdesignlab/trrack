@@ -1,2 +1,2 @@
 import { EventHandler } from "reactivityframework";
-export type Handler = EventHandler;
+export type Handler = (...args: any[]) => any;

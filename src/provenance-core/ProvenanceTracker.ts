@@ -13,7 +13,7 @@ export class ProvenanceTracker implements IProvenanceTracker {
   constructor(
     registry: IActionFunctionRegistry,
     graph: IProvenanceGraph,
-    username: string = "Unknown"
+    username: string = "unknown"
   ) {
     this.registry = registry;
     this.graph = graph;
@@ -59,6 +59,10 @@ export class ProvenanceTracker implements IProvenanceTracker {
 
       newNode = createNewStateNode(currentNode, actionResult);
     }
+
+    currentNode.children.push(newNode);
+    this.graph.addNode(newNode);
+    this.graph.current = newNode;
 
     return newNode;
   }

@@ -14,4 +14,8 @@ export class ActionFunctionRegistry implements IActionFunctionRegistry {
       throw new Error("Function not registered");
     return this.functionRegistry[name];
   }
+  isPresent(name: string): boolean {
+    if (this.functionRegistry[name]) return true;
+    return false;
+  }
 }
