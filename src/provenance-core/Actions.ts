@@ -1,4 +1,5 @@
 import { ActionFunctionWithThis } from "./Actions";
+import { Handler } from "./Handler";
 export type Action = IrreversibleAction | ReversibleAction;
 
 export type ActionMetadata = {
@@ -28,3 +29,20 @@ export type ActionFunctionWithThis = {
 export function isReversibleAction(action: Action): action is ReversibleAction {
   return "undo" in action;
 }
+
+export type ActionTemplate = {
+  func: Handler;
+  thisArgs: any;
+};
+
+export type RegisterActionTemplate = {
+  name: string;
+  do: ActionTemplate;
+  undo?: ActionTemplate;
+};
+
+export type ApplyAction = {
+  name: string;
+  doArgs: any[];
+  undoArgs: any[];
+};

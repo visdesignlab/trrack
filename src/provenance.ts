@@ -4,28 +4,7 @@ import { ProvenanceTracker } from "./provenance-core/ProvenanceTracker";
 import { ActionFunctionRegistry } from "./provenance-core/ActionFunctionRegistry";
 import { ProvenanceGraph } from "./provenance-core/ProvenanceGraph";
 import { NodeID } from "./provenance-core/Nodes";
-
-export type DoFunctionTemplate = {
-  name: string;
-  func: Handler;
-  thisArgs: any;
-};
-
-export type UndoFunctionTemplate = {
-  name: string;
-  func: Handler;
-  thisArgs: any;
-};
-
-export type DoFunction = {
-  name: string;
-  args: any;
-};
-
-export type UndoFunction = {
-  name: string;
-  args: any;
-};
+import { RegisterActionTemplate, ApplyAction } from "./provenance-core/Actions";
 
 export function Provenance(userId: string = "unknown") {
   let graph = new ProvenanceGraph(userId);
@@ -33,18 +12,22 @@ export function Provenance(userId: string = "unknown") {
   let tracker = new ProvenanceTracker(registry, graph);
   let traverser = new ProvenanceGraphTraverser(registry, graph);
 
-  function register(_do: DoFunctionTemplate, _undo?: UndoFunctionTemplate) {
-    registry.register(`DO_${_do.name}`, _do.func, _do.thisArgs);
-    if (_undo)
-      registry.register(`UNDO_${_undo.name}`, _undo.func, _undo.thisArgs);
+  function register(action: RegisterActionTemplate) {
+    registry.register(`DO_${action.name}`, action.do.func, action.do.thisArgs);
+    if (action.undo)
+      registry.register(
+        `UNDO_${action.name}`,
+        action.undo.func,
+        action.undo.thisArgs
+      );
   }
 
-  async function apply(_do: DoFunction, _undo: UndoFunction) {
+  async function apply(act: ApplyAction) {
     return await tracker.applyAction({
-      do: `DO_${_do.name}`,
-      doArgs: _do.args,
-      undo: `UNDO_${_undo.name}`,
-      undoArgs: _undo.args
+      do: `DO_${act.name}`,
+      doArgs: act.doArgs,
+      undo: `UNDO_${act.name}`,
+      undoArgs: act.undoArgs
     });
   }
 

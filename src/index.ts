@@ -1,7 +1,2 @@
-export {
-  Provenance,
-  DoFunctionTemplate,
-  UndoFunctionTemplate,
-  DoFunction,
-  UndoFunction
-} from "./provenance";
+export { Provenance } from "./provenance";
+export { RegisterActionTemplate, ApplyAction } from "./provenance-core/Actions";
