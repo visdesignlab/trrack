@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/visdesignlab/provenance-lib-core.git"
   },
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
   "license": "MIT",
