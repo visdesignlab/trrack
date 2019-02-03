@@ -1,4 +1,3 @@
-import { Handler } from "./provenance-core/Handler";
 import { ProvenanceGraphTraverser } from "./provenance-core/ProvenanceGraphTraverser";
 import { ProvenanceTracker } from "./provenance-core/ProvenanceTracker";
 import { ActionFunctionRegistry } from "./provenance-core/ActionFunctionRegistry";
@@ -32,13 +31,17 @@ export function Provenance(userId: string = "unknown") {
   }
 
   function goTo(nodeId: NodeID) {
-    console.log(Object.assign({}, graph));
     return traverser.toStateNode(nodeId);
+  }
+
+  function getGraph(): ProvenanceGraph {
+    return graph;
   }
 
   return {
     register: register,
     apply: apply,
-    goTo: goTo
+    goTo: goTo,
+    graph: getGraph
   };
 }
