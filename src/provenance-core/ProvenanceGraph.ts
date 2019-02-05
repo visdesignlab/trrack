@@ -7,7 +7,7 @@ import { generateUUID, generateTimeStamp } from "../utils/utils";
 export class ProvenanceGraph implements IProvenanceGraph {
   public readonly root: RootNode;
   private _current: ProvenanceNode;
-  private nodes: { [key: string]: ProvenanceNode } = {};
+  private _nodes: { [key: string]: ProvenanceNode } = {};
 
   constructor(userId: string = "unknown", root?: RootNode) {
     if (root) this.root = root;
@@ -29,28 +29,32 @@ export class ProvenanceGraph implements IProvenanceGraph {
   }
 
   addNode(node: ProvenanceNode) {
-    if (this.nodes[node.id]) throw new Error("Node already added");
-    this.nodes[node.id] = node;
+    if (this._nodes[node.id]) throw new Error("Node already added");
+    this._nodes[node.id] = node;
     Manager.emit("node-added", node);
   }
 
   getNode(id: NodeID) {
-    if (!this.nodes[id]) throw new Error("Node not found!");
-    return this.nodes[id];
+    if (!this._nodes[id]) throw new Error("Node not found!");
+    return this._nodes[id];
   }
 
   get current() {
     return this._current;
   }
 
+  get nodes() {
+    return this._nodes;
+  }
+
   set current(node: ProvenanceNode) {
-    if (!this.nodes[node.id]) throw new Error("Node not found");
+    if (!this._nodes[node.id]) throw new Error("Node not found");
     this._current = node;
     Manager.emit("current-changed", node);
   }
 
   emitNodeChangedEvent(node: ProvenanceNode) {
-    if (!this.nodes[node.id]) throw new Error("Node not found");
+    if (!this._nodes[node.id]) throw new Error("Node not found");
     Manager.emit("node-changed", node);
   }
 
