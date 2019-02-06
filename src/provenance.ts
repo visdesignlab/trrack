@@ -45,7 +45,7 @@ export function Provenance(
   }
 
   function getGraph(): ProvenanceGraph {
-    return graph;
+    return deserializeGraph(serializeGraph());
   }
 
   function serializeGraph(): SerializedProveananceGraph {
@@ -99,7 +99,7 @@ export function Provenance(
   return {
     register: register,
     apply: apply,
-    goTo: goTo,
+    to: goTo,
     graph: getGraph,
     serialize: () => JSON.stringify(serializeGraph())
   };
