@@ -19,3 +19,7 @@ export function generateUUID(): string {
 export function generateTimeStamp(): number {
   return new Date().getTime();
 }
+
+export function deepCopy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj)) as T;
+}

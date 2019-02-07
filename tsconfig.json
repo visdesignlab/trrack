@@ -12,9 +12,6 @@
     "declaration": true,
     "jsx": "react"
   },
-  "files": [
-    "./src/index.ts"
-  ],
   "compileOnSave": false,
   "buildOnSave": false
 }
