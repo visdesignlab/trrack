@@ -4,21 +4,9 @@ import {
   createNewGraph
 } from "./provenance-core/IProvenanceGraph";
 import { NodeAction, createAddNodeAction } from "./provenance-core/NodeActions";
-import {
-  nodeReducer,
-  currentReducer,
-  rootReducer
-} from "./provenance-core/Reducers";
+import { graphReducers } from "./provenance-core/Reducers";
 
 console.clear();
-
-const graphReducers: Reducer<ProvenanceGraph> = combineReducers<
-  ProvenanceGraph
->({
-  nodes: nodeReducer,
-  current: currentReducer,
-  root: rootReducer
-});
 
 export function configureStore(state: ProvenanceGraph): Store<ProvenanceGraph> {
   return createStore<ProvenanceGraph, null, null, null>(graphReducers);
