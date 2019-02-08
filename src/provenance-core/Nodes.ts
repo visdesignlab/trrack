@@ -1,3 +1,5 @@
+import { ReversibleAction } from "../Provenance";
+
 export type NodeID = string;
 
 export interface NodeMetadata {
@@ -18,8 +20,8 @@ export interface RootNode {
 }
 
 export interface StateNode extends RootNode {
-  parent: ProvenanceNode;
-  action: Function;
+  parent: NodeID;
+  action: ReversibleAction<unknown, unknown>;
   actionResult: unknown;
 }
 

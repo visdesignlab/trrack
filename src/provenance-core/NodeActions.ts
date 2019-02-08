@@ -1,29 +1,76 @@
 import { Action } from "redux";
-import { ActionsEnum } from "./ActionsEnum";
+import { NodeActionsEnum } from "./ActionsEnum";
 import { ProvenanceNode, NodeID } from "./Nodes";
+import { Nodes } from "./ProvenanceGraph";
+import { Reducer } from "redux";
+import { deepCopy } from "../utils/utils";
+
+export type NodeAction =
+  | AddNodeAction
+  | GotoAction
+  | UpdateNewlyAddedNodeAction;
 
 export interface AddNodeAction extends Action {
-  type: ActionsEnum.ADD_NODE;
+  type: NodeActionsEnum.ADD_NODE;
   node: ProvenanceNode;
 }
 
-export type NodeAction = AddNodeAction | GotoAction;
+export interface UpdateNewlyAddedNodeAction extends Action {
+  type: NodeActionsEnum.UPDATE_NEWLY_ADDED_NODE;
+  node: ProvenanceNode;
+}
+
+export interface GotoAction extends Action {
+  type: NodeActionsEnum.GOTO_NODE;
+  nodeid: NodeID;
+}
 
 export function createAddNodeAction(node: ProvenanceNode): AddNodeAction {
   return {
-    type: ActionsEnum.ADD_NODE,
+    type: NodeActionsEnum.ADD_NODE,
     node: node
   };
 }
 
-export interface GotoAction extends Action {
-  type: ActionsEnum.GOTO_NODE;
-  nodeid: NodeID;
-}
-
 export function createGotoAction(id: NodeID): GotoAction {
   return {
-    type: ActionsEnum.GOTO_NODE,
+    type: NodeActionsEnum.GOTO_NODE,
     nodeid: id
   };
+}
+
+export function createUpdateNewlyAddedNodeAction(
+  node: ProvenanceNode
+): UpdateNewlyAddedNodeAction {
+  return {
+    type: NodeActionsEnum.UPDATE_NEWLY_ADDED_NODE,
+    node: node
+  };
+}
+
+export const nodeReducer: Reducer<Nodes> = (
+  nodes: Nodes = {},
+  action: NodeAction
+) => {
+  switch (action.type) {
+    case NodeActionsEnum.ADD_NODE:
+      return addNode(nodes, action.node);
+    case NodeActionsEnum.UPDATE_NEWLY_ADDED_NODE:
+      return updateNodes(nodes, action.node);
+    default:
+      return nodes;
+  }
+};
+
+export function addNode(nodes: Nodes, node: ProvenanceNode): Nodes {
+  if (nodes[node.id]) throw new Error("Node already exists");
+  let newNodes = deepCopy(nodes);
+  newNodes[node.id] = node;
+  return newNodes;
+}
+
+export function updateNodes(nodes: Nodes, node: ProvenanceNode): Nodes {
+  const _nodes = deepCopy(nodes);
+  _nodes[node.id] = node;
+  return _nodes;
 }

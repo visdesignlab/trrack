@@ -1,5 +1,6 @@
 import { ProvenanceNode, RootNode } from "./Nodes";
-import { generateUUID, generateTimeStamp, deepCopy } from "../utils/utils";
+import { generateUUID, generateTimeStamp } from "../utils/utils";
+import { addNode } from "./NodeActions";
 
 export type Nodes = { [key: string]: ProvenanceNode };
 export type CurrentNode = ProvenanceNode;
@@ -32,13 +33,6 @@ export function createNewGraph(_root?: RootNode): ProvenanceGraph {
     current: root
   };
 
-  addNode(graph.nodes, root);
+  graph.nodes = addNode(graph.nodes, root);
   return graph;
-}
-
-export function addNode(nodes: Nodes, node: ProvenanceNode): Nodes {
-  if (nodes[node.id]) throw new Error("Node already exists");
-  let newNodes = deepCopy(nodes);
-  newNodes[node.id] = node;
-  return newNodes;
 }

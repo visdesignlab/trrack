@@ -1,34 +1,9 @@
 import { Reducer, combineReducers } from "redux";
-import {
-  Nodes,
-  addNode,
-  CurrentNode,
-  ProvenanceGraph
-} from "./IProvenanceGraph";
-import { NodeAction } from "./NodeActions";
-import { ActionsEnum } from "./ActionsEnum";
+import { ProvenanceGraph } from "./ProvenanceGraph";
 import { AnyAction } from "redux";
 import { RootNode } from "./Nodes";
-
-export const nodeReducer: Reducer<Nodes> = (
-  nodes: Nodes = {},
-  action: NodeAction
-) => {
-  switch (action.type) {
-    case ActionsEnum.ADD_NODE:
-      return addNode(nodes, action.node);
-    default:
-      return nodes;
-  }
-};
-
-export const currentReducer: Reducer<CurrentNode> = (
-  current: CurrentNode = {} as any,
-  action: AnyAction
-) => {
-  action.type;
-  return current;
-};
+import { nodeReducer } from "./NodeActions";
+import { currentReducer } from "./CurrentActions";
 
 export const rootReducer: Reducer<RootNode> = (
   root: RootNode = {} as any,
@@ -38,7 +13,7 @@ export const rootReducer: Reducer<RootNode> = (
   return root;
 };
 
-export const graphReducers: Reducer<ProvenanceGraph> = combineReducers<
+export const Reducers: Reducer<ProvenanceGraph> = combineReducers<
   ProvenanceGraph
 >({
   nodes: nodeReducer,
