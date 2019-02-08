@@ -7,7 +7,7 @@ export interface AddNodeAction extends Action {
   node: ProvenanceNode;
 }
 
-export type ProvenanceGraphAction = AddNodeAction | GotoAction;
+export type NodeAction = AddNodeAction | GotoAction;
 
 export function createAddNodeAction(node: ProvenanceNode): AddNodeAction {
   return {
