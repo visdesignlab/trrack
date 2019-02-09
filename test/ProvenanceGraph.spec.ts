@@ -2,7 +2,7 @@ import { expect } from "./expect";
 import { Provenance } from "../src";
 
 import * as util from "util";
-import { StateNode } from "../src/provenance-core/Nodes";
+import { StateNode } from "../src/provenance-core/NodeInterfaces";
 
 const provenance = Provenance("" as any);
 

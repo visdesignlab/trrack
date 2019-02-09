@@ -1,7 +1,6 @@
 export enum NodeActionsEnum {
   ADD_NODE = "ADD_NODE",
-  UPDATE_NEWLY_ADDED_NODE = "UPDATE_NEWLY_ADDED_NODE",
-  GOTO_NODE = "GOTO_NODE"
+  UPDATE_NEWLY_ADDED_NODE = "UPDATE_NEWLY_ADDED_NODE"
 }
 
 export enum CurrentActionsEnum {

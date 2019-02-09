@@ -27,6 +27,10 @@ export interface StateNode extends RootNode {
 
 export type ProvenanceNode = RootNode | StateNode;
 
+export type Nodes = { [key: string]: ProvenanceNode };
+
+export type CurrentNode = ProvenanceNode;
+
 export function isStateNode(node: ProvenanceNode): node is StateNode {
   return "parent" in node;
 }

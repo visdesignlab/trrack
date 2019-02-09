@@ -1,5 +1,6 @@
-export type GenericAction<T> = DoAction<T> | UndoAction<T>;
 import { Action } from "redux";
+
+export type GenericAction<T> = DoAction<T> | UndoAction<T>;
 
 export interface DoAction<T> extends Action {
   readonly type: string;

@@ -1,1 +1,1 @@
-export { Provenance } from "./Provenance";
+export { Provenance } from "./provenance-core/ProvenanceCore";
