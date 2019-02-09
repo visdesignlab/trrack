@@ -93,6 +93,7 @@ export function applyAction<T, D, U>(
 
 export function toNode<T>(
   graph: Store<ProvenanceGraph, AnyAction>,
+  application: Store<T>,
   id: NodeID
 ) {
   try {
@@ -135,7 +136,7 @@ export function toNode<T>(
       }
     }
 
-    // applyActions(application, actions);
+    applyActions(application, actions);
 
     // ! Change current
     graph.dispatch(createChangeCurrentAction(targetNode));
@@ -145,7 +146,11 @@ export function toNode<T>(
 }
 
 function applyActions<T>(app: Store<T>, actions: GenericAction<unknown>[]) {
-  for (let i = 0; i < actions.length; ++i) app.dispatch(actions[i]);
+  try {
+    for (let i = 0; i < actions.length; ++i) app.dispatch(actions[i]);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function isNextNodeInTrackUp(

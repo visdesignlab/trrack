@@ -20,7 +20,7 @@ export function Provenance<T>(application: Store<T>) {
   }
 
   function gotoNode(id: NodeID) {
-    toNode(graph, id);
+    toNode(graph, application, id);
   }
 
   return {
