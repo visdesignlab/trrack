@@ -102,7 +102,6 @@ export function toNode<T>(
     if (currentNode === targetNode) return;
 
     const trackToTarget: ProvenanceNode[] = [];
-    if (!currentNode && !targetNode) return;
 
     const success = findPathToTargetNode(
       graph.getState().nodes,
