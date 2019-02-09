@@ -3,3 +3,10 @@
 **/webpack.config.js
 node_modules
 src
+.github
+.nyc_output
+.coverage
+.test
+PULL_REQUEST_TEMPLATE.md
+package-lock.json
+bs-config.json
