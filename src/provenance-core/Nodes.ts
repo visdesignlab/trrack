@@ -1,4 +1,4 @@
-import { ReversibleAction } from "../Provenance";
+import { ReversibleAction } from "./ProvenanceActions";
 
 export type NodeID = string;
 

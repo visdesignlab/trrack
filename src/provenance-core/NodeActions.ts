@@ -5,10 +5,7 @@ import { Nodes } from "./ProvenanceGraph";
 import { Reducer } from "redux";
 import { deepCopy } from "../utils/utils";
 
-export type NodeAction =
-  | AddNodeAction
-  | GotoAction
-  | UpdateNewlyAddedNodeAction;
+export type NodeAction = AddNodeAction | UpdateNewlyAddedNodeAction;
 
 export interface AddNodeAction extends Action {
   type: NodeActionsEnum.ADD_NODE;
@@ -20,22 +17,10 @@ export interface UpdateNewlyAddedNodeAction extends Action {
   node: ProvenanceNode;
 }
 
-export interface GotoAction extends Action {
-  type: NodeActionsEnum.GOTO_NODE;
-  nodeid: NodeID;
-}
-
 export function createAddNodeAction(node: ProvenanceNode): AddNodeAction {
   return {
     type: NodeActionsEnum.ADD_NODE,
     node: node
-  };
-}
-
-export function createGotoAction(id: NodeID): GotoAction {
-  return {
-    type: NodeActionsEnum.GOTO_NODE,
-    nodeid: id
   };
 }
 
