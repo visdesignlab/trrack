@@ -96,12 +96,11 @@ export function Provenance<T>(application: Store<T>) {
     try {
       const currentNode = graph.getState().current;
       const targetNode = graph.getState().nodes[id];
-
-      if (currentNode === targetNode) {
-        return;
-      }
+      if (currentNode === targetNode) return;
 
       const trackToTarget: ProvenanceNode[] = [];
+      if (!currentNode && !targetNode) return;
+
       const success = findPathToTargetNode(
         graph.getState().nodes,
         currentNode,
@@ -112,7 +111,6 @@ export function Provenance<T>(application: Store<T>) {
       if (!success) {
         throw new Error("No Path found!");
       }
-
       const actions: GenericAction<unknown>[] = [];
 
       for (let i = 0; i < trackToTarget.length - 1; ++i) {
@@ -135,9 +133,10 @@ export function Provenance<T>(application: Store<T>) {
         }
       }
 
-      applyActions(application, actions);
+      // applyActions(application, actions);
 
       // ! Change current
+      graph.dispatch(createChangeCurrentAction(targetNode));
     } catch (err) {
       throw new Error(err);
     }
@@ -177,11 +176,13 @@ function findPathToTargetNode(
     track.unshift(currentNode);
     return true;
   } else if (currentNode) {
-    const nodesToCheck: ProvenanceNode[] = [
-      ...currentNode.children.map(c => nodes[c])
-    ];
+    const nodesToCheck: ProvenanceNode[] = currentNode.children.map(
+      c => nodes[c]
+    );
 
-    if (isStateNode(currentNode)) nodesToCheck.push(nodes[currentNode.id]);
+    if (isStateNode(currentNode)) {
+      nodesToCheck.push(nodes[currentNode.parent]);
+    }
 
     for (let node of nodesToCheck) {
       if (node === comingFromNode) continue;
@@ -192,6 +193,5 @@ function findPathToTargetNode(
     }
   }
 
-  eval("console").log(track);
   return false;
 }

@@ -12,7 +12,7 @@ export interface AddChildToCurrentAction extends Action {
 
 export interface ChangeCurrentAction extends Action {
   type: CurrentActionsEnum.CHANGE_CURRENT;
-  newCurrent: StateNode;
+  newCurrent: ProvenanceNode;
 }
 
 export function createAddChildToCurrentAction(
@@ -25,7 +25,7 @@ export function createAddChildToCurrentAction(
 }
 
 export function createChangeCurrentAction(
-  newCurrent: StateNode
+  newCurrent: ProvenanceNode
 ): ChangeCurrentAction {
   return {
     type: CurrentActionsEnum.CHANGE_CURRENT,
