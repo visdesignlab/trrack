@@ -2,11 +2,11 @@ import { createStore, combineReducers } from "redux";
 
 export enum CalcActionEnum {
   ADD = "ADD",
-  SUB = "SUB",
   DO_ADD = ADD,
+  UNDO_SUB = ADD,
+  SUB = "SUB",
   UNDO_ADD = SUB,
-  DO_SUB = SUB,
-  UNDO_SUB = ADD
+  DO_SUB = SUB
 }
 
 interface CalcAction {
@@ -34,7 +34,6 @@ const calcReducer = (count: number = 0, action: CalcAction) => {
       return count;
   }
 };
-
 export const Calculator = () =>
   createStore(
     combineReducers({
