@@ -2,7 +2,7 @@ import { createNewGraph } from "./ProvenanceGraph";
 import { configureStore } from "./Store";
 import { deepCopy } from "../utils/utils";
 import { Store } from "redux";
-import { NodeID } from "./NodeInterfaces";
+import { NodeID, isStateNode } from "./NodeInterfaces";
 import { ReversibleAction } from "./ProvenanceActions";
 import { applyAction } from "./ApplyActionFunction";
 import { toNode } from "./GotoNodeActions";
@@ -18,6 +18,23 @@ export function Provenance<T>(application: Store<T>) {
     ) => {
       applyAction(graph, application, action, skipFirstDoFunctionCall);
     },
-    goto: (id: NodeID) => toNode(graph, application, id)
+    goToNode: (id: NodeID) => toNode(graph, application, id),
+    goBackOneStep: () => {
+      const current = graph.getState().current;
+      if (isStateNode(current)) {
+        toNode(graph, application, current.parent);
+      }
+    },
+    goBackNSteps: (n: number) => {
+      while (n != 0) {
+        const current = graph.getState().current;
+        if (isStateNode(current)) {
+          toNode(graph, application, current.parent);
+          --n;
+        } else {
+          break;
+        }
+      }
+    }
   };
 }

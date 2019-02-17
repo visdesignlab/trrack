@@ -30,6 +30,9 @@ console.log(
 console.log(app.getState());
 
 provenance.apply(act);
+provenance.apply(act);
+provenance.apply(act);
+provenance.apply(act);
 
 console.log(
   "#####################################################################################"
@@ -38,8 +41,8 @@ console.log(app.getState());
 console.log(
   "#####################################################################################"
 );
-provenance.goto((provenance.graph().current as StateNode).parent);
-
+// provenance.goToNode((provenance.graph().current as StateNode).parent);
+provenance.goBackNSteps(0);
 console.log(util.inspect(provenance.graph(), false, 10, true));
 console.log(
   "#####################################################################################"
