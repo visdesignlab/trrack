@@ -1,7 +1,7 @@
 import { Store, AnyAction } from "redux";
 import { ProvenanceGraph } from "./ProvenanceGraph";
-import { NodeID, ProvenanceNode, isStateNode, Nodes } from "./NodeInterfaces";
-import { GenericAction } from "./ProvenanceActions";
+import { NodeID, ProvenanceNode, isStateNode, Nodes, StateNode} from "./NodeInterfaces";
+import { GenericAction, ResetActionCreator, ResetAction } from "./ProvenanceActions";
 import { createChangeCurrentAction } from "./CurrentActions/ActionCreators";
 
 export function toNode<T>(
@@ -51,6 +51,55 @@ export function toNode<T>(
     applyActions(application, actions);
 
     // * Change current
+    graph.dispatch(createChangeCurrentAction(targetNode));
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
+export function toNodeWithState<T>(
+  graph: Store<ProvenanceGraph, AnyAction>,
+  application: Store<T>,
+  id: NodeID,
+  inputString: string
+) {
+  try {
+    const currentNode = graph.getState().current;
+    const targetNode = graph.getState().nodes[id];
+
+    if(!isStateNode(targetNode)) {
+      throw new Error("Target not a state node");
+    }
+
+    if (currentNode === targetNode) return;
+
+    const trackToTarget: ProvenanceNode[] = [];
+
+    const success = findPathToTargetNode(
+      graph.getState().nodes,
+      currentNode,
+      targetNode,
+      trackToTarget
+    );
+
+    if (!success) {
+      throw new Error("No Path found!");
+    }
+
+    if(!isStateNode(targetNode)) {
+      throw new Error("Target not a state node");
+    }
+
+    const stateTargetNode = targetNode as StateNode;
+
+    const createResetAction = (toSet: any) : ResetAction<any> => {
+      return ResetActionCreator(inputString, toSet);
+    };
+
+    let action = createResetAction(stateTargetNode.state);
+
+    application.dispatch(action.doAction);
+
     graph.dispatch(createChangeCurrentAction(targetNode));
   } catch (err) {
     throw new Error(err);
