@@ -5,44 +5,38 @@ import { Store } from "redux";
 import { NodeID, isStateNode } from "./NodeInterfaces";
 import { ReversibleAction } from "./ProvenanceActions";
 import { applyAction, applyResetAction } from "./ApplyActionFunction";
-import { toNode, toNodeWithState} from "./GotoNodeActions";
+import { toNode, toNodeWithState } from "./GotoNodeActions";
 
-export function Provenance<T>(application: Store<T>, resetFunction: string = null) {
+export function Provenance<T>(
+  application: Store<T>,
+  resetFunction: string = null
+) {
   const graph = configureStore(createNewGraph());
-
-  let resetFlag = 0;
-
-  if(resetFunction != null)
-    resetFlag = 1;
 
   return {
     graph: () => deepCopy(graph.getState()),
     apply: <D, U>(
       action: ReversibleAction<D, U>,
-      skipFirstDoFunctionCall: boolean = false,
+      skipFirstDoFunctionCall: boolean = false
     ) => {
       applyAction(graph, application, action, skipFirstDoFunctionCall);
     },
     applyReset: () => {
-      applyResetAction(graph, application, resetFunction)
+      applyResetAction(graph, application, resetFunction);
     },
     goToNode: (id: NodeID) => {
-      if(resetFlag == 0)
-        toNode(graph, application, id)
-      else
-        toNodeWithState(graph, application, id, resetFunction)
+      if (!resetFunction) toNode(graph, application, id);
+      else toNodeWithState(graph, application, id, resetFunction);
     },
     goBackOneStep: () => {
       const current = graph.getState().current;
       if (isStateNode(current)) {
-        if(resetFlag == 0)
-          toNode(graph, application, current.parent);
-        else
-          toNodeWithState(graph, application, current.parent, resetFunction);
+        if (!resetFunction) toNode(graph, application, current.parent);
+        else toNodeWithState(graph, application, current.parent, resetFunction);
       }
     },
     goBackNSteps: (n: number) => {
-      if(resetFlag == 0) {
+      if (!resetFunction) {
         while (n != 0) {
           const current = graph.getState().current;
           if (isStateNode(current)) {
@@ -52,9 +46,7 @@ export function Provenance<T>(application: Store<T>, resetFunction: string = nul
             break;
           }
         }
-      }
-
-      else {
+      } else {
         let current = graph.getState().current;
         let parentVal = "";
         while (n != 0) {
