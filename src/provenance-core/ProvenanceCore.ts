@@ -13,7 +13,7 @@ import {
   applyResetAction,
   applyRecordableAction
 } from "./ApplyActionFunction";
-import { toNode, toNodeWithState } from "./GotoNodeActions";
+import { toNode, toNodeWithState, toNodeWithoutRedux } from "./GotoNodeActions";
 import { RecordableAction } from "./NonReduxInterfaces/RecordableAction";
 
 export function ProvenanceRedux<T>(
@@ -82,10 +82,14 @@ export interface Provenance<T> {
   applyAction: (actionObject: RecordableAction<T>) => void;
   addObserver: (propPath: string, func: SubscriberFunction<T>) => void;
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
+  goToNode: (id: NodeID) => void;
+  goBackOneStep: () => void;
+  goBackNSteps: (n: number) => void;
 }
 
 export function Provenance<T>(initState: T): Provenance<T> {
   const graph = configureStore(createNewGraphWithoutRedux<T>(initState));
+
   const subscriberDictionary: { [key: string]: SubscriberFunction<T>[] } = {};
 
   return {
@@ -103,6 +107,34 @@ export function Provenance<T>(initState: T): Provenance<T> {
     addGlobalObserver: (func: SubscriberFunction<T>) => {
       if (!subscriberDictionary[global]) subscriberDictionary[global] = [];
       subscriberDictionary[global].push(func);
+    },
+    goToNode: (id: NodeID) => {
+      const prevState = graph.getState().current.state;
+      const newState = toNodeWithoutRedux(graph, id);
+      callUpdateEvents(prevState, newState, subscriberDictionary);
+    },
+    goBackOneStep: () => {
+      const current = graph.getState().current;
+      const prevState = current.state;
+      let newState = current.state;
+      if (isStateNode(current))
+        newState = toNodeWithoutRedux(graph, current.parent);
+
+      callUpdateEvents(prevState, newState, subscriberDictionary);
+    },
+    goBackNSteps: (n: number) => {
+      let current = graph.getState().current;
+      const prevState = current.state;
+      let newState = current.state;
+      while (n > 0) {
+        current = graph.getState().current;
+        if (isStateNode(current))
+          newState = toNodeWithoutRedux(graph, current.parent);
+        else break;
+        --n;
+      }
+
+      callUpdateEvents(prevState, newState, subscriberDictionary);
     }
   };
 }

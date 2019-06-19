@@ -11,9 +11,9 @@ export function createAddChildToCurrentAction(
   };
 }
 
-export function createChangeCurrentAction(
-  newCurrent: ProvenanceNode
-): ChangeCurrentAction {
+export function createChangeCurrentAction<T>(
+  newCurrent: ProvenanceNode<T>
+): ChangeCurrentAction<T> {
   return {
     type: CurrentActionsEnum.CHANGE_CURRENT,
     newCurrent: newCurrent

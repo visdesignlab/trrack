@@ -1,12 +1,4 @@
 import { Provenance } from "../src";
-
-import * as util from "util";
-
-// import { Calculator, CalcActionEnum } from "./CalculatorTestApp";
-import {
-  ReversibleAction,
-  ReversibleActionCreator
-} from "../src/provenance-core/ProvenanceActions";
 import {
   initCalcState,
   Calculator,
@@ -16,16 +8,16 @@ import {
 console.clear();
 
 const provenance = Provenance(initCalcState);
-
 const app = Calculator(provenance);
 
-provenance.addObserver("count.count2.count4", () => {
-  console.log("I should be called Multiple times");
-});
+// provenance.addObserver("count.count2", () => {
+//   console.log("I should be called Multiple times");
+// });
 
-provenance.addObserver("count.count2.count4", (state: CalcState) => {
-  console.log("Only once", state.count);
-});
+// provenance.addObserver("count.count2.count4", (state: CalcState) => {
+//   console.log("Only once", state.count);
+// });
+console.log(app.currentState());
 
 provenance.applyAction({
   label: "Add val",
@@ -36,6 +28,7 @@ provenance.applyAction({
   },
   args: [12]
 });
+console.log(app.currentState());
 
 provenance.applyAction({
   label: "Add val",
@@ -46,6 +39,10 @@ provenance.applyAction({
   },
   args: [12]
 });
+console.log(app.currentState());
+
+provenance.goBackNSteps(2);
+console.log(app.currentState());
 
 // const app = Calculator();
 

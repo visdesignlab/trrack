@@ -1,11 +1,21 @@
 import { Store, AnyAction } from "redux";
 import { ProvenanceGraph } from "./ProvenanceGraph";
-import { NodeID, ProvenanceNode, isStateNode, Nodes, StateNode} from "./NodeInterfaces";
-import { GenericAction, ResetActionCreator, ResetAction } from "./ProvenanceActions";
+import {
+  NodeID,
+  ProvenanceNode,
+  isStateNode,
+  Nodes,
+  StateNode
+} from "./NodeInterfaces";
+import {
+  GenericAction,
+  ResetActionCreator,
+  ResetAction
+} from "./ProvenanceActions";
 import { createChangeCurrentAction } from "./CurrentActions/ActionCreators";
 
 export function toNode<T>(
-  graph: Store<ProvenanceGraph, AnyAction>,
+  graph: Store<ProvenanceGraph<T>, AnyAction>,
   application: Store<T>,
   id: NodeID
 ) {
@@ -14,7 +24,7 @@ export function toNode<T>(
     const targetNode = graph.getState().nodes[id];
     if (currentNode === targetNode) return;
 
-    const trackToTarget: ProvenanceNode[] = [];
+    const trackToTarget: ProvenanceNode<T>[] = [];
 
     const success = findPathToTargetNode(
       graph.getState().nodes,
@@ -57,8 +67,25 @@ export function toNode<T>(
   }
 }
 
+export function toNodeWithoutRedux<T>(
+  graph: Store<ProvenanceGraph<T>>,
+  id: NodeID
+): T {
+  try {
+    const currentNode = graph.getState().current;
+    const targetNode = graph.getState().nodes[id];
+
+    if (currentNode === targetNode) return currentNode.state;
+
+    graph.dispatch(createChangeCurrentAction(targetNode));
+    return targetNode.state;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
 export function toNodeWithState<T>(
-  graph: Store<ProvenanceGraph, AnyAction>,
+  graph: Store<ProvenanceGraph<T>, AnyAction>,
   application: Store<T>,
   id: NodeID,
   inputString: string
@@ -67,13 +94,13 @@ export function toNodeWithState<T>(
     const currentNode = graph.getState().current;
     const targetNode = graph.getState().nodes[id];
 
-    if(!isStateNode(targetNode)) {
+    if (!isStateNode(targetNode)) {
       throw new Error("Target not a state node");
     }
 
     if (currentNode === targetNode) return;
 
-    const trackToTarget: ProvenanceNode[] = [];
+    const trackToTarget: ProvenanceNode<T>[] = [];
 
     const success = findPathToTargetNode(
       graph.getState().nodes,
@@ -86,13 +113,13 @@ export function toNodeWithState<T>(
       throw new Error("No Path found!");
     }
 
-    if(!isStateNode(targetNode)) {
+    if (!isStateNode(targetNode)) {
       throw new Error("Target not a state node");
     }
 
-    const stateTargetNode = targetNode as StateNode;
+    const stateTargetNode = targetNode as StateNode<T>;
 
-    const createResetAction = (toSet: any) : ResetAction<any> => {
+    const createResetAction = (toSet: any): ResetAction<any> => {
       return ResetActionCreator(inputString, toSet);
     };
 
@@ -106,18 +133,18 @@ export function toNodeWithState<T>(
   }
 }
 
-function findPathToTargetNode(
-  nodes: Nodes,
-  currentNode: ProvenanceNode,
-  targetNode: ProvenanceNode,
-  track: ProvenanceNode[],
-  comingFromNode: ProvenanceNode = currentNode
+function findPathToTargetNode<T>(
+  nodes: Nodes<T>,
+  currentNode: ProvenanceNode<T>,
+  targetNode: ProvenanceNode<T>,
+  track: ProvenanceNode<T>[],
+  comingFromNode: ProvenanceNode<T> = currentNode
 ): boolean {
   if (currentNode && currentNode === targetNode) {
     track.unshift(currentNode);
     return true;
   } else if (currentNode) {
-    const nodesToCheck: ProvenanceNode[] = currentNode.children.map(
+    const nodesToCheck: ProvenanceNode<T>[] = currentNode.children.map(
       c => nodes[c]
     );
 
@@ -137,9 +164,9 @@ function findPathToTargetNode(
   return false;
 }
 
-function isNextNodeInTrackUp(
-  currentNode: ProvenanceNode,
-  nextNode: ProvenanceNode
+function isNextNodeInTrackUp<T>(
+  currentNode: ProvenanceNode<T>,
+  nextNode: ProvenanceNode<T>
 ): boolean {
   if (isStateNode(currentNode) && currentNode.parent === nextNode.id) {
     return true;

@@ -1,5 +1,4 @@
 import { Provenance } from "../src/provenance-core/ProvenanceCore";
-import { BaseNode } from "../src/provenance-core/NodeInterfaces";
 
 export interface CalcState {
   count: {
