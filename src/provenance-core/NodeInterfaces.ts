@@ -11,27 +11,31 @@ export interface Artifacts {
   [key: string]: any;
 }
 
-export interface RootNode {
+export interface BaseNode<T> {
+  state?: T;
+}
+
+export interface RootNode<T> extends BaseNode<T> {
   id: NodeID;
   label: string;
   metadata: NodeMetadata;
   children: NodeID[];
   artifacts: Artifacts;
+  state?: Readonly<T>;
 }
 
-export interface StateNode extends RootNode {
+export interface StateNode<T> extends RootNode<T> {
   parent: NodeID;
-  state: unknown;
-  action: ReversibleAction<unknown, unknown> | ResetAction <unknown>;
+  action: ReversibleAction<unknown, unknown> | ResetAction<unknown>;
   actionResult: unknown;
 }
 
-export type ProvenanceNode = RootNode | StateNode;
+export type ProvenanceNode<T> = RootNode<T> | StateNode<T>;
 
-export type Nodes = { [key: string]: ProvenanceNode };
+export type Nodes<T> = { [key: string]: ProvenanceNode<T> };
 
-export type CurrentNode = ProvenanceNode;
+export type CurrentNode<T> = ProvenanceNode<T>;
 
-export function isStateNode(node: ProvenanceNode): node is StateNode {
+export function isStateNode<T>(node: ProvenanceNode<T>): node is StateNode<T> {
   return "parent" in node;
 }

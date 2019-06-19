@@ -1,53 +1,88 @@
-import { expect } from "./expect";
 import { Provenance } from "../src";
 
 import * as util from "util";
 
-import { Calculator, CalcActionEnum } from "./CalculatorTestApp";
+// import { Calculator, CalcActionEnum } from "./CalculatorTestApp";
 import {
   ReversibleAction,
   ReversibleActionCreator
 } from "../src/provenance-core/ProvenanceActions";
-import { StateNode } from "../src/provenance-core/NodeInterfaces";
+import {
+  initCalcState,
+  Calculator,
+  CalcState
+} from "./CalculatorNonReduxTextApp";
 
 console.clear();
 
-const app = Calculator();
+const provenance = Provenance(initCalcState);
 
-const provenance = Provenance(app);
+const app = Calculator(provenance);
 
-const createReversibleAddAction = (
-  toAdd: number
-): ReversibleAction<number, number> => {
-  return ReversibleActionCreator(CalcActionEnum.ADD, toAdd, toAdd);
-};
+provenance.addObserver("count.count2.count4", () => {
+  console.log("I should be called Multiple times");
+});
 
-const act = createReversibleAddAction(3);
+provenance.addObserver("count.count2.count4", (state: CalcState) => {
+  console.log("Only once", state.count);
+});
 
-console.log(
-  "#####################################################################################"
-);
-console.log(app.getState());
+provenance.applyAction({
+  label: "Add val",
+  action: (val: number) => {
+    const test = (app.currentState() as any) as CalcState;
+    test.count.count2.count3 += val;
+    return test;
+  },
+  args: [12]
+});
 
-provenance.apply(act);
-provenance.apply(act);
-provenance.apply(act);
-provenance.apply(act);
+provenance.applyAction({
+  label: "Add val",
+  action: (val: number) => {
+    const test = (app.currentState() as any) as CalcState;
+    test.count.count2.count4 += val;
+    return test;
+  },
+  args: [12]
+});
 
-console.log(
-  "#####################################################################################"
-);
-console.log(app.getState());
-console.log(
-  "#####################################################################################"
-);
-// provenance.goToNode((provenance.graph().current as StateNode).parent);
-provenance.goBackNSteps(0);
-console.log(util.inspect(provenance.graph(), false, 10, true));
-console.log(
-  "#####################################################################################"
-);
-console.log(app.getState());
-console.log(
-  "#####################################################################################"
-);
+// const app = Calculator();
+
+// const provenance = Provenance(app);
+
+// const createReversibleAddAction = (
+//   toAdd: number
+// ): ReversibleAction<number, number> => {
+//   return ReversibleActionCreator(CalcActionEnum.ADD, toAdd, toAdd);
+// };
+
+// const act = createReversibleAddAction(3);
+
+// console.log(
+//   "#####################################################################################"
+// );
+// console.log(app.getState());
+
+// provenance.apply(act);
+// provenance.apply(act);
+// provenance.apply(act);
+// provenance.apply(act);
+
+// console.log(
+//   "#####################################################################################"
+// );
+// console.log(app.getState());
+// console.log(
+//   "#####################################################################################"
+// );
+// // provenance.goToNode((provenance.graph().current as StateNode).parent);
+// provenance.goBackNSteps(0);
+// console.log(util.inspect(provenance.graph(), false, 10, true));
+// console.log(
+//   "#####################################################################################"
+// );
+// console.log(app.getState());
+// console.log(
+//   "#####################################################################################"
+// );
