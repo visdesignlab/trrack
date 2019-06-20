@@ -2,8 +2,8 @@
   "name": "@visdesignlab/provenance-lib-core",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib",
     "lib-esm",
