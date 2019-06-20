@@ -1,19 +1,9 @@
-export { Provenance } from "./provenance-core/ProvenanceCore";
+export { Provenance, ProvenanceRedux } from "./provenance-core/ProvenanceCore";
+export {
+  RecordableReduxAction,
+  recordableReduxActionCreator
+} from "./provenance-core/ActionHelpers/RecordableReduxActions";
 
 export {
   RecordableAction
-} from "./provenance-core/NonReduxInterfaces/RecordableAction";
-
-// export {
-//   StateNode,
-//   ProvenanceNode,
-//   RootNode
-// } from "./provenance-core/NodeInterfaces";
-
-// export {
-//   ReversibleActionCreator,
-//   ReversibleAction,
-//   DoAction,
-//   UndoAction,
-//   GenericAction
-// } from "./provenance-core/ProvenanceActions";
+} from "./provenance-core/ActionHelpers/RecordableAction";

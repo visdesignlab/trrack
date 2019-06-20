@@ -1,10 +1,5 @@
 import { Store, AnyAction } from "redux";
 import { ProvenanceGraph } from "./ProvenanceGraph";
-import {
-  ReversibleAction,
-  ResetAction,
-  ResetActionCreator
-} from "./ProvenanceActions";
 import { NodeID, StateNode } from "./NodeInterfaces";
 import { generateUUID, generateTimeStamp } from "../utils/utils";
 import {
@@ -15,12 +10,13 @@ import {
   createAddChildToCurrentAction,
   createChangeCurrentAction
 } from "./CurrentActions/ActionCreators";
-import { RecordableAction } from "./NonReduxInterfaces/RecordableAction";
+import { RecordableAction } from "./ActionHelpers/RecordableAction";
+import { RecordableReduxAction } from "./ActionHelpers/RecordableReduxActions";
 
-export function applyAction<T, D, U>(
+export function applyRecordableActionRedux<T>(
   graph: Store<ProvenanceGraph<T>, AnyAction>,
   application: Store<T>,
-  action: ReversibleAction<D, U>,
+  action: RecordableReduxAction,
   skipFirstDoFunctionCall: boolean = false
 ) {
   const createNewStateNode = (
@@ -44,8 +40,9 @@ export function applyAction<T, D, U>(
   let newNode: StateNode<T>;
 
   const currentNode = graph.getState().current;
-  if (!skipFirstDoFunctionCall) application.dispatch(action.doAction);
+  if (!skipFirstDoFunctionCall) application.dispatch(action);
   newNode = createNewStateNode(currentNode.id, null);
+
   // * Add to nodes list
   graph.dispatch(createAddNodeAction(newNode));
   // * Add as child to current nodeididid
@@ -88,53 +85,6 @@ export function applyRecordableAction<T>(
     else newState = action.apply(null, args);
 
   const newNode = createNewStateNode(currentNode.id, null, newState);
-  // * Add to nodes list
-  graph.dispatch(createAddNodeAction(newNode));
-  // * Add as child to current nodeididid
-  graph.dispatch(createAddChildToCurrentAction(newNode.id));
-  // * Update the node in nodes list
-  graph.dispatch(createUpdateNewlyAddedNodeAction(graph.getState().current));
-  // * Change Current node
-  graph.dispatch(createChangeCurrentAction(newNode));
-}
-
-export function applyResetAction<T, D, U>(
-  graph: Store<ProvenanceGraph<T>, AnyAction>,
-  application: Store<T>,
-  inputString: string
-) {
-  const createResetAction = (toSet: any): ResetAction<any> => {
-    return ResetActionCreator(inputString, toSet);
-  };
-
-  let action = createResetAction(application.getState());
-
-  const createNewStateNode = (
-    parent: NodeID,
-    actionResult: unknown
-  ): StateNode<T> => ({
-    id: generateUUID(),
-    label: action.type,
-
-    metadata: {
-      createdOn: generateTimeStamp()
-    },
-    action: action,
-    actionResult: actionResult,
-    parent: parent,
-    children: [],
-    artifacts: [],
-    state: application.getState()
-  });
-
-  let newNode: StateNode<T>;
-
-  const currentNode = graph.getState().current;
-
-  newNode = createNewStateNode(currentNode.id, null);
-
-  application.dispatch(action.doAction);
-
   // * Add to nodes list
   graph.dispatch(createAddNodeAction(newNode));
   // * Add as child to current nodeididid

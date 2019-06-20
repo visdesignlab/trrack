@@ -1,4 +1,4 @@
-import { ReversibleAction, ResetAction } from "./ProvenanceActions";
+import { RecordableReduxAction } from "./ActionHelpers/RecordableReduxActions";
 
 export type NodeID = string;
 
@@ -21,12 +21,12 @@ export interface RootNode<T> extends BaseNode<T> {
   metadata: NodeMetadata;
   children: NodeID[];
   artifacts: Artifacts;
-  state?: Readonly<T>;
+  state?: T;
 }
 
 export interface StateNode<T> extends RootNode<T> {
   parent: NodeID;
-  action: ReversibleAction<unknown, unknown> | ResetAction<unknown>;
+  action: RecordableReduxAction;
   actionResult: unknown;
 }
 

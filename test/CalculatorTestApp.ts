@@ -40,3 +40,12 @@ export const Calculator = () =>
       count: calcReducer
     })
   );
+
+export function resetStore(newState: any) {
+  return createStore(
+    combineReducers({
+      count: calcReducer
+    }),
+    newState
+  );
+}

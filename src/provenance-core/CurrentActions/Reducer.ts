@@ -1,4 +1,3 @@
-import { Reducer } from "redux";
 import { CurrentActionsEnum } from "../ActionsEnum";
 import { ProvenanceNode, NodeID, CurrentNode } from "../NodeInterfaces";
 import { CurrentAction } from "./Actions";
