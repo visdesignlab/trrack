@@ -1,4 +1,4 @@
-import { ProvenanceGraph, createNewGraphWithoutRedux } from "./ProvenanceGraph";
+import { ProvenanceGraph, createNewGraph } from "./ProvenanceGraph";
 import { RecordableAction } from "./ActionHelpers/RecordableAction";
 import {
   SubscriberFunction,
@@ -22,7 +22,7 @@ export interface Provenance<T> {
 }
 
 export function initProvenance<T>(initState: T): Provenance<T> {
-  const graph = configureStore(createNewGraphWithoutRedux<T>(initState));
+  const graph = configureStore(createNewGraph<T>(initState));
 
   const EM = initEventManager<T>();
 

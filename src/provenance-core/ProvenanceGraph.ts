@@ -1,6 +1,7 @@
 import { generateTimeStamp, generateUUID } from "../utils/utils";
 import { RootNode, CurrentNode, Nodes } from "./NodeInterfaces";
 import { addNode } from "./NodeActions/Reducer";
+import { Store } from "redux";
 
 export interface ProvenanceGraph<T> {
   nodes: Nodes<T>;
@@ -8,21 +9,21 @@ export interface ProvenanceGraph<T> {
   root: RootNode<T>;
 }
 
-export function createNewGraph<T>(_root?: RootNode<T>): ProvenanceGraph<T> {
+export function createNewGraphRedux<T>(
+  application: Store<T>
+): ProvenanceGraph<T> {
   let root: RootNode<T> = undefined;
-  if (_root) {
-    root = _root;
-  } else {
-    root = {
-      id: generateUUID(),
-      label: "Root",
-      metadata: {
-        createdOn: generateTimeStamp()
-      },
-      artifacts: {},
-      children: []
-    };
-  }
+
+  root = {
+    id: generateUUID(),
+    label: "Root",
+    metadata: {
+      createdOn: generateTimeStamp()
+    },
+    artifacts: {},
+    children: [],
+    state: application.getState()
+  };
 
   const graph: ProvenanceGraph<T> = {
     nodes: {},
@@ -34,9 +35,7 @@ export function createNewGraph<T>(_root?: RootNode<T>): ProvenanceGraph<T> {
   return graph;
 }
 
-export function createNewGraphWithoutRedux<T>(
-  initState: T
-): ProvenanceGraph<T> {
+export function createNewGraph<T>(initState: T): ProvenanceGraph<T> {
   let root: RootNode<T> = {
     id: generateUUID(),
     label: "Root",

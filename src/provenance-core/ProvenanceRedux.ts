@@ -1,6 +1,6 @@
 import { Store } from "redux";
 import { configureStore } from "./Store";
-import { createNewGraph, ProvenanceGraph } from "./ProvenanceGraph";
+import { createNewGraphRedux, ProvenanceGraph } from "./ProvenanceGraph";
 import { deepCopy } from "../utils/utils";
 import { RecordableReduxAction } from "./ActionHelpers/RecordableReduxActions";
 import { applyRecordableActionRedux } from "./ApplyActionFunction";
@@ -23,7 +23,7 @@ export function initProvenanceRedux<T>(
   applicationStore: Store<T>,
   resetStore: (newState: T) => void
 ): ProvenanceRedux<T> {
-  const graph = configureStore<T>(createNewGraph());
+  const graph = configureStore<T>(createNewGraphRedux(applicationStore));
 
   return {
     graph: () => deepCopy(graph.getState()),

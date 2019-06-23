@@ -12,6 +12,8 @@ const provenance = initProvenanceRedux(app, (s: any) => {
   app = resetStore(s);
 });
 
+console.log("Hello", provenance.graph().root);
+
 console.log(app.getState());
 
 const addAction = recordableReduxActionCreator(
