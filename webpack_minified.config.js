@@ -16,12 +16,11 @@ const libraryName = "ProvenanceLibrary";
 
 const config = {
   entry: {
-    app: [PATHS.entryPoint],
-    style: [PATHS.cssEntryPoint]
+    app: "./src/index.ts"
   },
   output: {
     path: PATHS.bundles,
-    filename: "[name].[chunkhash].js",
+    filename: "provenance.min.js",
     library: libraryName,
     libraryTarget: "umd",
     umdNamedDefine: true
@@ -32,10 +31,6 @@ const config = {
   devtool: "source-map",
   plugins: [
     new WebpackMd5Hash(),
-    new HtmlWebpackPlugin({
-      template: "./src/_index.html",
-      filename: "../index.html"
-    }),
     new webpack.ProvidePlugin({
       d3: "d3",
       $: "jquery",

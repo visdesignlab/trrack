@@ -21,6 +21,7 @@
     "build": "npm run clean && npm install && npm-run-all --parallel tsc tsc-esm webpack",
     "build-lib": "npm run clean && npm install && npm-run-all --parallel tsc tsc-esm",
     "build-web": "npm run clean && npm install && npm run webpack",
+    "build-minified-lib": "webpack --config webpack_minified.config.js",
     "dev-lib": "npm run clean && npm install && npm-run-all --parallel tsc-dev",
     "dev-lib-esm": "npm run clean && npm install && npm-run-all --parallel tsc-esm-dev",
     "dev-web": "npm run clean && npm install && npm-run-all --parallel webpack-dev serve",

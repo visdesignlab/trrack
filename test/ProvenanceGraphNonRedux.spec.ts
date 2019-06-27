@@ -1,9 +1,10 @@
-import { initProvenance } from "../src/provenance-core/Provenance";
 import {
-  initCalcState,
+  CalcState,
   Calculator,
-  CalcState
+  initCalcState
 } from "./CalculatorNonReduxTextApp";
+
+import { initProvenance } from "../src/provenance-core/Provenance";
 
 console.log("######################################################");
 console.log("Non Redux Testing");
@@ -42,6 +43,8 @@ provenance.applyAction({
   },
   args: [12]
 });
+console.log(provenance.graph());
+
 console.log(app.currentState());
 
 provenance.reset();
