@@ -38,8 +38,9 @@ export function initEventManager<T>(): EventManager<T> {
         if (!(prevValue && newValue))
           throw new Error(`Path ${path} is illegal.`);
 
-        if (prevValue !== newValue)
+        if (JSON.stringify(prevValue) !== JSON.stringify(newValue)) {
           eventRegistry[path].forEach(f => f(newState));
+        }
       });
     }
   };
