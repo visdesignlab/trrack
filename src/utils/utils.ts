@@ -1,5 +1,4 @@
 export function generateUUID(): string {
-  // Public domain/MIT
   let d = new Date().getTime();
 
   if (
@@ -21,5 +20,10 @@ export function generateTimeStamp(): number {
 }
 
 export function deepCopy<T>(obj: T): T {
+  if (!obj) return;
   return JSON.parse(JSON.stringify(obj)) as T;
+}
+
+export function deepCopyReadonly<T>(obj: T): Readonly<T> {
+  return JSON.parse(JSON.stringify(obj)) as Readonly<T>;
 }

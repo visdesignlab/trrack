@@ -1,9 +1,9 @@
 {
-  "name": "provenance-lib-core",
-  "version": "3.2.0",
+  "name": "@visdesignlab/provenance-lib-core",
+  "version": "1.4.0",
   "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib",
     "lib-esm",
@@ -21,6 +21,7 @@
     "build": "npm run clean && npm install && npm-run-all --parallel tsc tsc-esm webpack",
     "build-lib": "npm run clean && npm install && npm-run-all --parallel tsc tsc-esm",
     "build-web": "npm run clean && npm install && npm run webpack",
+    "build-minified-lib": "webpack --config webpack_minified.config.js",
     "dev-lib": "npm run clean && npm install && npm-run-all --parallel tsc-dev",
     "dev-lib-esm": "npm run clean && npm install && npm-run-all --parallel tsc-esm-dev",
     "dev-web": "npm run clean && npm install && npm-run-all --parallel webpack-dev serve",
