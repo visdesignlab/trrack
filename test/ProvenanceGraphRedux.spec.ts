@@ -24,6 +24,41 @@ const addAction = recordableReduxActionCreator(
 
 provenance.apply(addAction);
 
+provenance.importState();
+
+provenance.exportState();
+
+var diff = require('deep-diff').diff;
+
+var lhs = {
+  name: 'my object',
+  description: 'it\'s an object!',
+  details: {
+    it: 'has',
+    an: 'array',
+    with: ['a', 'few', 'elements']
+  }
+};
+
+var rhs = {
+  name: 'updated object',
+  description: 'it\'s an object!',
+  details: {
+    it: 'has',
+    an: 'array',
+    with: ['a', 'few', 'more', 'elements', { than: 'before' }]
+  }
+};
+
+var differences = diff(lhs, rhs);
+
+console.log(differences)
+console.log(provenance.graph());
+console.log(app.getState());
+
+provenance.apply(addAction);
+
+console.log(provenance.graph());
 console.log(app.getState());
 
 const addAction2 = recordableReduxActionCreator(
