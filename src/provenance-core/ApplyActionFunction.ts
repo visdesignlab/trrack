@@ -111,6 +111,90 @@ export function exportStateToFile<T>(
   fs.writeFileSync("sync.txt", JSON.stringify(application.getState()));
 }
 
+export function exportPartialStateToFile<T>(
+  graph: Store<ProvenanceGraph<T>, AnyAction>,
+  application: Store<T>,
+  skipFirstDoFunctionCall: boolean = false
+) {
+  const rootNode = graph.getState().root;
+  const currentNode = graph.getState().current;
+
+  let originalState = rootNode.state
+  let currentState = currentNode.state;
+
+
+  var diff = require('deep-diff').diff;
+
+  var differences = diff(originalState, currentState);
+  console.log(differences)
+
+  let i;
+  const fs = require('fs');
+
+  for (i = 0 ; i < differences.length ; i++) {
+
+      if(differences[i].kind != "E")
+        continue;
+
+      console.log(differences[i].path[0])
+      let statePiece = {};
+      statePiece[differences[i].path[0]] = differences[i].rhs
+      console.log(statePiece)
+
+      fs.appendFile("syncPiece.txt", JSON.stringify(statePiece));
+  }
+}
+
+export function importStateFromURL<T>(
+  graph: Store<ProvenanceGraph<T>, AnyAction>,
+  application: Store<T>,
+  skipFirstDoFunctionCall: boolean = false
+) {
+  const importAction = recordableReduxActionCreator(
+    "Import State from URL",
+    "Import State from URL",
+    200
+  );
+  let url_string = window.location.href;
+  var url = new URL(url_string);
+  var stringVal = url.searchParams.get("state");
+
+  stringVal = JSON.parse(stringVal.trim());
+  const createNewStateNode = (
+    parent: NodeID,
+    actionResult: unknown
+  ): StateNode<T> => ({
+    id: generateUUID(),
+    label: importAction.type,
+
+    metadata: {
+      createdOn: generateTimeStamp()
+    },
+    action: importAction,
+    actionResult: actionResult,
+    parent: parent,
+    children: [],
+    artifacts: [],
+    state: <T><any>stringVal
+    //state: application.getState()
+  });
+
+  let newNode: StateNode<T>;
+
+  const currentNode = graph.getState().current;
+  if (!skipFirstDoFunctionCall) application.dispatch(importAction);
+  newNode = createNewStateNode(currentNode.id, null);
+
+  // * Add to nodes list
+  graph.dispatch(createAddNodeAction(newNode));
+  // * Add as child to current nodeididid
+  graph.dispatch(createAddChildToCurrentAction(newNode.id));
+  // * Update the node in nodes list
+  graph.dispatch(createUpdateNewlyAddedNodeAction(graph.getState().current));
+  // * Change Current node
+  graph.dispatch(createChangeCurrentAction(newNode));
+}
+
 export function applyRecordableAction<T>(
   graph: Store<ProvenanceGraph<T>, AnyAction>,
   { label, action, args, thisArg }: RecordableAction<T>,
