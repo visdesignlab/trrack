@@ -88,7 +88,7 @@ export function importStateFromFile<T>(
   let newNode: StateNode<T>;
 
   const currentNode = graph.getState().current;
-  if (!skipFirstDoFunctionCall) application.dispatch(importAction);
+  //if (!skipFirstDoFunctionCall) application.dispatch(importAction);
   newNode = createNewStateNode(currentNode.id, null);
 
   // * Add to nodes list
@@ -126,23 +126,45 @@ export function exportPartialStateToFile<T>(
   var diff = require('deep-diff').diff;
 
   var differences = diff(originalState, currentState);
-  console.log(differences)
 
   let i;
   const fs = require('fs');
+  let statePiece = {};
+  fs.writeFileSync("syncPiece.txt", "");
 
   for (i = 0 ; i < differences.length ; i++) {
 
       if(differences[i].kind != "E")
         continue;
 
-      console.log(differences[i].path[0])
-      let statePiece = {};
       statePiece[differences[i].path[0]] = differences[i].rhs
-      console.log(statePiece)
-
-      fs.appendFile("syncPiece.txt", JSON.stringify(statePiece));
   }
+  fs.appendFile("syncPiece.txt", JSON.stringify(statePiece));
+}
+
+export function importPartialStateToFile<T>(
+  graph: Store<ProvenanceGraph<T>, AnyAction>,
+  application: Store<T>,
+  skipFirstDoFunctionCall: boolean = false
+) {
+  const rootNode = graph.getState().root;
+
+  let originalState = rootNode.state
+  console.log(originalState)
+
+  var fs = require('fs')
+  let partJSON = fs.readFileSync("partialJSON.txt", "");
+
+  let i;
+  let currentState = {};
+  for (let key in Object.keys(originalState)) {
+      console.log("key is " + key)
+      if(partJSON.hasOwnProperty(key))
+        currentState[key] = partJSON[key]
+      else
+      currentState[key] = originalState[key]
+  }
+  console.log(JSON.stringify(currentState))
 }
 
 export function importStateFromURL<T>(

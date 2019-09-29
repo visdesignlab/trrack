@@ -3,7 +3,7 @@ import { configureStore } from "./Store";
 import { createNewGraphRedux, ProvenanceGraph } from "./ProvenanceGraph";
 import { deepCopy } from "../utils/utils";
 import { RecordableReduxAction } from "./ActionHelpers/RecordableReduxActions";
-import { applyRecordableActionRedux, importStateFromFile, exportStateToFile, exportPartialStateToFile, importStateFromURL } from "./ApplyActionFunction";
+import { applyRecordableActionRedux, importStateFromFile, exportStateToFile, importPartialStateToFile, exportPartialStateToFile, importStateFromURL } from "./ApplyActionFunction";
 import { NodeID, isStateNode } from "./NodeInterfaces";
 import { toNodeRedux } from "./GotoNodeActions";
 
@@ -15,6 +15,7 @@ export interface ProvenanceRedux<T> {
   ) => void;
   importState:()=>void;
   exportState:()=>void;
+  importPartialStateFromFile:()=>void;
   importStateFromUrl:()=>void;
   exportPartialState:()=>void;
   goToNode: (id: NodeID) => void;
@@ -42,6 +43,13 @@ export function initProvenanceRedux<T>(
         skipFirstDoFunctionCall
       );
     },
+    importPartialStateFromFile:() => {
+      importPartialStateToFile(
+        graph,
+        applicationStore
+      )
+    },
+
     importState:()=> {
       importStateFromFile(
         graph,
