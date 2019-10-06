@@ -52,20 +52,19 @@ export function initProvenance<T>(initState: T): Provenance<T> {
 
       let statePiece = {};
 
-      for (i = 0 ; i < differences.length ; i++) {
+      if(differences == null || differences.length === 0)
+        console.log("No diff to export");
 
-          if(differences[i].kind != "E")
-            continue;
-          if(differences[i].path.length == 1)
-            statePiece[differences[i].path[0]] = differences[i].rhs
-          else {
-            if(statePiece[differences[i].path[0]] == null)
-              statePiece[differences[i].path[0]] = []
-            statePiece[differences[i].path[0]][differences[i].path[1]] = differences[i].rhs
-          }
+      let currentJSON = JSON.parse(JSON.stringify(currentState));
+      let originalJSON = JSON.parse(JSON.stringify(originalState))
+
+      for(let key in currentJSON) {
+        if(currentJSON[key] != originalJSON[key])
+          statePiece[key] = currentJSON[key]
       }
 
       let queryString = btoa(JSON.stringify(statePiece));
+
       window.location.search = "?" + queryString;
     },
 
@@ -101,32 +100,24 @@ export function initProvenance<T>(initState: T): Provenance<T> {
 
     importPartialState:() => {
 
-      const oldState = graph.getState().current.state;
+      let oldState = graph.getState().current.state;
+      let savedOldState =  deepCopy(oldState);
 
       let stateString = window.location.search.substring(1);
 
       let importedObject = JSON.parse(atob(stateString));
 
-      for (let j = 0 ; j < importedObject.length ; j++) {
-
-        let currentPiece = importedObject[j]
-
-        if(Array.isArray(currentPiece)) {
-          for(let i = 0 ; i < oldState[j].length ; i++) {
-            if(importedObject[j][i] == null)
-              importedObject[j][i] = oldState[j][i]
-          }
-        }
+      for(let key in importedObject) {
+        if(importedObject[key] != oldState[key])
+          oldState[key] = importedObject[key]
       }
-
-      console.log("re constructed " + importedObject);
 
       let actionObject:RecordableAction<T> = {
         label: "Import Data",
         action: () => {
           let currentState = graph.getState().current;
-          currentState.state = importedObject;
-          return currentState.state;
+          currentState.state = oldState;
+          return oldState;
         },
         args: []
       };
@@ -134,7 +125,7 @@ export function initProvenance<T>(initState: T): Provenance<T> {
       applyRecordableAction(graph, actionObject);
 
       const newState = graph.getState().current.state;
-      EM.callEvents(oldState, newState);
+      EM.callEvents(savedOldState, newState);
     },
 
 
