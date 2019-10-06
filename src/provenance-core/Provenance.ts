@@ -16,6 +16,10 @@ export interface Provenance<T> {
   addObserver: (propPath: string, func: SubscriberFunction<T>) => void;
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
   goToNode: (id: NodeID) => void;
+  exportPartialState:() => void;
+  exportState:() => void;
+  importState:() => void;
+  importPartialState:() => void;
   goBackOneStep: () => void;
   goBackNSteps: (n: number) => void;
   reset: () => void;
@@ -23,7 +27,6 @@ export interface Provenance<T> {
 
 export function initProvenance<T>(initState: T): Provenance<T> {
   const graph = configureStore(createNewGraph<T>(initState));
-
   const EM = initEventManager<T>();
 
   return {
@@ -34,6 +37,107 @@ export function initProvenance<T>(initState: T): Provenance<T> {
       const newState = graph.getState().current.state;
       EM.callEvents(oldState, newState);
     },
+    exportPartialState:() => {
+      const rootNode = graph.getState().root;
+      const currentNode = graph.getState().current;
+
+      let originalState = rootNode.state
+      let currentState = currentNode.state;
+
+      var diff = require('deep-diff').diff;
+
+      var differences = diff(originalState, currentState);
+
+      let i;
+
+      let statePiece = {};
+
+      for (i = 0 ; i < differences.length ; i++) {
+
+          if(differences[i].kind != "E")
+            continue;
+          if(differences[i].path.length == 1)
+            statePiece[differences[i].path[0]] = differences[i].rhs
+          else {
+            if(statePiece[differences[i].path[0]] == null)
+              statePiece[differences[i].path[0]] = []
+            statePiece[differences[i].path[0]][differences[i].path[1]] = differences[i].rhs
+          }
+      }
+
+      let queryString = btoa(JSON.stringify(statePiece));
+      window.location.search = "?" + queryString;
+    },
+
+    exportState:() => {
+      const currentNode = graph.getState().current;
+
+      let queryString = btoa(JSON.stringify(currentNode));
+      window.location.search = "?" + queryString;
+    },
+
+    importState:() => {
+
+      const oldState = graph.getState().current.state;
+
+      let stateString = window.location.search.substring(1);
+      let importedObject = JSON.parse(atob(stateString));
+
+      let actionObject:RecordableAction<T> = {
+        label: "Import Data",
+        action: () => {
+          let currentState = graph.getState().current;
+          currentState.state = importedObject["state"];
+          return currentState.state;
+        },
+        args: []
+      };
+
+      applyRecordableAction(graph, actionObject);
+
+      const newState = graph.getState().current.state;
+      EM.callEvents(oldState, newState);
+    },
+
+    importPartialState:() => {
+
+      const oldState = graph.getState().current.state;
+
+      let stateString = window.location.search.substring(1);
+
+      let importedObject = JSON.parse(atob(stateString));
+
+      for (let j = 0 ; j < importedObject.length ; j++) {
+
+        let currentPiece = importedObject[j]
+
+        if(Array.isArray(currentPiece)) {
+          for(let i = 0 ; i < oldState[j].length ; i++) {
+            if(importedObject[j][i] == null)
+              importedObject[j][i] = oldState[j][i]
+          }
+        }
+      }
+
+      console.log("re constructed " + importedObject);
+
+      let actionObject:RecordableAction<T> = {
+        label: "Import Data",
+        action: () => {
+          let currentState = graph.getState().current;
+          currentState.state = importedObject;
+          return currentState.state;
+        },
+        args: []
+      };
+
+      applyRecordableAction(graph, actionObject);
+
+      const newState = graph.getState().current.state;
+      EM.callEvents(oldState, newState);
+    },
+
+
     addObserver: (propPath: string, func: SubscriberFunction<T>) => {
       EM.addObserver(propPath, func);
     },

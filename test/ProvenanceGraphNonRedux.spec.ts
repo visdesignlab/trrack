@@ -32,6 +32,7 @@ provenance.applyAction({
   },
   args: [12]
 });
+
 console.log(app.currentState());
 
 provenance.applyAction({
