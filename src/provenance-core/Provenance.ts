@@ -9,6 +9,7 @@ import { configureStore } from "./Store";
 import { deepCopy } from "../utils/utils";
 import { applyRecordableAction } from "./ApplyActionFunction";
 import { toNode } from "./GotoNodeActions";
+import {importPartialState, importState, exportPartialState, exportState, importEitherState} from "./ImportExportActions";
 
 export interface Provenance<T> {
   graph: () => ProvenanceGraph<T>;
@@ -23,111 +24,54 @@ export interface Provenance<T> {
   goBackOneStep: () => void;
   goBackNSteps: (n: number) => void;
   reset: () => void;
+  done: () => void;
 }
 
 export function initProvenance<T>(initState: T): Provenance<T> {
   const graph = configureStore(createNewGraph<T>(initState));
   const EM = initEventManager<T>();
+  let addedObserversFlag = 0;
 
   return {
     graph: () => deepCopy(graph.getState()),
     applyAction: (actionObject: RecordableAction<T>) => {
+
+      if(addedObserversFlag == 0)
+        console.warn("Use done() function to signal the end of observers"
+                                              + "and to import existing state from URL");
       const oldState = graph.getState().current.state;
       applyRecordableAction(graph, actionObject);
       const newState = graph.getState().current.state;
       EM.callEvents(oldState, newState);
     },
+    done: () => {
+
+      console.log("----- All observers added -----")
+      console.log("Triggering import of state if exists in URL");
+
+      importEitherState(graph, EM);
+
+      addedObserversFlag = 1;
+    },
     exportPartialState:() => {
-      const rootNode = graph.getState().root;
-      const currentNode = graph.getState().current;
 
-      let originalState = rootNode.state
-      let currentState = currentNode.state;
-
-      var diff = require('deep-diff').diff;
-
-      var differences = diff(originalState, currentState);
-
-      let i;
-
-      let statePiece = {};
-
-      if(differences == null || differences.length === 0)
-        console.log("No diff to export");
-
-      let currentJSON = JSON.parse(JSON.stringify(currentState));
-      let originalJSON = JSON.parse(JSON.stringify(originalState))
-
-      for(let key in currentJSON) {
-        if(currentJSON[key] != originalJSON[key])
-          statePiece[key] = currentJSON[key]
-      }
-
-      let queryString = btoa(JSON.stringify(statePiece));
-
-      window.location.search = "?" + queryString;
+      exportPartialState(graph);
     },
 
     exportState:() => {
-      const currentNode = graph.getState().current;
 
-      let queryString = btoa(JSON.stringify(currentNode));
-      window.location.search = "?" + queryString;
+      exportState(graph);
     },
 
     importState:() => {
 
-      const oldState = graph.getState().current.state;
-
-      let stateString = window.location.search.substring(1);
-      let importedObject = JSON.parse(atob(stateString));
-
-      let actionObject:RecordableAction<T> = {
-        label: "Import Data",
-        action: () => {
-          let currentState = graph.getState().current;
-          currentState.state = importedObject["state"];
-          return currentState.state;
-        },
-        args: []
-      };
-
-      applyRecordableAction(graph, actionObject);
-
-      const newState = graph.getState().current.state;
-      EM.callEvents(oldState, newState);
+      importState(graph, EM);
     },
 
     importPartialState:() => {
 
-      let oldState = graph.getState().current.state;
-      let savedOldState =  deepCopy(oldState);
-
-      let stateString = window.location.search.substring(1);
-
-      let importedObject = JSON.parse(atob(stateString));
-
-      for(let key in importedObject) {
-        if(importedObject[key] != oldState[key])
-          oldState[key] = importedObject[key]
-      }
-
-      let actionObject:RecordableAction<T> = {
-        label: "Import Data",
-        action: () => {
-          let currentState = graph.getState().current;
-          currentState.state = oldState;
-          return oldState;
-        },
-        args: []
-      };
-
-      applyRecordableAction(graph, actionObject);
-
-      const newState = graph.getState().current.state;
-      EM.callEvents(savedOldState, newState);
+        importPartialState(graph, EM);
     },
-
 
     addObserver: (propPath: string, func: SubscriberFunction<T>) => {
       EM.addObserver(propPath, func);
