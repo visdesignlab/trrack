@@ -1,0 +1,30 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "Examples for using provenance library",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "test",
+    "start": "webpack-dev-server --mode development"
+  },
+  "author": "Zach Cutler",
+  "license": "ISC",
+  "dependencies": {
+    "@types/d3": "^5.7.2",
+    "@visdesignlab/provenance-lib-core": "^1.4.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "d3": "^5.12.0",
+    "http-server": "^0.11.1",
+    "ts-loader": "^6.0.4",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2",
+    "tslint": "^5.19.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.2"
+  }
+}

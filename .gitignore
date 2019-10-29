@@ -2,7 +2,7 @@ node_modules
 lib
 lib-esm
 _bundles
-index.html
 package-lock.json
 coverage/
 .nyc_output
+*.DS_Store
