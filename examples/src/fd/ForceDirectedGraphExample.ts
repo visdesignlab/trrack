@@ -41,8 +41,6 @@ let redoAvailable = false;
 let undoUsed = false;
 let positionChange = false;
 
-let currMap:Map<string, number[]> = new Map<string, number[]>();
-
 provenance.addObserver("nodes.nodeMap", () => {
   console.log(provenance.graph());
   updateProv(provenance, undoUsed, positionChange);
@@ -336,19 +334,14 @@ d3.json("../miserables.json").then(function(innerGraph) {
 
 });
 
-
-
 function ended() {
-
   var dict = {}
   let arr:any[] = node.data();
-  // currMap.clear();
 
   for (let i = 0; i < arr.length; i++)
   {
     let curr = arr[i].id
     dict[curr]  = [arr[i].x, arr[i].y]
-    // currMap.set(arr[i].id, [arr[i].x, arr[i].y])
   }
 
   setRedo(false);
@@ -419,7 +412,6 @@ function selectNode(id:string, provenanceActive:boolean){
   if(provenanceActive){
     setRedo(false);
     redoAvailable  = false;
-
     undoUsed = false;
 
     provenance.applyAction({

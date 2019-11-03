@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import * as ProvenanceLibrary from "@visdesignlab/provenance-lib-core/lib/src/index.js";
-import {NodeState} from "./ForceDirectedGraphExample";
-import {setState} from "./ForceDirectedGraphExample";
+import {NodeState} from "./Script";
+// import {setState} from "./Script";
 
 let depthMap = {};
 let maxWidth = 0;
@@ -91,8 +91,6 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
       d.children.forEach(assignDepth);
     }
   }
-
-
 
   function findPathToTargetNode<T>(
     nodes: any,
@@ -311,7 +309,6 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
 
     // Creates a curved (diagonal) path from parent to the child nodes
     function diagonal(s, d) {
-
       let path = `M ${s.x} ${s.y}
                 ${d.x} ${d.y}`
 
@@ -319,7 +316,7 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
     }
 
     function clicked(d){
-      setState(d, true);
+      // setState(provenance, app, d, true);
     }
   }
 }
