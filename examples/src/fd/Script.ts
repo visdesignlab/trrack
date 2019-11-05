@@ -144,10 +144,13 @@ d3.json("../miserables.json").then(graph => {
     }
   }
 
+  document.getElementById("undoButton").addEventListener("click", undo);
+  document.getElementById("redoButton").addEventListener("click", redo);
+
+
   /**
   * Function called on undo. Updates provenance and changes state.
   */
-
   function undo(e){
     provenance.goBackOneStep();
     setState(provenance.graph().current);

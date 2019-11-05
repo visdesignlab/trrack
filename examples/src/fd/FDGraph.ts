@@ -3,7 +3,7 @@ import {NodeState} from "./Script"
 
 export default class Graph {
 
-  private graph:any;
+  graph:any;
   private hoverOver: (id: any) => void;
   private hoverOut: () => void;
   private select: (id: any) => void;
