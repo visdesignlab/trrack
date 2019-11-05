@@ -1,6 +1,7 @@
 //
 import * as d3 from "d3";
 import * as ProvenanceLibrary from "@visdesignlab/provenance-lib-core/lib/src/index.js";
+import {updateProv} from "./provenanceVis"
 import Bars from "./FDBar"
 import Graph from "./FDGraph"
 
@@ -34,6 +35,8 @@ d3.json("../miserables.json").then(graph => {
   let provenance = currProv[0] as ProvenanceLibrary.Provenance<NodeState>;
   let app = currProv[1] as {currentState: () => NodeState;};
 
+
+
   let hoverOver = function(currData){
     if(currData.id){
       barVis.hoverBar(currData.id);
@@ -45,14 +48,18 @@ d3.json("../miserables.json").then(graph => {
     }
   }
 
+
+
   let hoverOut = function(){
     barVis.dehoverBars();
     graphVis.dehoverNodes();
   }
 
+
+
   let select = function(currData){
     provenance.applyAction({
-      label: "Node Selected",
+      label: currData.id ? currData.id : currData + " Selected",
       action: (id:string) => {
         const test = (app.currentState() as any) as NodeState;
         test.nodes.selectedNode = id;
@@ -60,11 +67,15 @@ d3.json("../miserables.json").then(graph => {
       },
       args: [currData.id ? currData.id : currData]
     });
+
+    updateProv(provenance, setState);
   }
+
+
 
   let dragEnded = function(d){
     provenance.applyAction({
-      label: "Node Moved",
+      label: d.id + " Moved",
       action: (id:string) => {
         const test = (app.currentState() as any) as NodeState;
         test.nodes.nodeMap[d.id][0] = d.x;
@@ -73,9 +84,43 @@ d3.json("../miserables.json").then(graph => {
       },
       args: [d.id]
     });
+
+    updateProv(provenance, setState);
   }
 
-  initializeProvenanceState(graph, provenance, app);
+  let setState = function(d){
+
+    provenance.goToNode(d.id);
+
+    let newGraph = provenance.graph().current.state.nodes.nodeMap
+
+    for(let i of graph.nodes){
+      i.x = newGraph[i.id][0];
+      i.y = newGraph[i.id][1];
+    }
+
+    for(let i of graph.links){
+      i.source.x = newGraph[i.source.id][0];
+      i.source.y = newGraph[i.source.id][1];
+      i.target.x = newGraph[i.target.id][0];
+      i.target.y = newGraph[i.target.id][1];
+    }
+    //
+    graphVis.graph = graph;
+    graphVis.drawGraph();
+    //
+    let currSelected = provenance.graph().current.state.nodes.selectedNode;
+    //
+    graphVis.deselectAllNodes();
+    barVis.deselectAllBars();
+
+    if(currSelected != "none"){
+      graphVis.selectNode(currSelected);
+      barVis.selectBar(currSelected);
+    }
+  }
+
+  initializeProvenanceState(graph, provenance, app, setState);
 
   const barVis = new Bars(graph, hoverOver, hoverOut, select);
   const graphVis = new Graph(graph, hoverOver, hoverOut, select, dragEnded);
@@ -84,6 +129,34 @@ d3.json("../miserables.json").then(graph => {
     barVis.selectBar(provenance.graph().current.state.nodes.selectedNode);
     graphVis.selectNode(provenance.graph().current.state.nodes.selectedNode);
   });
+
+  document.onkeydown = function(e){
+    var mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+    console.log(mac);
+
+    if(!e.shiftKey && (mac ? e.metaKey : e.ctrlKey) && e.which == 90){
+      undo(e);
+    }
+    else if(e.shiftKey && (mac ? e.metaKey : e.ctrlKey) && e.which == 90){
+      redo(e);
+    }
+  }
+
+  function undo(e){
+    provenance.goBackOneStep();
+    setState(provenance.graph().current);
+    updateProv(provenance, setState);
+  }
+
+  function redo(e){
+    if(provenance.graph().current.children.length == 0){
+      return;
+    }
+    provenance.goToNode(provenance.graph().current.children[provenance.graph().current.children.length - 1])
+    setState(provenance.graph().current);
+    updateProv(provenance, setState);
+
+  }
 });
 
 function setupProvenance(){
@@ -112,7 +185,7 @@ function runSimulation(graph){
   return simulation;
 }
 
-function initializeProvenanceState(graph, provenance, app) {
+function initializeProvenanceState(graph, provenance, app, setState) {
     var dict = {}
     let arr:any[] = graph.nodes;
 
@@ -131,45 +204,6 @@ function initializeProvenanceState(graph, provenance, app) {
       },
       args: [dict]
     });
-  }
 
-// export function setState(provenance, app, d, b){
-//   console.log(d);
-//   if(d.data){
-//     provenance.goToNode(d.data.id);
-//   }
-//   else if (d.id){
-//     provenance.goToNode(d.id);
-//   }
-//   else{
-//     provenance.goToNode(d);
-//   }
-//
-//   console.log(provenance.graph().current.state.nodes)
-//
-//   let newGraph = provenance.graph().current.state.nodes.nodeMap
-//
-//   for(let i of globalGraph.nodes){
-//     i.x = newGraph[i.id][0];
-//     i.y = newGraph[i.id][1];
-//   }
-//
-//   for(let i of globalGraph.links){
-//     i.source.x = newGraph[i.source.id][0];
-//     i.source.y = newGraph[i.source.id][1];
-//     i.target.x = newGraph[i.target.id][0];
-//     i.target.y = newGraph[i.target.id][1];
-//   }
-//
-//   drawGraph(globalGraph, provenance, app);
-//
-//   let currSelected = provenance.graph().current.state.nodes.selectedNode;
-//
-//   deselectAllBars();
-//   deselectAllNodes();
-//
-//   if(currSelected != "none"){
-//     selectNode(globalGraph, currSelected, provenance, app);
-//     selectBar(globalGraph, currSelected, provenance, app);
-//   }
-// }
+    updateProv(provenance, setState);
+}

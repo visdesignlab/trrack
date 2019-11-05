@@ -3,7 +3,7 @@ import {NodeState} from "./Script"
 
 export default class Graph {
 
-  private graph = undefined;
+  graph:any;
   private hoverOver: (id: any) => void;
   private hoverOut: () => void;
   private select: (id: any) => void;
@@ -48,7 +48,7 @@ export default class Graph {
         .join("circle")
         .classed("nodes", true)
         .attr("id", function(d:any){return d.id + "N"})
-        .attr("fill", function(d:any) { return color(d.group); })
+        .attr("fill", function(d:any) { return color(d.group);})
         .call(d3.drag()
             .on("drag", d => this.dragged(d, link, node))
             .on("end", d => this.dragEnded(d)))

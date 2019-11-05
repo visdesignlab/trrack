@@ -11,21 +11,45 @@
     body {
       margin-top:160px;
     }
+
+    .descriptionRect{
+      fill:none;
+      stroke:black;
+      stroke-width:2px;
+    }
+
     .activeButton{
       cursor: pointer;
     }
+
     .inactiveButton{
       pointer-events: none;
       opacity: .5;
     }
-    .node circle{
+
+    .provNode circle{
+      r:10;
       fill: #fff;
       stroke: steelblue;
       stroke-width: 3px;
     }
-    .node text{
-      font: 12px sans-serif;
+
+    .provNode rect{
+      r:10;
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 3px;
     }
+
+    .provNodeSelected circle{
+      fill: cornflowerblue;
+    }
+
+
+    .provNodeSelected rect{
+      fill: cornflowerblue;
+    }
+
     .link{
       fill: none;
       stroke: #ccc;

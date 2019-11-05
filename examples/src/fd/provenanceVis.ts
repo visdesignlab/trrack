@@ -6,7 +6,7 @@ import {NodeState} from "./Script";
 let depthMap = {};
 let maxWidth = 0;
 
-export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, undo:boolean, positionChange:boolean)
+export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, setState)
 {
   let links = [];
   let nodes = provenance.graph().nodes;
@@ -29,7 +29,7 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
   //
   //
   // Set the dimensions and margins of the diagram
-  let margin = {top: 20, right: 90, bottom: 30, left: 90},
+  let margin = {top: 20, right: 200, bottom: 30, left: 90},
       width = 530 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
 
@@ -61,10 +61,13 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
   //console.log(rootNode);
   root = d3.hierarchy(rootNode, d => d.children);
 
-  DFS(root, !positionChange);
+  if(!root.width){
+    DFS(root);
+
+  }
   // assignDepth(root);
 
-  console.log(depthMap);
+  // console.log(depthMap);
   //console.log(links);
 
   //We use x0 and y0 to keep track of the parent's position. We will use it to animate the children.
@@ -72,8 +75,13 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
   root.y0 = 0;
 
   // root.children.forEach(collapse);
+  let path = [];
+  // findPathToTargetNode(provenance.graph(), provenance.graph().root, provenance.graph().current, path);
+
 
   update(root);
+  drawDescriptions();
+  // console.log(depthMap);
 
   // // Collapse the node and all it's children
   // //Here we create a _children attribute to hide the 'hidden' children.
@@ -85,6 +93,8 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
   //   }
   // }
 
+
+
   function assignDepth(d:any){
     d.width = depthMap[d.data.id];
     if(d.children){
@@ -92,41 +102,7 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
     }
   }
 
-  function findPathToTargetNode<T>(
-    nodes: any,
-    currentNode: any,
-    targetNode: any,
-    track: any[],
-    comingFromNode: any = currentNode
-  ): boolean {
-    if (currentNode && currentNode.id === targetNode.id) {
-      console.log("here");
-      track.unshift(currentNode);
-      return true;
-    } else if (currentNode) {
-      const nodesToCheck: any[] = currentNode.children.map(
-        c => nodes[c]
-      );
-
-      if (currentNode.parent) {
-        nodesToCheck.push(nodes[currentNode.parent]);
-      }
-
-      for (let node of nodesToCheck) {
-        if (node === comingFromNode) continue;
-        if (findPathToTargetNode(nodes, node, targetNode, track, currentNode)) {
-          track.unshift(currentNode);
-          return true;
-        }
-      }
-    }
-
-    console.log(track);
-    return false;
-  }
-
-
-  function DFS(node:any, setDepth:boolean) {
+  function DFS(node:any) {
 
     // let list = []
     //
@@ -185,78 +161,105 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
    }
  }
 
- function swapCurrentToFront(node:any, widthToSwap:number) {
-   let explored = new Set();
-   let s = [];
 
-  let currDepth = 0;
 
-  s.push(node);
+  function drawDescriptions(){
+    let frontNodes = d3.selectAll("g.provNode")
+      .filter(d => (d as any).width == 0);
 
-  while (s.length != 0) {
-     let t = s.pop();
+    let backNodes = d3.selectAll("g.provNode")
+      .filter(d => (d as any).width != 0);
 
-     if(!explored.has(t.data.id)){
-       t.width = currDepth;
-       depthMap[t.data.id] = t.width
-       explored.add(t.data.id);
-     }
-     else{
-       t.width = depthMap[t.data.id]
-     }
+    backNodes.selectAll("g").transition().duration(500).style("opacity", 0).remove();
 
-     if(t.parent && t.parent.width == depthMap[t.data.id]){
-       links.push({parent:t.parent, child:t});
-     }
+    let descriptionG = frontNodes.append("g")
+      .style("opacity", 0);
 
-     if(t.children){
+    descriptionG.transition().duration(1000).style("opacity", 1);
 
-       if(t.children.length > 1){
-         for(let i = 0; i < t.children.length - 1; i++){
-           links.push({child:t.children[i], parent:t.children[i+1]});
-         }
-       }
-       t.children
-         .forEach(n => {
-           s.push(n);
-       });
-     }
-     else{
-       currDepth++;
-     }
+    descriptionG.append("rect")
+      .attr("width",180)
+      .attr("height", 40)
+      .attr("y", -20)
+      .attr("x", 15)
+      .classed("descriptionRect", true);
+
+    descriptionG.append("text")
+      .text(function(d){
+        // console.log(d);
+        return d.data.data.label;
+      })
+      .attr("x", 20)
+      .attr("y", -5)
+
+    descriptionG.append("text")
+      .text(function(d){
+        // console.log(d);
+        return d.data.id;
+      })
+      .attr("font-size", ".6em")
+      .attr("x", 20)
+      .attr("y", 15)
+
+    descriptionG.append("text")
+      .text(function(d){
+        let ts = new Date(d.data.data.metadata.createdOn);
+        return ts.toLocaleString();
+      })
+      .attr("font-size", ".6em")
+      .attr("x", 20)
+      .attr("y", 5)
   }
- }
 
 
   function update(source:any) {
-
-    // Assigns the x and y position for the nodes
     let treeData = treemap(root);
+    assignDepth(root);
 
     let nodes = treeData.descendants();
-    let node = svg.selectAll<SVGGElement, any>('g.node')
+    let node = svg.selectAll<SVGGElement, any>('g.provNode')
         .data(nodes, function(d:any){
           return d.data.id;
         });
 
     // Enter any new nodes at the parent's previous position.
     let nodeEnter = node.enter().append('g')
-        .attr('class', 'node')
-        .attr("transform", function(d:any) {
-          if(!undo && d.data.parent && d.data.id == provenance.graph().current.id){
-            console.log(d.width);
+      .classed("provNode", true)
+      .attr("id", d => { return (d as any).data.id });
 
+    d3.select(".provNodeSelected")
+      .classed("provNodeSelected", false);
+
+    d3.select("g[id='"+ provenance.graph().current.id +"']")
+      .classed("provNodeSelected", true);
+
+    nodesToBeShifted(0);
+
+    nodeEnter
+        .attr("transform", function(d:any) {
+          if(d.data.parent && d.data.id == provenance.graph().current.id){
             return "translate(" + (width - d.parent.width * 50) + "," + (margin.top + d.parent.depth * 50) + ")"
           }
           return "translate(" + (width - d.width * 50) + "," + (margin.top + d.depth * 50) + ")";
-      })
-      .on('click', clicked);
+        })
+        .on('click', clicked);
 
     // Add Circle for the nodes
-    nodeEnter.append('circle')
-        .attr('class', 'node')
-        .attr('r', 1e-6);
+    nodeEnter.filter(function(d){
+        return d.data.data.label[d.data.data.label.length - 3] != "v";
+      })
+        .append('circle')
+        .attr('class', 'provNode');
 
+    nodeEnter.filter(function(d){
+        return d.data.data.label[d.data.data.label.length - 3] == "v";
+      })
+        .append('rect')
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", -10)
+        .attr("y", -10)
+        .attr('class', 'provNode');
     // UPDATE
     let nodeUpdate = nodeEnter.merge(node);
 
@@ -264,59 +267,170 @@ export function updateProv(provenance: ProvenanceLibrary.Provenance<NodeState>, 
     nodeUpdate.transition()
       .duration(duration)
       .attr("transform", function(d:any){return "translate(" + (width - d.width * 50) + "," + (margin.top + d.depth * 50) + ")";});
-    // Update the node attributes and style
 
-    nodeUpdate.select('circle.node')
-      .attr('r', 10)
-      .style('fill', function(d:any){
-        // console.log(d)
-        if(d.data.id == provenance.graph().current.id){
-          return "cornflowerblue";
-        }
-        return "#FFF";
-      });
     // ****************** links section ***************************
-    let link = svg.selectAll<SVGPathElement, any>('path.link')
-        .data(links, function(d){
-          return d.child.data.id;
-        });
 
-    // Enter any new links at the parent's previous position.
-    let linkEnter = link.enter().insert('path', "g")
-        .attr("class", "link")
-        .attr('d', d => {
-          if(!undo && d.child.data.parent && d.child.data.id == provenance.graph().current.id){
-            let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
-            return diagonal(parent, parent)
-          }
-          let child = {x: (width - d.child.width * 50), y: (margin.top + d.child.depth * 50)}
-          let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
-          return diagonal(child, parent)
-        });
-    //
-    // // UPDATE
-    let linkUpdate = linkEnter.merge(link);
-    //
-    // Transition back to the parent element position
-    linkUpdate.transition()
-        .duration(duration)
-        .attr('d', function(d){
-          let child = {x: (width - d.child.width * 50), y: (margin.top + d.child.depth * 50)}
-          let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
-
-          return diagonal(child, parent)
-        });
-
+    updateLinks();
+    moveNodes();
+    drawDescriptions();
     // Creates a curved (diagonal) path from parent to the child nodes
     function diagonal(s, d) {
       let path = `M ${s.x} ${s.y}
                 ${d.x} ${d.y}`
-
       return path
     }
 
     function clicked(d){
-      // setState(provenance, app, d, true);
+      setState(d.data);
+      d3.select(".provNodeSelected")
+        .classed("provNodeSelected", false);
+
+      d3.select("g[id='"+d.data.id +"']")
+        .classed("provNodeSelected", true);
+      // update(provenance.graph().root)
+      nodesToBeShifted(0);
+      moveNodes();
+      drawDescriptions();
+      updateLinks();
+
+      // update(root);
+    }
+
+    function updateLinks(){
+      let nodes = d3.selectAll("g.provNode").data();
+      links = [];
+      nodes.forEach(function(node){
+        if(node.children){
+          for(let i = 0; i < node.children.length; i++){
+            if(node.width == node.children[i].width){
+              links.push({parent:node, child:node.children[i]});
+            }
+            if(i > 0){
+              links.push({parent:node.children[i], child:node.children[i-1]});
+            }
+          }
+        }
+      })
+
+      console.log(links);
+
+      let link = svg.selectAll<SVGPathElement, any>('path.link')
+          .data(links, function(d){
+            return d.parent.data.id + d.child.data.id;
+          });
+
+      link.exit().remove();
+
+      let linkEnter = link.enter().insert('path', "g")
+          .attr("class", "link")
+          .attr('d', d => {
+            if(d.child.data.parent && d.child.data.id == provenance.graph().current.id){
+              let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
+              return diagonal(parent, parent)
+            }
+            let child = {x: (width - d.child.width * 50), y: (margin.top + d.child.depth * 50)}
+            let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
+            return diagonal(child, parent)
+          });
+      // UPDATE
+      let linkUpdate = linkEnter.merge(link)
+      // Transition to the correct position
+      linkUpdate.transition()
+          .duration(duration)
+          .attr('d', function(d){
+            let child = {x: (width - d.child.width * 50), y: (margin.top + d.child.depth * 50)}
+            let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
+
+            return diagonal(child, parent)
+          });
+    }
+
+    function nodesToBeShifted(shift: number){
+      let currNode = d3.select("g.provNodeSelected").data()[0];
+
+      let shiftList = []
+
+      let currWidth = currNode.width;
+      shiftList.push(currNode);
+      while(currNode.parent && currNode.parent.width == currWidth){
+        currNode = currNode.parent;
+        shiftList.push(currNode);
+      }
+
+      let parentWidth = currNode.parent? currNode.parent.width : 0
+      let parentDepth = currNode.parent? currNode.parent.depth : 0
+      let moveDist = currNode.width - parentWidth
+
+      if(parentWidth == 0){
+        d3.selectAll("g.provNode")
+          .filter(function(d){
+            return d.width < currNode.width && d.depth > parentDepth;
+          })
+          .data().forEach(function(d){
+            console.log(d);
+              d.width += findMaxChildWidth(shiftList[shiftList.length - 1]) - currNode.width + 1;
+          })
+      }
+      else{
+        d3.selectAll("g.provNode")
+          .filter(function(d){
+            return d.width < currNode.width && d.width >= parentWidth && d.depth > parentDepth;
+          })
+          .data().forEach(function(d){
+            console.log(d);
+              d.width += findMaxChildWidth(shiftList[shiftList.length - 1]) - currNode.width + 1;
+          })
+      }
+
+      addWidthToChildren(shiftList[shiftList.length - 1], -moveDist);
+
+      console.log(shiftList);
+
+      if(parentWidth != 0){
+        nodesToBeShifted(shift + findMaxChildWidth(shiftList[shiftList.length - 1]) - 1);
+      }
+      // currNode.width = 2;
+    }
+
+    function addWidthToChildren(node, widthToAdd){
+      node.width += widthToAdd;
+      if(node.children){
+        node.children.forEach(function(d){
+          addWidthToChildren(d, widthToAdd);
+        })
+      }
+    }
+
+    function findMaxChildWidth(node){
+      let maxWidth = node.width;
+
+      if(node.children){
+        node.children.forEach(d => {
+            let currWidth = findMaxChildWidth(d)
+            if(currWidth > maxWidth){
+              maxWidth = currWidth;
+            }
+        });
+      }
+
+      return maxWidth;
+    }
+
+    function moveNodes(){
+      d3.selectAll("g.provNode")
+        .transition()
+        .duration(duration)
+        .attr("transform", function(d:any){return "translate(" + (width - d.width * 50) + "," + (margin.top + d.depth * 50) + ")";});
+
+      d3.selectAll("path.link")
+          .transition()
+          .duration(duration)
+          .attr('d', function(d){
+            let child = {x: (width - d.child.width * 50), y: (margin.top + d.child.depth * 50)}
+            let parent = {x: (width - d.parent.width * 50), y: (margin.top + d.parent.depth * 50)}
+
+            return diagonal(child, parent)
+          });
     }
   }
 }
