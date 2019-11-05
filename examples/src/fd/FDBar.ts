@@ -1,9 +1,9 @@
-import {NodeState} from "./Script"
 import * as d3 from "d3";
+import {NodeState} from "./Script"
 
 export default class Bars {
 
-  private graph = undefined;
+  private graph:any;
   private hoverOver: (id: string) => void;
   private hoverOut: () => void;
   private select: (id: string) => void;

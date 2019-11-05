@@ -12,12 +12,6 @@
       margin-top:160px;
     }
 
-    .descriptionRect{
-      fill:none;
-      stroke:black;
-      stroke-width:2px;
-    }
-
     .activeButton{
       cursor: pointer;
     }
@@ -25,29 +19,6 @@
     .inactiveButton{
       pointer-events: none;
       opacity: .5;
-    }
-
-    .provNode circle{
-      r:10;
-      fill: #fff;
-      stroke: steelblue;
-      stroke-width: 3px;
-    }
-
-    .provNode rect{
-      r:10;
-      fill: #fff;
-      stroke: steelblue;
-      stroke-width: 3px;
-    }
-
-    .provNodeSelected circle{
-      fill: cornflowerblue;
-    }
-
-
-    .provNodeSelected rect{
-      fill: cornflowerblue;
     }
 
     .link{
@@ -96,7 +67,7 @@
     }
     #force-directed{
       display: inline-grid;
-      grid-template-columns: 530px 530px 530px;
+      grid-template-columns: 700px 700px;
       gap: .5rem .5rem;
       margin:auto;
     }
@@ -122,9 +93,8 @@
     <div id = "headerDiv"> Les Misérables Character Co-Occurence</div>
     <main id = "main" class="container">
       <div id="force-directed";>
-        <svg width = "530" height = "600" id = 'viz'></svg>
-        <svg width = "530" height = "600" id = 'bars'></svg>
-        <svg width = "530" height = "600" id = 'prov'></svg>
+        <svg width = "700" height = "600" id = 'viz'></svg>
+        <svg width = "700" height = "600" id = 'bars'></svg>
       </div>
     </main>
 

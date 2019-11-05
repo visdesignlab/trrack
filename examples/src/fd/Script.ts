@@ -1,10 +1,7 @@
-//
 import * as d3 from "d3";
 import * as ProvenanceLibrary from "@visdesignlab/provenance-lib-core/lib/src/index.js";
-import {updateProv} from "./provenanceVis"
 import Bars from "./FDBar"
 import Graph from "./FDGraph"
-
 
 function CreateApp(provenance: ProvenanceLibrary.Provenance<NodeState>) {
   return {
@@ -12,6 +9,7 @@ function CreateApp(provenance: ProvenanceLibrary.Provenance<NodeState>) {
   };
 }
 
+//Interface to represent the state of the vis
 export interface NodeState {
   nodes: {
     nodeMap: {};
@@ -19,6 +17,7 @@ export interface NodeState {
   }
 };
 
+//Initial, empty state
 const initialState: NodeState = {
   nodes: {
     nodeMap: {},
@@ -36,7 +35,9 @@ d3.json("../miserables.json").then(graph => {
   let app = currProv[1] as {currentState: () => NodeState;};
 
 
-
+  /**
+  * Callback function called when either a bar or a node is hovered over.
+  */
   let hoverOver = function(currData){
     if(currData.id){
       barVis.hoverBar(currData.id);
@@ -48,15 +49,17 @@ d3.json("../miserables.json").then(graph => {
     }
   }
 
-
-
+  /**
+  * Callback function called when either a bar or a node is no longer being hovered.
+  */
   let hoverOut = function(){
     barVis.dehoverBars();
     graphVis.dehoverNodes();
   }
 
-
-
+  /**
+  * Callback function called when either a bar or a node is selected. Updates provenance.
+  */
   let select = function(currData){
     provenance.applyAction({
       label: currData.id ? currData.id : currData + " Selected",
@@ -67,12 +70,11 @@ d3.json("../miserables.json").then(graph => {
       },
       args: [currData.id ? currData.id : currData]
     });
-
-    updateProv(provenance, setState);
   }
 
-
-
+  /**
+  * Callback function called when a node is dragged. Updates provenance.
+  */
   let dragEnded = function(d){
     provenance.applyAction({
       label: d.id + " Moved",
@@ -84,14 +86,12 @@ d3.json("../miserables.json").then(graph => {
       },
       args: [d.id]
     });
-
-    updateProv(provenance, setState);
   }
 
+  /**
+  * Sets the state of the application to that of the given provenance node.
+  */
   let setState = function(d){
-
-    provenance.goToNode(d.id);
-
     let newGraph = provenance.graph().current.state.nodes.nodeMap
 
     for(let i of graph.nodes){
@@ -125,11 +125,13 @@ d3.json("../miserables.json").then(graph => {
   const barVis = new Bars(graph, hoverOver, hoverOut, select);
   const graphVis = new Graph(graph, hoverOver, hoverOut, select, dragEnded);
 
+  // When a node is selected, the observer will be called and will update both views.
   provenance.addObserver("nodes.selectedNode", () => {
     barVis.selectBar(provenance.graph().current.state.nodes.selectedNode);
     graphVis.selectNode(provenance.graph().current.state.nodes.selectedNode);
   });
 
+  // Set up undo/redo keybindings
   document.onkeydown = function(e){
     var mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
     console.log(mac);
@@ -142,23 +144,30 @@ d3.json("../miserables.json").then(graph => {
     }
   }
 
+  /**
+  * Function called on undo. Updates provenance and changes state.
+  */
+
   function undo(e){
     provenance.goBackOneStep();
     setState(provenance.graph().current);
-    updateProv(provenance, setState);
   }
 
+  /**
+  * Function called on redo. Updates provenance and changes state.
+  */
   function redo(e){
     if(provenance.graph().current.children.length == 0){
       return;
     }
     provenance.goToNode(provenance.graph().current.children[provenance.graph().current.children.length - 1])
     setState(provenance.graph().current);
-    updateProv(provenance, setState);
-
   }
 });
 
+/**
+* Initialize provenance library, return provenance object and app to access current.
+*/
 function setupProvenance(){
   const provenance = ProvenanceLibrary.initProvenance(initialState);
 
@@ -167,6 +176,9 @@ function setupProvenance(){
   return [provenance, app];
 }
 
+/**
+* Runs the force directed simulation 300 times to calculate initial position.
+*/
 function runSimulation(graph){
   let simulation = d3.forceSimulation()
       .force("link", d3.forceLink().id(function(d:any) { return d.id; }))
@@ -185,6 +197,9 @@ function runSimulation(graph){
   return simulation;
 }
 
+/**
+* Once given initial positions, create the provenance state at those positions.
+*/
 function initializeProvenanceState(graph, provenance, app, setState) {
     var dict = {}
     let arr:any[] = graph.nodes;
@@ -204,6 +219,4 @@ function initializeProvenanceState(graph, provenance, app, setState) {
       },
       args: [dict]
     });
-
-    updateProv(provenance, setState);
 }
