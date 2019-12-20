@@ -4,5 +4,6 @@ lib-esm
 _bundles
 index.html
 package-lock.json
+yarn.lock
 coverage/
 .nyc_output
