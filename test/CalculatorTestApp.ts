@@ -34,17 +34,32 @@ const calcReducer = (count: number = 0, action: CalcAction) => {
       return count;
   }
 };
+
+const calcConstantReducer = (value: string = "unchanged", action: CalcAction) => {
+  switch (CalcActionEnum[action.type]) {
+    case CalcActionEnum.ADD:
+      return value;
+    case CalcActionEnum.SUB:
+      return value;
+    default:
+      return value;
+  }
+};
 export const Calculator = () =>
   createStore(
     combineReducers({
-      count: calcReducer
+      count1: calcReducer,
+      count2: calcReducer,
+      count3: calcConstantReducer
     })
   );
 
 export function resetStore(newState: any) {
   return createStore(
     combineReducers({
-      count: calcReducer
+      count1: calcReducer,
+      count2: calcReducer,
+      count3: calcConstantReducer
     }),
     newState
   );
