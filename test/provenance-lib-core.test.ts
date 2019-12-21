@@ -1,14 +1,14 @@
-import DummyClass from "../src/provenance-lib-core"
+import helloWorld from '../src/provenance-lib-core';
 
 /**
  * Dummy test
  */
-describe("Dummy test", () => {
-  it("works if true is truthy", () => {
-    expect(true).toBeTruthy()
-  })
+describe('Dummy test', () => {
+  it('works if true is truthy', () => {
+    expect(true).toBeTruthy();
+  });
 
-  it("DummyClass is instantiable", () => {
-    expect(new DummyClass()).toBeInstanceOf(DummyClass)
-  })
-})
+  it('is helloWorld a function', () => {
+    expect(helloWorld).toBeInstanceOf(Function);
+  });
+});
