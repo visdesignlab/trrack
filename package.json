@@ -1,6 +1,6 @@
 {
-  "name": "provenance-lib-core",
-  "version": "0.0.0",
+  "name": "@visdesignlab/provenance-lib-core",
+  "version": "1.4.0",
   "description": "",
   "keywords": [],
   "main": "dist/provenance-lib-core.umd.js",
