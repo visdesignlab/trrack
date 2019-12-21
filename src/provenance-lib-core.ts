@@ -2,7 +2,9 @@
 // import "core-js/fn/array.find"
 // ...
 const helloWorld = () => {
-  console.log('Hello, World!')
-}
+  console.log('Hello, World!');
+};
 
-export default helloWorld
+helloWorld();
+
+export default helloWorld;
