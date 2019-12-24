@@ -12,10 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/d3": "^5.7.2",
-    "@visdesignlab/provenance-lib-core": "^1.4.0",
+    "@visdesignlab/provenance-lib-core": "^2.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "d3": "^5.12.0",
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.0",
     "ts-loader": "^6.0.4",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",
