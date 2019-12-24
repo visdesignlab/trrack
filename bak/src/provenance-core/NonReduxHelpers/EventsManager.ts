@@ -1,4 +1,4 @@
-import Global from "./Global";
+import Global from './Global';
 
 export type SubscriberFunction<T> = (state?: T) => void;
 
@@ -21,13 +21,12 @@ export function initEventManager<T>(): EventManager<T> {
     },
     callEvents: (prevState: T, newState: T) => {
       if (eventRegistry[Global]) {
-        if (prevState !== newState)
-          eventRegistry[Global].forEach(f => f(newState));
+        if (prevState !== newState) eventRegistry[Global].forEach(f => f(newState));
         return;
       }
 
       Object.keys(eventRegistry).forEach(path => {
-        const paths = path.split(".");
+        const paths = path.split('.');
         const prevValue = paths.reduce((prev, curr) => {
           return prev && prev[curr];
         }, prevState);
@@ -35,8 +34,7 @@ export function initEventManager<T>(): EventManager<T> {
           return prev && prev[curr];
         }, newState);
 
-        if (!(prevValue && newValue))
-          throw new Error(`Path ${path} is illegal.`);
+        if (!(prevValue && newValue)) throw new Error(`Path ${path} is illegal.`);
 
         if (JSON.stringify(prevValue) !== JSON.stringify(newValue)) {
           eventRegistry[path].forEach(f => f(newState));

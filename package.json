@@ -3,9 +3,9 @@
   "version": "0.0.0-development",
   "description": "",
   "keywords": [],
-  "main": "dist/provenance-lib-core.umd.js",
-  "module": "dist/provenance-lib-core.es5.js",
-  "typings": "dist/types/provenance-lib-core.d.ts",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es5.js",
+  "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
@@ -51,7 +51,7 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jest-environment-jsdom",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
@@ -86,7 +86,9 @@
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
+    "@types/deep-diff": "^1.0.0",
     "@types/jest": "^23.3.2",
+    "@types/lz-string": "^1.3.33",
     "@types/node": "^10.11.0",
     "colors": "^1.3.2",
     "commitizen": "^3.0.0",
@@ -118,5 +120,10 @@
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.12.0",
     "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "deep-diff": "^1.0.2",
+    "immer": "^5.1.0",
+    "lz-string": "^1.4.4"
   }
 }
