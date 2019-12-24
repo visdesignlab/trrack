@@ -3,5 +3,6 @@
 // ...
 
 import initProvenance from './Provenance/InitializeProvenance';
+import { ProvenanceGraph } from './Interfaces/ProvenanceGraph';
 
-export { initProvenance };
+export { initProvenance, ProvenanceGraph };
