@@ -19,7 +19,8 @@ import {
   importState
 } from './ProvenanceGraphFunction';
 import { initEventManager } from '../Utils/EventManager';
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
+const decompressFromEncodedURIComponent = require('lz-string').decompressFromEncodedURIComponent;
+const compressToEncodedURIComponent = require('lz-string').compressToEncodedURIComponent;
 
 export default function initProvenance<T>(
   initialState: T,
