@@ -1,0 +1,11 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "bak/examples/package.json",
+        "bak/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
