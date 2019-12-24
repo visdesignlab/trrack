@@ -145,4 +145,4 @@ node_modules/
 .DS_Store
 
 yarn.lock
-i
+package-lock.json
