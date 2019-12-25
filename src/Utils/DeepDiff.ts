@@ -8,13 +8,7 @@ export default function deepDiff<T>(obj1: T, obj2: T): Diff[] {
 
   if (changes) {
     changes.forEach((change: any) => {
-      const { path: diffedKey, lhs: prevValue, rhs: currValue } = change;
-
-      diffs.push({
-        diffedKey,
-        prevValue,
-        currValue
-      });
+      diffs.push(change);
     });
   }
 

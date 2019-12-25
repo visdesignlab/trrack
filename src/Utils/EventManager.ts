@@ -33,8 +33,8 @@ export function initEventManager<T>(): EventManager<T> {
         eventRegistry[GLOBAL].forEach(f => f(state));
       }
 
-      diffs.forEach(diff => {
-        const pathArr = diff.diffedKey;
+      diffs.forEach((diff: Diff) => {
+        const pathArr = diff.path;
         const changedPaths: string[] = [];
 
         pathArr.forEach(path => {
