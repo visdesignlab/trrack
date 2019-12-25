@@ -19,6 +19,7 @@ import {
   importState
 } from './ProvenanceGraphFunction';
 import { initEventManager } from '../Utils/EventManager';
+import deepDiff from '../Utils/DeepDiff';
 const decompressFromEncodedURIComponent = require('lz-string').decompressFromEncodedURIComponent;
 const compressToEncodedURIComponent = require('lz-string').compressToEncodedURIComponent;
 
@@ -52,11 +53,11 @@ export default function initProvenance<T>(
     importStateAndAddNode(importedState);
   }
 
-  function triggerEvents() {
-    const currentState = graph.nodes[graph.current];
-    if (isStateNode(currentState)) {
-      EM.callEvents(currentState.artifacts.diffs || [], currentState.state);
-    }
+  function triggerEvents(oldState: T) {
+    const currentState = graph.nodes[graph.current].state;
+    const diffs = deepDiff(oldState, currentState);
+
+    EM.callEvents(diffs || [], currentState);
   }
 
   function importStateAndAddNode(state: T) {
@@ -74,29 +75,33 @@ export default function initProvenance<T>(
       metadata?: NodeMetadata,
       artifacts?: Artifacts
     ) => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       graph = applyActionFunction(graph, label, action, args, metadata, artifacts);
-      triggerEvents();
+      triggerEvents(oldState);
       return graph.nodes[graph.current].state;
     },
 
     goToNode: (id: NodeID) => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       graph = goToNode(graph, id);
-      triggerEvents();
+      triggerEvents(oldState);
     },
     goBackOneStep: () => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       const current = graph.nodes[graph.current];
       if (isStateNode(current)) {
         graph = goToNode(graph, current.parent);
       } else {
         throw new Error('Already at root');
       }
-      triggerEvents();
+      triggerEvents(oldState);
     },
     goBackNSteps: (n: number) => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       const num = n;
       let tempGraph: ProvenanceGraph<T> = deepCopy(graph);
       while (n > 0) {
-        let current = tempGraph.nodes[graph.current];
+        let current = tempGraph.nodes[tempGraph.current];
         if (isStateNode(current)) {
           tempGraph = goToNode(graph, current.parent);
         } else {
@@ -105,9 +110,10 @@ export default function initProvenance<T>(
         n--;
       }
       graph = tempGraph;
-      triggerEvents();
+      triggerEvents(oldState);
     },
     goForwardOneStep: () => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       let current = graph.nodes[graph.current];
       if (current.children.length > 0) {
         graph = goToNode(graph, current.children.reverse()[0]);
@@ -115,17 +121,19 @@ export default function initProvenance<T>(
         throw new Error('Already at the latest node in this branch');
       }
 
-      triggerEvents();
+      triggerEvents(oldState);
     },
 
     reset: () => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       graph = goToNode(graph, graph.root);
-      triggerEvents();
+      triggerEvents(oldState);
     },
     done: () => {
       if (loadFromUrl) {
+        const oldState = deepCopy(graph.nodes[graph.current].state);
         loadUrl();
-        triggerEvents();
+        triggerEvents(oldState);
       }
     },
 
@@ -167,12 +175,13 @@ export default function initProvenance<T>(
       return `${surroundChars}${compressedString}`;
     },
     importState: (importString: string) => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
       const importedStates: ExportedState<T> = JSON.parse(
         decompressFromEncodedURIComponent(importString.replace('||', ''))
       );
       const state = { ...graph.nodes[graph.current].state, ...importedStates };
       importStateAndAddNode(state);
-      triggerEvents();
+      triggerEvents(oldState);
     },
 
     exportProvenanceGraph: () => graph,
