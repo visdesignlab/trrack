@@ -4,5 +4,6 @@
 
 import initProvenance from './Provenance/InitializeProvenance';
 import { ProvenanceGraph } from './Interfaces/ProvenanceGraph';
+import { ActionFunction } from './Interfaces/Provenance';
 
-export { initProvenance, ProvenanceGraph };
+export { initProvenance, ProvenanceGraph, ActionFunction };
