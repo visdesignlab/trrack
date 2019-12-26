@@ -48,6 +48,7 @@ export default function initProvenance<T>(
     }
 
     const importString = url.split('||').reverse()[0];
+
     const importedState = JSON.parse(decompressFromEncodedURIComponent(importString)) as T;
 
     importStateAndAddNode(importedState);
@@ -183,8 +184,11 @@ export default function initProvenance<T>(
       importStateAndAddNode(state);
       triggerEvents(oldState);
     },
-
-    exportProvenanceGraph: () => graph,
-    importProvenanceGraph: (graph: ProvenanceGraph<T>) => console.log(graph)
+    exportProvenanceGraph: () => JSON.stringify(graph),
+    importProvenanceGraph: (importString: string) => {
+      const oldState = deepCopy(graph.nodes[graph.current].state);
+      graph = JSON.parse(importString);
+      triggerEvents(oldState);
+    }
   };
 }
