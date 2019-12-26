@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`provenance.graph returns a valid provenance object has valid keys 1`] = `
+Object {
+  "current": Any<String>,
+  "nodes": Any<Object>,
+  "root": Any<String>,
+}
+`;

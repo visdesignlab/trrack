@@ -5,11 +5,13 @@ export interface NodeMetadata {
   [key: string]: any;
 }
 
-export interface Diff {
-  diffedKey: string[];
-  prevValue: any;
-  currValue: any;
+interface DiffAnyProps {
+  [key: string]: any;
 }
+
+export type Diff = DiffAnyProps & {
+  path: string[];
+};
 
 export interface Artifacts {
   diffs?: Diff[];

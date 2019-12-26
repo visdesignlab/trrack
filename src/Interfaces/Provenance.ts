@@ -33,6 +33,6 @@ export default interface Provenance<T> {
   exportState: (partial?: boolean) => string;
   importState: (importString: string) => void;
 
-  exportProvenanceGraph: () => ProvenanceGraph<T>;
-  importProvenanceGraph: (graph: ProvenanceGraph<T>) => void;
+  exportProvenanceGraph: () => string;
+  importProvenanceGraph: (importString: string) => void;
 }
