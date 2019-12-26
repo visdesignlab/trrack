@@ -1,5 +1,6 @@
 import { ActionFunction, initProvenance } from '../../src';
 import { isStateNode } from '../../src/Interfaces/NodeInterfaces';
+import deepCopy from '../../src/Utils/DeepCopy';
 
 enum TodoStatus {
   DONE = 'DONE',
@@ -24,7 +25,7 @@ interface ToDoListState {
   todos: Todos;
 }
 
-function setupApp(loadFromUrl: boolean = false) {
+function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
   const state: ToDoListState = {
     user: {
       name: 'Kiran',
@@ -42,16 +43,24 @@ function setupApp(loadFromUrl: boolean = false) {
 
   const observerStatus = {
     global: 0,
+    global2: 1,
     todos: 0,
     user: 0,
+    user2: 1,
     user_total: 0
   };
 
   const provenance = initProvenance(state, loadFromUrl);
 
-  provenance.addGlobalObserver(() => {
-    observerStatus.global += 1;
-  });
+  if (!skipGlobal) {
+    provenance.addGlobalObserver(() => {
+      observerStatus.global += 1;
+    });
+
+    provenance.addGlobalObserver(() => {
+      observerStatus.global *= 2;
+    });
+  }
 
   provenance.addObserver(['todos'], () => {
     observerStatus.todos += 1;
@@ -59,6 +68,10 @@ function setupApp(loadFromUrl: boolean = false) {
 
   provenance.addObserver(['user'], (state?: ToDoListState) => {
     observerStatus.user += 1;
+  });
+
+  provenance.addObserver(['user'], (state?: ToDoListState) => {
+    observerStatus.user *= 2;
   });
 
   provenance.addObserver(['user', 'totalTask'], (state?: ToDoListState) => {
@@ -154,8 +167,8 @@ describe('provenance.graph returns a valid provenance object', () => {
   });
 });
 
-function addOneTask() {
-  const app = setupApp();
+function addOneTask(skipGlobal: boolean = false) {
+  const app = setupApp(false, skipGlobal);
 
   const { provenance, addTask } = app;
 
@@ -182,7 +195,7 @@ function addNoArgTask() {
 }
 
 describe('applying an action', () => {
-  let { provenance, label } = addOneTask();
+  let { provenance, label } = addOneTask(true);
 
   test('if some new node has added', () => {
     const { nodes } = provenance.graph();
@@ -244,7 +257,7 @@ describe('isStateNode function', () => {
 
 describe('current and root function', () => {
   test('current function returns current node', () => {
-    const { provenance } = setupApp();
+    const { provenance } = setupApp(false, true);
     const { nodes, current } = provenance.graph();
     const currentNode = nodes[current];
 
@@ -431,12 +444,74 @@ describe('Import state function', () => {
   });
 });
 
-// describe('goBack and goForward functions', () => {
+describe('loadFromUrl', () => {
+  const { provenance: prov } = threeTasks();
+  const stateCopy = deepCopy(prov.current().state);
 
-//   test('goBackOneStep', () => {
-//   const { provenance } = threeTasks();
-//     const { root, current } = provenance.graph();
-//     expect(root).not.toBe(current);
-//   });
+  const originalWindowLocationHref = window.location.href;
 
-// });
+  test('test if url loading works', () => {
+    const windowLoc = JSON.stringify(window.location);
+    delete window.location;
+    Object.defineProperty(window, 'location', {
+      value: JSON.parse(windowLoc),
+      writable: true
+    });
+    window.location.href = originalWindowLocationHref + prov.exportState();
+
+    const { provenance } = setupApp(true);
+
+    expect(stateCopy).toStrictEqual(provenance.current().state);
+  });
+
+  test('test if url loading stops when state not found', () => {
+    const windowLoc = JSON.stringify(window.location);
+    delete window.location;
+    Object.defineProperty(window, 'location', {
+      value: JSON.parse(windowLoc),
+      writable: true
+    });
+    window.location.href = originalWindowLocationHref + 'Hello';
+
+    const { provenance } = setupApp(true);
+
+    expect(stateCopy).not.toStrictEqual(provenance.current().state);
+  });
+
+  test('if error is thrown in non-browser environment', () => {
+    // const err = () => setupApp(true);
+    // expect(err).toThrowError();
+    delete window.location;
+    Object.defineProperty(window, 'location', {
+      value: null,
+      writable: true
+    });
+
+    const err = () => setupApp(true);
+
+    expect(err).toThrowError();
+  });
+});
+
+describe('Export graph', () => {
+  const { provenance } = setupApp();
+
+  test('exported graph is a string', () => {
+    expect(typeof provenance.exportProvenanceGraph()).toBe('string');
+  });
+});
+
+describe('Import graph', () => {
+  const { provenance } = addOneTask();
+  const oldGraph = deepCopy(provenance.graph());
+  const str = provenance.exportProvenanceGraph();
+
+  test('imported string returns same exact graph', () => {
+    const { provenance: prov2 } = setupApp();
+
+    prov2.importProvenanceGraph(str);
+    const importedGraph = prov2.graph();
+
+    expect(importedGraph).toStrictEqual(oldGraph);
+  });
+});
