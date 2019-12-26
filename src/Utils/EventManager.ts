@@ -29,7 +29,7 @@ export function initEventManager<T>(): EventManager<T> {
     callEvents: (diffs: Diff[], state: T) => {
       if (diffs.length === 0) return;
 
-      if (eventRegistry[GLOBAL]) {
+      if (eventRegistry[GLOBAL] && eventRegistry[GLOBAL].length > 0) {
         eventRegistry[GLOBAL].forEach(f => f(state));
       }
 
