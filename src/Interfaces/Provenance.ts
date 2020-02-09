@@ -7,16 +7,17 @@ export type ActionFunction<T> = (currentState: T, ...args: any[]) => T;
 
 export type ExportedState<T> = Partial<T>;
 
-export default interface Provenance<T> {
-  graph: () => ProvenanceGraph<T>;
-  current: () => ProvenanceNode<T>;
-  root: () => RootNode<T>;
+export default interface Provenance<T, S> {
+  graph: () => ProvenanceGraph<T, S>;
+  current: () => ProvenanceNode<T, S>;
+  root: () => RootNode<T, S>;
   applyAction: (
     label: string,
     action: ActionFunction<T>,
     args?: any[],
-    metadata?: NodeMetadata,
-    artifacts?: Artifacts
+    metadata?: NodeMetadata<S>,
+    artifacts?: Artifacts,
+    eventType?: S
   ) => T;
 
   addObserver: (propPath: string[], func: SubscriberFunction<T>) => void;

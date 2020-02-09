@@ -10,7 +10,8 @@ import {
   NodeMetadata,
   Artifacts,
   RootNode,
-  isStateNode
+  isStateNode,
+  ProvenanceNode
 } from '../Interfaces/NodeInterfaces';
 import {
   createProvenanceGraph,
@@ -23,10 +24,10 @@ import deepDiff from '../Utils/DeepDiff';
 const decompressFromEncodedURIComponent = require('lz-string').decompressFromEncodedURIComponent;
 const compressToEncodedURIComponent = require('lz-string').compressToEncodedURIComponent;
 
-export default function initProvenance<T>(
+export default function initProvenance<T, S>(
   initialState: T,
   loadFromUrl: boolean = false
-): Provenance<T> {
+): Provenance<T, S> {
   let graph = createProvenanceGraph(initialState);
 
   const initalStateRecord = deepCopy(initialState) as any;
@@ -66,17 +67,23 @@ export default function initProvenance<T>(
   }
 
   return {
-    graph: () => deepCopy(graph),
-    current: () => deepCopy(graph.nodes[graph.current]),
-    root: () => deepCopy(graph.nodes[graph.root] as RootNode<T>),
+    graph: () => deepCopy(graph) as ProvenanceGraph<T, S>,
+    current: () => deepCopy(graph.nodes[graph.current]) as ProvenanceNode<T, S>,
+    root: () => deepCopy(graph.nodes[graph.root] as RootNode<T, S>),
     applyAction: (
       label: string,
       action: ActionFunction<T>,
       args?: any[],
-      metadata?: NodeMetadata,
-      artifacts?: Artifacts
+      metadata: NodeMetadata<S> = {},
+      artifacts?: Artifacts,
+      eventType?: S
     ) => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
+
+      if (eventType) {
+        metadata.type = eventType;
+      }
+
       graph = applyActionFunction(graph, label, action, args, metadata, artifacts);
       triggerEvents(oldState);
       return graph.nodes[graph.current].state;
@@ -100,11 +107,11 @@ export default function initProvenance<T>(
     goBackNSteps: (n: number) => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
       const num = n;
-      let tempGraph: ProvenanceGraph<T> = deepCopy(graph);
+      let tempGraph: ProvenanceGraph<T, S> = deepCopy(graph) as any;
       while (n > 0) {
         let current = tempGraph.nodes[tempGraph.current];
         if (isStateNode(current)) {
-          tempGraph = goToNode(graph, current.parent);
+          tempGraph = goToNode(graph, current.parent) as any;
         } else {
           throw new Error(`Cannot go back ${num} steps. Reached root after ${num - n} steps`);
         }

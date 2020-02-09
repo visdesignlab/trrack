@@ -1,7 +1,8 @@
 export type NodeID = string;
 
-export interface NodeMetadata {
+export interface NodeMetadata<S> {
   createdOn?: number;
+  type?: S | 'Root';
   [key: string]: any;
 }
 
@@ -22,25 +23,25 @@ export interface BaseNode<T> {
   state: T;
 }
 
-export interface RootNode<T> extends BaseNode<T> {
+export interface RootNode<T, S> extends BaseNode<T> {
   id: NodeID;
   label: string;
-  metadata: NodeMetadata;
+  metadata: NodeMetadata<S>;
   children: NodeID[];
   state: T;
 }
 
-export interface StateNode<T> extends RootNode<T> {
+export interface StateNode<T, S> extends RootNode<T, S> {
   parent: NodeID;
   artifacts: Artifacts;
 }
 
-export type ProvenanceNode<T> = RootNode<T> | StateNode<T>;
+export type ProvenanceNode<T, S> = RootNode<T, S> | StateNode<T, S>;
 
-export type Nodes<T> = { [key: string]: ProvenanceNode<T> };
+export type Nodes<T, S> = { [key: string]: ProvenanceNode<T, S> };
 
-export type CurrentNode<T> = ProvenanceNode<T>;
+export type CurrentNode<T, S> = ProvenanceNode<T, S>;
 
-export function isStateNode<T>(node: ProvenanceNode<T>): node is StateNode<T> {
+export function isStateNode<T, S>(node: ProvenanceNode<T, S>): node is StateNode<T, S> {
   return 'parent' in node;
 }
