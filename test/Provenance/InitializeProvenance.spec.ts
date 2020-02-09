@@ -25,6 +25,8 @@ interface ToDoListState {
   todos: Todos;
 }
 
+type TestEvents = 'Name Change' | 'Add TODO';
+
 function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
   const state: ToDoListState = {
     user: {
@@ -50,7 +52,7 @@ function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
     user_total: 0
   };
 
-  const provenance = initProvenance(state, loadFromUrl);
+  const provenance = initProvenance<ToDoListState, TestEvents>(state, loadFromUrl);
 
   if (!skipGlobal) {
     provenance.addGlobalObserver(() => {
@@ -179,7 +181,7 @@ function addOneTask(skipGlobal: boolean = false) {
     completedOn: ''
   };
 
-  provenance.applyAction('Adding new task', addTask, [newTask]);
+  provenance.applyAction('Adding new task', addTask, [newTask], { type: 'Add TODO' });
 
   return { ...app, label: 'Adding new task' };
 }
@@ -189,7 +191,9 @@ function addNoArgTask() {
 
   const { provenance, changeNameToHello } = app;
 
-  provenance.applyAction('Change name to hello', changeNameToHello);
+  provenance.applyAction('Change name to hello', changeNameToHello, undefined, {
+    type: 'Name Change'
+  });
 
   return { ...app, label: 'Change name to hello' };
 }
@@ -282,7 +286,9 @@ describe('test go to node', () => {
     status: TodoStatus.FUTURE
   };
 
-  provenance.applyAction('Adding 3rd task', addTask, [newTask]);
+  provenance.applyAction('Adding 3rd task', addTask, [newTask], { type: 'Add TODO' });
+
+  console.log(provenance.current().metadata.type);
 
   test('if root is not current', () => {
     const { root, current } = provenance.graph();
