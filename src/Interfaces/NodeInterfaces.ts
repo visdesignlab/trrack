@@ -21,7 +21,7 @@ export interface Extra<A> {
 
 export interface Artifacts<A> {
   diffs?: Diff[];
-  extra?: Extra<A>[];
+  extra: Extra<A>[];
   [key: string]: any;
 }
 

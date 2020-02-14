@@ -97,9 +97,6 @@ export function addExtraToNodeArtifact<T, S, A>(
   const node = newGraph.nodes[id];
 
   if (isStateNode(node)) {
-    if (!node.artifacts.extra) {
-      node.artifacts.extra = [];
-    }
     node.artifacts.extra.push({
       time: generateTimeStamp(),
       e: extra
@@ -128,7 +125,7 @@ export function applyActionFunction<T, S, A>(
   action: ActionFunction<T>,
   args?: any[],
   metadata?: NodeMetadata<S>,
-  artifacts: Artifacts<A> = {}
+  artifacts: Partial<Artifacts<A>> = {}
 ): ProvenanceGraph<T, S, A> {
   const newGraph = deepCopy(graph);
 
