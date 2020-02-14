@@ -295,6 +295,17 @@ describe('test go to node', () => {
   console.log(provenance.getExtraFromArtifact(provenance.current().id));
   console.log(provenance.current().metadata.type);
 
+  try {
+    provenance.addExtraToNodeArtifact(provenance.root().id, 'Hello, World');
+  } catch (err) {
+    console.error(err);
+  }
+  try {
+    provenance.getExtraFromArtifact(provenance.root().id);
+  } catch (err) {
+    console.error(err);
+  }
+
   test('if root is not current', () => {
     const { root, current } = provenance.graph();
     expect(root).not.toBe(current);
