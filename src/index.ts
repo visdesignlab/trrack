@@ -15,7 +15,8 @@ import {
   StateNode,
   RootNode,
   CurrentNode,
-  Nodes
+  Nodes,
+  Extra
 } from './Interfaces/NodeInterfaces';
 
 export {
@@ -33,5 +34,6 @@ export {
   isStateNode,
   Nodes,
   CurrentNode,
-  Artifacts
+  Artifacts,
+  Extra
 };

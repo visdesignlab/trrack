@@ -10,25 +10,26 @@ import {
   NodeMetadata,
   Artifacts,
   RootNode,
-  isStateNode,
-  ProvenanceNode
+  isStateNode
 } from '../Interfaces/NodeInterfaces';
 import {
   createProvenanceGraph,
   applyActionFunction,
   goToNode,
-  importState
+  importState,
+  addExtraToNodeArtifact,
+  getExtraFromArtifact
 } from './ProvenanceGraphFunction';
 import { initEventManager } from '../Utils/EventManager';
 import deepDiff from '../Utils/DeepDiff';
 const decompressFromEncodedURIComponent = require('lz-string').decompressFromEncodedURIComponent;
 const compressToEncodedURIComponent = require('lz-string').compressToEncodedURIComponent;
 
-export default function initProvenance<T, S>(
+export default function initProvenance<T, S, A>(
   initialState: T,
   loadFromUrl: boolean = false
-): Provenance<T, S> {
-  let graph = createProvenanceGraph(initialState);
+): Provenance<T, S, A> {
+  let graph = createProvenanceGraph<T, S, A>(initialState);
 
   const initalStateRecord = deepCopy(initialState) as any;
 
@@ -67,15 +68,15 @@ export default function initProvenance<T, S>(
   }
 
   return {
-    graph: () => deepCopy(graph) as ProvenanceGraph<T, S>,
-    current: () => deepCopy(graph.nodes[graph.current]) as ProvenanceNode<T, S>,
+    graph: () => deepCopy(graph),
+    current: () => deepCopy(graph.nodes[graph.current]),
     root: () => deepCopy(graph.nodes[graph.root] as RootNode<T, S>),
     applyAction: (
       label: string,
       action: ActionFunction<T>,
       args?: any[],
       metadata: NodeMetadata<S> = {},
-      artifacts?: Artifacts,
+      artifacts?: Artifacts<A>,
       eventType?: S
     ) => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
@@ -88,11 +89,16 @@ export default function initProvenance<T, S>(
       triggerEvents(oldState);
       return graph.nodes[graph.current].state;
     },
-
     goToNode: (id: NodeID) => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
       graph = goToNode(graph, id);
       triggerEvents(oldState);
+    },
+    addExtraToNodeArtifact: (id: NodeID, extra: A) => {
+      graph = addExtraToNodeArtifact(graph, id, extra);
+    },
+    getExtraFromArtifact: (id: NodeID) => {
+      return getExtraFromArtifact<T, S, A>(graph, id);
     },
     goBackOneStep: () => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
@@ -107,7 +113,7 @@ export default function initProvenance<T, S>(
     goBackNSteps: (n: number) => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
       const num = n;
-      let tempGraph: ProvenanceGraph<T, S> = deepCopy(graph) as any;
+      let tempGraph: ProvenanceGraph<T, S, A> = deepCopy(graph) as any;
       while (n > 0) {
         let current = tempGraph.nodes[tempGraph.current];
         if (isStateNode(current)) {

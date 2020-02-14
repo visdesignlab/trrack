@@ -27,6 +27,8 @@ interface ToDoListState {
 
 type TestEvents = 'Name Change' | 'Add TODO';
 
+type Annotation = string;
+
 function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
   const state: ToDoListState = {
     user: {
@@ -52,7 +54,7 @@ function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
     user_total: 0
   };
 
-  const provenance = initProvenance<ToDoListState, TestEvents>(state, loadFromUrl);
+  const provenance = initProvenance<ToDoListState, TestEvents, Annotation>(state, loadFromUrl);
 
   if (!skipGlobal) {
     provenance.addGlobalObserver(() => {
@@ -288,6 +290,9 @@ describe('test go to node', () => {
 
   provenance.applyAction('Adding 3rd task', addTask, [newTask], { type: 'Add TODO' });
 
+  provenance.addExtraToNodeArtifact(provenance.current().id, 'Hello, World');
+
+  console.log(provenance.getExtraFromArtifact(provenance.current().id));
   console.log(provenance.current().metadata.type);
 
   test('if root is not current', () => {
