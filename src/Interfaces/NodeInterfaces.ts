@@ -14,8 +14,14 @@ export type Diff = DiffAnyProps & {
   path: string[];
 };
 
-export interface Artifacts {
+export interface Extra<A> {
+  time: number;
+  e: A;
+}
+
+export interface Artifacts<A> {
   diffs?: Diff[];
+  extra: Extra<A>[];
   [key: string]: any;
 }
 
@@ -31,17 +37,17 @@ export interface RootNode<T, S> extends BaseNode<T> {
   state: T;
 }
 
-export interface StateNode<T, S> extends RootNode<T, S> {
+export interface StateNode<T, S, A> extends RootNode<T, S> {
   parent: NodeID;
-  artifacts: Artifacts;
+  artifacts: Artifacts<A>;
 }
 
-export type ProvenanceNode<T, S> = RootNode<T, S> | StateNode<T, S>;
+export type ProvenanceNode<T, S, A> = RootNode<T, S> | StateNode<T, S, A>;
 
-export type Nodes<T, S> = { [key: string]: ProvenanceNode<T, S> };
+export type Nodes<T, S, A> = { [key: string]: ProvenanceNode<T, S, A> };
 
-export type CurrentNode<T, S> = ProvenanceNode<T, S>;
+export type CurrentNode<T, S, A> = ProvenanceNode<T, S, A>;
 
-export function isStateNode<T, S>(node: ProvenanceNode<T, S>): node is StateNode<T, S> {
+export function isStateNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is StateNode<T, S, A> {
   return 'parent' in node;
 }

@@ -5,7 +5,9 @@ import {
   NodeMetadata,
   Artifacts,
   StateNode,
-  Diff
+  Diff,
+  isStateNode,
+  Extra
 } from '../Interfaces/NodeInterfaces';
 import generateUUID from '../Utils/generateUUID';
 import generateTimeStamp from '../Utils/generateTimeStamp';
@@ -13,7 +15,7 @@ import deepCopy from '../Utils/DeepCopy';
 import { ActionFunction } from '../Interfaces/Provenance';
 import deepDiff from '../Utils/DeepDiff';
 
-export function createProvenanceGraph<T, S>(state: T): ProvenanceGraph<T, S> {
+export function createProvenanceGraph<T, S, A>(state: T): ProvenanceGraph<T, S, A> {
   const root: RootNode<T, S> = {
     id: generateUUID(),
     label: 'Root',
@@ -25,7 +27,7 @@ export function createProvenanceGraph<T, S>(state: T): ProvenanceGraph<T, S> {
     state
   };
 
-  const graph: ProvenanceGraph<T, S> = {
+  const graph: ProvenanceGraph<T, S, A> = {
     nodes: {
       [root.id]: root
     },
@@ -36,7 +38,10 @@ export function createProvenanceGraph<T, S>(state: T): ProvenanceGraph<T, S> {
   return graph;
 }
 
-export function goToNode<T, S>(graph: ProvenanceGraph<T, S>, id: NodeID): ProvenanceGraph<T, S> {
+export function goToNode<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
+  id: NodeID
+): ProvenanceGraph<T, S, A> {
   const newGraph = deepCopy(graph);
 
   const newCurrentNode = graph.nodes[id];
@@ -50,16 +55,21 @@ export function goToNode<T, S>(graph: ProvenanceGraph<T, S>, id: NodeID): Proven
   return newGraph;
 }
 
-export function importState<T, S>(graph: ProvenanceGraph<T, S>, initalState: T, importedState: T) {
+export function importState<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
+  initalState: T,
+  importedState: T
+) {
   const newGraph = deepCopy(graph);
 
-  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S> => ({
+  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
     id: generateUUID(),
     label: 'Imported state',
     metadata: {
       createdOn: generateTimeStamp()
     },
     artifacts: {
+      extra: [],
       diffs
     },
     parent: parent,
@@ -78,21 +88,52 @@ export function importState<T, S>(graph: ProvenanceGraph<T, S>, initalState: T, 
   return newGraph;
 }
 
-export function applyActionFunction<T, S>(
-  graph: ProvenanceGraph<T, S>,
+export function addExtraToNodeArtifact<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
+  id: NodeID,
+  extra: A
+): ProvenanceGraph<T, S, A> {
+  const newGraph = deepCopy(graph);
+  const node = newGraph.nodes[id];
+
+  if (isStateNode(node)) {
+    node.artifacts.extra.push({
+      time: generateTimeStamp(),
+      e: extra
+    });
+  } else {
+    throw new Error('Cannot add artifacts to Root Node');
+  }
+
+  return newGraph;
+}
+
+export function getExtraFromArtifact<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
+  id: NodeID
+): Extra<A>[] {
+  const node = graph.nodes[id];
+  if (isStateNode(node)) {
+    return node.artifacts.extra || [];
+  }
+  throw new Error('Root does not have artifacts');
+}
+
+export function applyActionFunction<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
   label: string,
   action: ActionFunction<T>,
   args?: any[],
   metadata?: NodeMetadata<S>,
-  artifacts: Artifacts = {}
-): ProvenanceGraph<T, S> {
+  artifacts: Partial<Artifacts<A>> = {}
+): ProvenanceGraph<T, S, A> {
   const newGraph = deepCopy(graph);
 
   const { current: currentId } = newGraph;
 
   const currentState = deepCopy(newGraph.nodes[currentId].state);
 
-  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S> => ({
+  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
     id: generateUUID(),
     label: label,
     metadata: {
@@ -101,6 +142,7 @@ export function applyActionFunction<T, S>(
     },
     artifacts: {
       diffs,
+      extra: [],
       ...artifacts
     },
     parent: parent,
