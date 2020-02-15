@@ -1,5 +1,5 @@
 import { ActionFunction, initProvenance } from '../../src';
-import { isStateNode } from '../../src/Interfaces/NodeInterfaces';
+import { isStateNode, ProvenanceNode, StateNode } from '../../src/Interfaces/NodeInterfaces';
 import deepCopy from '../../src/Utils/DeepCopy';
 
 enum TodoStatus {
@@ -80,6 +80,10 @@ function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
 
   provenance.addObserver(['user', 'totalTask'], (state?: ToDoListState) => {
     observerStatus.user_total += 1;
+  });
+
+  provenance.addArtifactObserver((node: StateNode<ToDoListState, TestEvents, Annotation>) => {
+    node.artifacts.extra.push({ time: 0, e: '' });
   });
 
   provenance.done();
@@ -291,20 +295,17 @@ describe('test go to node', () => {
   provenance.applyAction('Adding 3rd task', addTask, [newTask], { type: 'Add TODO' });
 
   provenance.addExtraToNodeArtifact(provenance.current().id, 'Hello, World');
+  provenance.getExtraFromArtifact(provenance.current().id);
 
-  console.log(provenance.getExtraFromArtifact(provenance.current().id));
-  console.log(provenance.current().metadata.type);
+  test('add artifact error', () => {
+    const err = () => provenance.addExtraToNodeArtifact(provenance.root().id, 'Hello, World');
+    expect(err).toThrowError();
+  });
 
-  try {
-    provenance.addExtraToNodeArtifact(provenance.root().id, 'Hello, World');
-  } catch (err) {
-    console.error(err);
-  }
-  try {
-    provenance.getExtraFromArtifact(provenance.root().id);
-  } catch (err) {
-    console.error(err);
-  }
+  test('get artifact error', () => {
+    const err = () => provenance.getExtraFromArtifact(provenance.root().id);
+    expect(err).toThrowError();
+  });
 
   test('if root is not current', () => {
     const { root, current } = provenance.graph();
