@@ -101,6 +101,7 @@ export default function initProvenance<T, S, A>(
     },
     addExtraToNodeArtifact: (id: NodeID, extra: A) => {
       graph = addExtraToNodeArtifact(graph, id, extra);
+      EM.callEvents([], graph.nodes[id].state, graph.nodes[id]);
     },
     getExtraFromArtifact: (id: NodeID) => {
       return getExtraFromArtifact<T, S, A>(graph, id);
@@ -169,7 +170,7 @@ export default function initProvenance<T, S, A>(
     addGlobalObserver: (func: SubscriberFunction<T>) => {
       EM.addGlobalObserver(func);
     },
-    addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => {
+    addArtifactObserver: (func: ArtifactSubscriberFunction<A>) => {
       EM.addArtifactObserver(func);
     },
     exportState: (partial: boolean = false) => {
