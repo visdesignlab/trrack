@@ -1,7 +1,8 @@
 import Provenance, {
   ActionFunction,
   SubscriberFunction,
-  ExportedState
+  ExportedState,
+  ArtifactSubscriberFunction
 } from '../Interfaces/Provenance';
 import deepCopy from '../Utils/DeepCopy';
 import { ProvenanceGraph } from '../Interfaces/ProvenanceGraph';
@@ -33,7 +34,7 @@ export default function initProvenance<T, S, A>(
 
   const initalStateRecord = deepCopy(initialState) as any;
 
-  const EM = initEventManager<T>();
+  const EM = initEventManager<T, S, A>();
 
   const surroundChars = '||';
 
@@ -56,11 +57,15 @@ export default function initProvenance<T, S, A>(
     importStateAndAddNode(importedState);
   }
 
+  function curr() {
+    return graph.nodes[graph.current];
+  }
+
   function triggerEvents(oldState: T) {
     const currentState = graph.nodes[graph.current].state;
     const diffs = deepDiff(oldState, currentState);
 
-    EM.callEvents(diffs || [], currentState);
+    EM.callEvents(diffs || [], currentState, curr());
   }
 
   function importStateAndAddNode(state: T) {
@@ -137,7 +142,6 @@ export default function initProvenance<T, S, A>(
 
       triggerEvents(oldState);
     },
-
     reset: () => {
       const oldState = deepCopy(graph.nodes[graph.current].state);
       graph = goToNode(graph, graph.root);
@@ -150,7 +154,6 @@ export default function initProvenance<T, S, A>(
         triggerEvents(oldState);
       }
     },
-
     addObserver: (propPath: string[], func: SubscriberFunction<T>) => {
       const state = graph.nodes[graph.current].state as any;
       let path = state;
@@ -166,7 +169,9 @@ export default function initProvenance<T, S, A>(
     addGlobalObserver: (func: SubscriberFunction<T>) => {
       EM.addGlobalObserver(func);
     },
-
+    addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => {
+      EM.addArtifactObserver(func);
+    },
     exportState: (partial: boolean = false) => {
       let exportedState: Partial<T> = {};
       const currentState = graph.nodes[graph.current].state as any;

@@ -1,16 +1,41 @@
-import { SubscriberFunction } from '../Interfaces/Provenance';
-import { Diff } from '../Interfaces/NodeInterfaces';
+import { SubscriberFunction, ArtifactSubscriberFunction } from '../Interfaces/Provenance';
+import { Diff, ProvenanceNode, isStateNode, StateNode } from '../Interfaces/NodeInterfaces';
+import deepCopy from './DeepCopy';
 
 const GLOBAL: string = 'GLOBAL';
+const ARTIFACT: string = 'ARTIFACT';
 
-export interface EventManager<T> {
-  callEvents: (diffs: Diff[], state: T) => void;
+export interface EventManager<T, S, A> {
+  callEvents: (diffs: Diff[], state: T, node: ProvenanceNode<T, S, A>) => void;
   addObserver: (propPath: string[], func: SubscriberFunction<T>) => void;
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
+  addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => void;
 }
 
-export function initEventManager<T>(): EventManager<T> {
-  const eventRegistry: { [key: string]: SubscriberFunction<T>[] } = {};
+export function initEventManager<T, S, A>(): EventManager<T, S, A> {
+  const eventRegistry: {
+    [key: string]: SubscriberFunction<T>[];
+  } = {};
+
+  const artifactEventRegistry: {
+    [key: string]: ArtifactSubscriberFunction<T, S, A>[];
+  } = {};
+
+  function callGlobalEvents(state: T) {
+    if (eventRegistry[GLOBAL] && eventRegistry[GLOBAL].length > 0) {
+      eventRegistry[GLOBAL].forEach(f => f(state));
+    }
+  }
+
+  function callArtifactEvents(node: StateNode<T, S, A>) {
+    if (artifactEventRegistry[ARTIFACT] && artifactEventRegistry[ARTIFACT].length > 0) {
+      if (isStateNode(node)) {
+        if (node.artifacts.extra) {
+          artifactEventRegistry[ARTIFACT].forEach(f => f(deepCopy(node)));
+        }
+      }
+    }
+  }
 
   return {
     addGlobalObserver: (func: SubscriberFunction<T>) => {
@@ -26,11 +51,18 @@ export function initEventManager<T>(): EventManager<T> {
       }
       eventRegistry[path].push(func);
     },
-    callEvents: (diffs: Diff[], state: T) => {
+    addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => {
+      if (!artifactEventRegistry[ARTIFACT]) {
+        artifactEventRegistry[ARTIFACT] = [];
+      }
+      artifactEventRegistry[ARTIFACT].push(func);
+    },
+    callEvents: (diffs: Diff[], state: T, node: ProvenanceNode<T, S, A>) => {
       if (diffs.length === 0) return;
 
-      if (eventRegistry[GLOBAL] && eventRegistry[GLOBAL].length > 0) {
-        eventRegistry[GLOBAL].forEach(f => f(state));
+      callGlobalEvents(state);
+      if (isStateNode(node)) {
+        callArtifactEvents(node);
       }
 
       const diffStrings: string[] = [];

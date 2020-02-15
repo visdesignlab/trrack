@@ -1,7 +1,17 @@
 import { ProvenanceGraph } from './ProvenanceGraph';
-import { NodeID, NodeMetadata, Artifacts, RootNode, ProvenanceNode, Extra } from './NodeInterfaces';
+import {
+  NodeID,
+  NodeMetadata,
+  Artifacts,
+  RootNode,
+  ProvenanceNode,
+  Extra,
+  StateNode
+} from './NodeInterfaces';
 
 export type SubscriberFunction<T> = (state?: T) => void;
+
+export type ArtifactSubscriberFunction<T, S, A> = (node: StateNode<T, S, A>) => void;
 
 export type ActionFunction<T> = (currentState: T, ...args: any[]) => T;
 
@@ -21,6 +31,7 @@ export default interface Provenance<T, S, A> {
   ) => T;
 
   addObserver: (propPath: string[], func: SubscriberFunction<T>) => void;
+  addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => void;
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
 
   addExtraToNodeArtifact: (id: NodeID, extra: A) => void;
