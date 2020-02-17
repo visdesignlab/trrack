@@ -58,12 +58,13 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
       artifactEventRegistry[ARTIFACT].push(func);
     },
     callEvents: (diffs: Diff[], state: T, node: ProvenanceNode<T, S, A>) => {
-      if (diffs.length === 0) return;
-
-      callGlobalEvents(state);
       if (isStateNode(node)) {
         callArtifactEvents(node);
       }
+
+      if (diffs.length === 0) return;
+
+      callGlobalEvents(state);
 
       const diffStrings: string[] = [];
 
