@@ -1,6 +1,5 @@
 import { SubscriberFunction, ArtifactSubscriberFunction } from '../Interfaces/Provenance';
 import { Diff, ProvenanceNode, isStateNode, StateNode } from '../Interfaces/NodeInterfaces';
-import deepCopy from './DeepCopy';
 
 const GLOBAL: string = 'GLOBAL';
 const ARTIFACT: string = 'ARTIFACT';
@@ -9,7 +8,7 @@ export interface EventManager<T, S, A> {
   callEvents: (diffs: Diff[], state: T, node: ProvenanceNode<T, S, A>) => void;
   addObserver: (propPath: string[], func: SubscriberFunction<T>) => void;
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
-  addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => void;
+  addArtifactObserver: (func: ArtifactSubscriberFunction<A>) => void;
 }
 
 export function initEventManager<T, S, A>(): EventManager<T, S, A> {
@@ -18,7 +17,7 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
   } = {};
 
   const artifactEventRegistry: {
-    [key: string]: ArtifactSubscriberFunction<T, S, A>[];
+    [key: string]: ArtifactSubscriberFunction<A>[];
   } = {};
 
   function callGlobalEvents(state: T) {
@@ -31,7 +30,8 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
     if (artifactEventRegistry[ARTIFACT] && artifactEventRegistry[ARTIFACT].length > 0) {
       if (isStateNode(node)) {
         if (node.artifacts.extra) {
-          artifactEventRegistry[ARTIFACT].forEach(f => f(deepCopy(node)));
+          const extra = node.artifacts.extra || [];
+          artifactEventRegistry[ARTIFACT].forEach(f => f(extra));
         }
       }
     }
@@ -51,7 +51,7 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
       }
       eventRegistry[path].push(func);
     },
-    addArtifactObserver: (func: ArtifactSubscriberFunction<T, S, A>) => {
+    addArtifactObserver: (func: ArtifactSubscriberFunction<A>) => {
       if (!artifactEventRegistry[ARTIFACT]) {
         artifactEventRegistry[ARTIFACT] = [];
       }
