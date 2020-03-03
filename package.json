@@ -124,7 +124,7 @@
   },
   "dependencies": {
     "deep-diff": "^1.0.2",
-    "immer": "^5.1.0",
+    "immer": "^6.0.0",
     "lz-string": "^1.4.4"
   }
 }
