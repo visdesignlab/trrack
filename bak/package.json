@@ -76,7 +76,7 @@
     "precss": "^4.0.0",
     "prompt": "^1.0.0",
     "proxyquire": "^2.1.0",
-    "replace-in-file": "^5.0.2",
+    "replace-in-file": "^6.0.0",
     "sass-loader": "^8.0.0",
     "shelljs": "^0.8.3",
     "shx": "^0.3.2",
