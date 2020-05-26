@@ -142,3 +142,11 @@ git clone git@github.com:visdesignlab/provenance-lib-core.git
 ## Resources
 
 Project created using [Typescript library starter](https://github.com/alexjoverm/typescript-library-starter) by [alexjoverm](https://github.com/alexjoverm/)
+
+## Other provenance related projects
+
+[Intent]
+
+[Example](https://github.com/visdesignlab/provenance-lib-core-demo) application using provenance. Also demonstrates how to import and export the current state of an application.
+
+[ProvVis](https://github.com/visdesignlab/ProvVis) is a library for visualizing the provenance graph created from this library.
