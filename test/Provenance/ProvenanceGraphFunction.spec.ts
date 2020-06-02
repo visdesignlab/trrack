@@ -1,4 +1,5 @@
 import { createProvenanceGraph } from '../../src/Provenance/ProvenanceGraphFunction';
+import { getState } from '../../src/Interfaces/NodeInterfaces';
 
 describe('Creating Provenance Graph function', () => {
   interface State {
@@ -18,7 +19,7 @@ describe('Creating Provenance Graph function', () => {
   });
 
   test('initalState should match root', () => {
-    const state = graph.nodes[graph.root].state;
+    const state = getState(graph, graph.nodes[graph.root]);
     expect(state).toMatchObject(initialState);
   });
 

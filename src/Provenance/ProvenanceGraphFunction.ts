@@ -5,8 +5,11 @@ import {
   NodeMetadata,
   Artifacts,
   StateNode,
+  ActionNode,
   Diff,
   isStateNode,
+  isChildNode,
+  getState,
   Extra
 } from '../Interfaces/NodeInterfaces';
 import generateUUID from '../Utils/generateUUID';
@@ -96,7 +99,7 @@ export function addExtraToNodeArtifact<T, S, A>(
   const newGraph = deepCopy(graph);
   const node = newGraph.nodes[id];
 
-  if (isStateNode(node)) {
+  if (isChildNode(node)) {
     node.artifacts.extra.push({
       time: generateTimeStamp(),
       e: extra
@@ -113,7 +116,7 @@ export function getExtraFromArtifact<T, S, A>(
   id: NodeID
 ): Extra<A>[] {
   const node = graph.nodes[id];
-  if (isStateNode(node)) {
+  if (isChildNode(node)) {
     return node.artifacts.extra || [];
   }
   throw new Error('Root does not have artifacts');
@@ -131,7 +134,7 @@ export function applyActionFunction<T, S, A>(
 
   const { current: currentId } = newGraph;
 
-  const currentState = deepCopy(newGraph.nodes[currentId].state);
+  const currentState = deepCopy(getState(newGraph, newGraph.nodes[currentId]));
 
   const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
     id: generateUUID(),
@@ -147,15 +150,62 @@ export function applyActionFunction<T, S, A>(
     },
     parent: parent,
     children: [],
-    state
+    state: state
   });
+
+  const createNewActionNode = (
+    parent: NodeID,
+    previousStateID: NodeID,
+    diffs: Diff[]
+  ): ActionNode<T, S, A> => ({
+    id: generateUUID(),
+    label: label,
+    metadata: {
+      createdOn: generateTimeStamp(),
+      ...metadata
+    },
+    artifacts: {
+      diffs,
+      extra: [],
+      ...artifacts
+    },
+    parent: parent,
+    children: [],
+    lastStateNode: previousStateID,
+    diffs: diffs
+  });
+
+  let actionNode = false;
+  let currNode = graph.nodes[currentId];
+  let backCounter = 0;
+  let previousState = undefined;
+  let previousStateID = '';
+
+  while (isChildNode(currNode)) {
+    if (isStateNode(currNode)) {
+      previousState = currNode.state;
+      previousStateID = currNode.id;
+      actionNode = true;
+      break;
+    }
+
+    backCounter++;
+    currNode = graph.nodes[(currNode as ActionNode<T, S, A>).parent];
+  }
+
+  if (previousState === undefined) {
+    previousState = currNode.state;
+    previousStateID = currNode.id;
+  }
 
   const newState = args ? action(currentState, ...args) : action(currentState);
   const parentId = graph.current;
 
-  const diffs = deepDiff(graph.nodes[currentId].state, newState);
+  const diffs = deepDiff(previousState, newState);
 
-  const newNode = createNewStateNode(parentId, newState, diffs);
+  const newNode = actionNode
+    ? createNewActionNode(parentId, previousStateID, diffs)
+    : createNewStateNode(parentId, newState, diffs);
 
   newGraph.nodes[newNode.id] = newNode;
   newGraph.nodes[currentId].children.push(newNode.id);

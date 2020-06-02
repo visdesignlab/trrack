@@ -11,7 +11,9 @@ import {
   NodeMetadata,
   Artifacts,
   RootNode,
-  isStateNode
+  isStateNode,
+  isChildNode,
+  getState
 } from '../Interfaces/NodeInterfaces';
 import {
   createProvenanceGraph,
@@ -62,7 +64,7 @@ export default function initProvenance<T, S, A>(
   }
 
   function triggerEvents(oldState: T) {
-    const currentState = graph.nodes[graph.current].state;
+    const currentState = getState(graph, graph.nodes[graph.current]);
     const diffs = deepDiff(oldState, currentState);
 
     EM.callEvents(diffs || [], currentState, curr());
@@ -84,7 +86,7 @@ export default function initProvenance<T, S, A>(
       artifacts?: Artifacts<A>,
       eventType?: S
     ) => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
 
       if (eventType) {
         metadata.type = eventType;
@@ -92,24 +94,24 @@ export default function initProvenance<T, S, A>(
 
       graph = applyActionFunction(graph, label, action, args, metadata, artifacts);
       triggerEvents(oldState);
-      return graph.nodes[graph.current].state;
+      return getState(graph, graph.nodes[graph.current]);
     },
     goToNode: (id: NodeID) => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       graph = goToNode(graph, id);
       triggerEvents(oldState);
     },
     addExtraToNodeArtifact: (id: NodeID, extra: A) => {
       graph = addExtraToNodeArtifact(graph, id, extra);
-      EM.callEvents([], graph.nodes[id].state, graph.nodes[id]);
+      EM.callEvents([], getState(graph, graph.nodes[id]), graph.nodes[id]);
     },
     getExtraFromArtifact: (id: NodeID) => {
       return getExtraFromArtifact<T, S, A>(graph, id);
     },
     goBackOneStep: () => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       const current = graph.nodes[graph.current];
-      if (isStateNode(current)) {
+      if (isChildNode(current)) {
         graph = goToNode(graph, current.parent);
       } else {
         throw new Error('Already at root');
@@ -117,12 +119,12 @@ export default function initProvenance<T, S, A>(
       triggerEvents(oldState);
     },
     goBackNSteps: (n: number) => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       const num = n;
       let tempGraph: ProvenanceGraph<T, S, A> = deepCopy(graph) as any;
       while (n > 0) {
         let current = tempGraph.nodes[tempGraph.current];
-        if (isStateNode(current)) {
+        if (isChildNode(current)) {
           tempGraph = goToNode(graph, current.parent) as any;
         } else {
           throw new Error(`Cannot go back ${num} steps. Reached root after ${num - n} steps`);
@@ -133,7 +135,7 @@ export default function initProvenance<T, S, A>(
       triggerEvents(oldState);
     },
     goForwardOneStep: () => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       let current = graph.nodes[graph.current];
       if (current.children.length > 0) {
         graph = goToNode(graph, current.children.reverse()[0]);
@@ -144,19 +146,19 @@ export default function initProvenance<T, S, A>(
       triggerEvents(oldState);
     },
     reset: () => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       graph = goToNode(graph, graph.root);
       triggerEvents(oldState);
     },
     done: () => {
       if (loadFromUrl) {
-        const oldState = deepCopy(graph.nodes[graph.current].state);
+        const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
         loadUrl();
         triggerEvents(oldState);
       }
     },
     addObserver: (propPath: string[], func: SubscriberFunction<T>) => {
-      const state = graph.nodes[graph.current].state as any;
+      const state = getState(graph, graph.nodes[graph.current]) as any;
       let path = state;
 
       propPath.forEach((prop: string) => {
@@ -175,7 +177,7 @@ export default function initProvenance<T, S, A>(
     },
     exportState: (partial: boolean = false) => {
       let exportedState: Partial<T> = {};
-      const currentState = graph.nodes[graph.current].state as any;
+      const currentState = getState(graph, graph.nodes[graph.current]) as any;
 
       if (partial) {
         Object.keys(currentState).forEach(key => {
@@ -195,17 +197,17 @@ export default function initProvenance<T, S, A>(
       return `${surroundChars}${compressedString}`;
     },
     importState: (importString: string) => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       const importedStates: ExportedState<T> = JSON.parse(
         decompressFromEncodedURIComponent(importString.replace('||', ''))
       );
-      const state = { ...graph.nodes[graph.current].state, ...importedStates };
+      const state = { ...getState(graph, graph.nodes[graph.current]), ...importedStates };
       importStateAndAddNode(state);
       triggerEvents(oldState);
     },
     exportProvenanceGraph: () => JSON.stringify(graph),
     importProvenanceGraph: (importString: string) => {
-      const oldState = deepCopy(graph.nodes[graph.current].state);
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
       graph = JSON.parse(importString);
       triggerEvents(oldState);
     }

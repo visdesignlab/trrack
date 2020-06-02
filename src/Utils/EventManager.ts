@@ -1,5 +1,12 @@
 import { SubscriberFunction, ArtifactSubscriberFunction } from '../Interfaces/Provenance';
-import { Diff, ProvenanceNode, isStateNode, StateNode } from '../Interfaces/NodeInterfaces';
+import {
+  Diff,
+  ProvenanceNode,
+  isStateNode,
+  isChildNode,
+  StateNode,
+  ActionNode
+} from '../Interfaces/NodeInterfaces';
 
 const GLOBAL: string = 'GLOBAL';
 const ARTIFACT: string = 'ARTIFACT';
@@ -26,9 +33,9 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
     }
   }
 
-  function callArtifactEvents(node: StateNode<T, S, A>) {
+  function callArtifactEvents(node: StateNode<T, S, A> | ActionNode<T, S, A>) {
     if (artifactEventRegistry[ARTIFACT] && artifactEventRegistry[ARTIFACT].length > 0) {
-      if (isStateNode(node)) {
+      if (isChildNode(node)) {
         if (node.artifacts.extra) {
           const extra = node.artifacts.extra || [];
           artifactEventRegistry[ARTIFACT].forEach(f => f(extra));
@@ -58,7 +65,7 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
       artifactEventRegistry[ARTIFACT].push(func);
     },
     callEvents: (diffs: Diff[], state: T, node: ProvenanceNode<T, S, A>) => {
-      if (isStateNode(node)) {
+      if (isChildNode(node)) {
         callArtifactEvents(node);
       }
 

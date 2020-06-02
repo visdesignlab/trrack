@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as ProvenanceLibrary from "@visdesignlab/provenance-lib-core/lib/src/index.js";
+import * as ProvenanceLibrary from "../../dist";
 import Bars from "./FDBar"
 import Graph from "./FDGraph"
 

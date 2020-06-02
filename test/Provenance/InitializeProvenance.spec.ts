@@ -1,5 +1,11 @@
 import { ActionFunction, initProvenance } from '../../src';
-import { isStateNode, StateNode, Extra } from '../../src/Interfaces/NodeInterfaces';
+import {
+  isStateNode,
+  isChildNode,
+  StateNode,
+  Extra,
+  getState
+} from '../../src/Interfaces/NodeInterfaces';
 import deepCopy from '../../src/Utils/DeepCopy';
 
 enum TodoStatus {
@@ -148,13 +154,13 @@ describe('provenance.graph returns a valid provenance object', () => {
 
     const defaultTaskId = Object.keys(nodes)[0];
 
-    expect(nodes[defaultTaskId].state.todos.length).toBe(1);
+    expect(getState(provenance.graph(), nodes[defaultTaskId]).todos.length).toBe(1);
   });
 
   test('default task matches the snapshot', () => {
     const defaultTaskId = Object.keys(nodes)[0];
 
-    const defaultTask = nodes[defaultTaskId].state.todos[0];
+    const defaultTask = getState(provenance.graph(), nodes[defaultTaskId]).todos[0];
 
     expect(defaultTask).toMatchInlineSnapshot(
       {
@@ -221,7 +227,7 @@ describe('applying an action', () => {
 
   test('if state stored matches the added task', () => {
     const { nodes, current } = provenance.graph();
-    const currentState = nodes[current].state;
+    const currentState = getState(provenance.graph(), nodes[current]);
     const addedTodo = currentState.todos[1];
 
     expect(addedTodo).toMatchInlineSnapshot(
@@ -373,12 +379,15 @@ describe('goBackOneStep function', () => {
     const { provenance } = threeTasks();
     const currentNode = provenance.current();
     let parentId = '';
-    if (isStateNode(currentNode)) {
+    if (isChildNode(currentNode)) {
       parentId = currentNode.parent;
     }
 
     provenance.goBackOneStep();
     const newCurrentNodeId = provenance.current().id;
+    console.log(provenance.current().id);
+    console.log(newCurrentNodeId);
+
     expect(newCurrentNodeId).toBe(parentId);
   });
 
@@ -444,24 +453,24 @@ describe('Export state function', () => {
 describe('Import state function', () => {
   test('import full state loads current state', () => {
     const { provenance } = threeTasks();
-    const currentState = provenance.current().state;
+    const currentState = getState(provenance.graph(), provenance.current());
     const exportedString = provenance.exportState();
 
     const { provenance: prov2 } = setupApp();
     prov2.importState(exportedString);
-    const currentState2 = prov2.current().state;
+    const currentState2 = getState(prov2.graph(), prov2.current());
 
     expect(currentState).toStrictEqual(currentState2);
   });
 
   test('import partial state loads current state', () => {
     const { provenance } = threeTasks();
-    const currentState = provenance.current().state;
+    const currentState = getState(provenance.graph(), provenance.current());
     const exportedString = provenance.exportState(true);
 
     const { provenance: prov2 } = setupApp();
     prov2.importState(exportedString);
-    const currentState2 = prov2.current().state;
+    const currentState2 = getState(prov2.graph(), prov2.current());
 
     expect(currentState).toStrictEqual(currentState2);
   });
@@ -469,7 +478,7 @@ describe('Import state function', () => {
 
 describe('loadFromUrl', () => {
   const { provenance: prov } = threeTasks();
-  const stateCopy = deepCopy(prov.current().state);
+  const stateCopy = deepCopy(getState(prov.graph(), prov.current()));
 
   const originalWindowLocationHref = window.location.href;
 
@@ -484,7 +493,7 @@ describe('loadFromUrl', () => {
 
     const { provenance } = setupApp(true);
 
-    expect(stateCopy).toStrictEqual(provenance.current().state);
+    expect(stateCopy).toStrictEqual(getState(provenance.graph(), provenance.current()));
   });
 
   test('test if url loading stops when state not found', () => {
@@ -498,7 +507,7 @@ describe('loadFromUrl', () => {
 
     const { provenance } = setupApp(true);
 
-    expect(stateCopy).not.toStrictEqual(provenance.current().state);
+    expect(stateCopy).not.toStrictEqual(getState(provenance.graph(), provenance.current()));
   });
 
   test('if error is thrown in non-browser environment', () => {
