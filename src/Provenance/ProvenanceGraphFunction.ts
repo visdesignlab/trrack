@@ -190,7 +190,7 @@ export function applyActionFunction<T, S, A>(
     }
 
     backCounter++;
-    currNode = graph.nodes[(currNode as ActionNode<T, S, A>).parent];
+    currNode = graph.nodes[currNode.parent];
   }
 
   if (previousState === undefined) {
