@@ -145,8 +145,8 @@ Project created using [Typescript library starter](https://github.com/alexjoverm
 
 ## Other provenance related projects
 
-[Intent]
-
 [Example](https://github.com/visdesignlab/provenance-lib-core-demo) application using provenance. Also demonstrates how to import and export the current state of an application.
 
 [ProvVis](https://github.com/visdesignlab/ProvVis) is a library for visualizing the provenance graph created from this library.
+
+[Intent System](https://github.com/visdesignlab/intent-system) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.
