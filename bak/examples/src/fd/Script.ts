@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as ProvenanceLibrary from "../../dist";
+import * as ProvenanceLibrary from "../../../../dist/types/index";
 import Bars from "./FDBar"
 import Graph from "./FDGraph"
 

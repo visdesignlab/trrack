@@ -84,7 +84,8 @@ export default function initProvenance<T, S, A>(
       args?: any[],
       metadata: NodeMetadata<S> = {},
       artifacts?: Artifacts<A>,
-      eventType?: S
+      eventType?: S,
+      complex: boolean = false
     ) => {
       const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
 
@@ -92,7 +93,7 @@ export default function initProvenance<T, S, A>(
         metadata.type = eventType;
       }
 
-      graph = applyActionFunction(graph, label, action, args, metadata, artifacts);
+      graph = applyActionFunction(graph, label, action, args, metadata, artifacts, complex);
       triggerEvents(oldState);
       return getState(graph, graph.nodes[graph.current]);
     },

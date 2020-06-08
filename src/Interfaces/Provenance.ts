@@ -19,7 +19,8 @@ export default interface Provenance<T, S, A> {
     args?: any[],
     metadata?: NodeMetadata<S>,
     artifacts?: Artifacts<A>,
-    eventType?: S
+    eventType?: S,
+    complex?: boolean
   ) => T;
 
   addObserver: (propPath: string[], func: SubscriberFunction<T>) => void;

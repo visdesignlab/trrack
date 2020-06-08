@@ -1,5 +1,6 @@
-const applyDiff = require('deep-diff').applyDiff;
+const applyChange = require('deep-diff').applyChange;
 import { ProvenanceGraph } from './ProvenanceGraph';
+import deepCopy from '../Utils/DeepCopy';
 
 export type NodeID = string;
 
@@ -46,12 +47,12 @@ export interface ChildNode<T, S, A> {
 
 export interface StateNode<T, S, A> extends RootNode<T, S>, ChildNode<T, S, A> {}
 
-export interface ActionNode<T, S, A> extends BaseNode<T, S>, ChildNode<T, S, A> {
+export interface DiffNode<T, S, A> extends BaseNode<T, S>, ChildNode<T, S, A> {
   diffs: Diff[];
   lastStateNode: NodeID;
 }
 
-export type ProvenanceNode<T, S, A> = RootNode<T, S> | StateNode<T, S, A> | ActionNode<T, S, A>;
+export type ProvenanceNode<T, S, A> = RootNode<T, S> | StateNode<T, S, A> | DiffNode<T, S, A>;
 
 export type Nodes<T, S, A> = { [key: string]: ProvenanceNode<T, S, A> };
 
@@ -61,13 +62,13 @@ export function isStateNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is Sta
   return 'state' in node && 'parent' in node;
 }
 
-export function isActionNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is ActionNode<T, S, A> {
+export function isDiffNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is DiffNode<T, S, A> {
   return 'diffs' in node;
 }
 
 export function isChildNode<T, S, A>(
   node: ProvenanceNode<T, S, A>
-): node is ActionNode<T, S, A> | StateNode<T, S, A> {
+): node is DiffNode<T, S, A> | StateNode<T, S, A> {
   return 'parent' in node;
 }
 
@@ -75,38 +76,25 @@ export function getState<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   node: ProvenanceNode<T, S, A>
 ): T {
-  if (isActionNode(node)) {
-    let previousState = (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state;
+  if (isDiffNode(node)) {
+    let _state = (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state;
+    let state = deepCopy(_state);
 
-    // console.log(previousState)
+    let diffs = node.diffs;
 
-    // diffs.forEach((diff: Diff) => {
-    //   const pathArr = diff.path;
-    //   const changedPaths: string[] = [];
-    //
-    //   const diffStr = pathArr.join('|');
-    //   if (!diffStrings.includes(diffStr)) {
-    //     diffStrings.push(diffStr);
-    //   } else {
-    //     return;
-    //   }
-    //
-    //   pathArr.forEach(path => {
-    //     if (changedPaths.length === 0) {
-    //       changedPaths.push(path);
-    //     } else {
-    //       changedPaths.push([changedPaths.reverse()[0], path].join('|'));
-    //     }
-    //   });
-    //
-    //   changedPaths.reverse().forEach(cp => {
-    //     if (eventRegistry[cp]) {
-    //       eventRegistry[cp].forEach(f => f(state));
-    //     }
-    //   });
-    // });
+    if (diffs.length === 0) {
+      return state;
+    }
 
-    return previousState;
+    // console.log(JSON.stringify( {_state, diffs}, null, 4 ));
+
+    diffs.forEach((diff: Diff) => {
+      applyChange(state, null, diff);
+    });
+
+    // console.log(state)
+
+    return state;
   } else {
     return node.state;
   }

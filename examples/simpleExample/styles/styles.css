@@ -1,0 +1,26 @@
+.normalNode
+{
+  fill: #333333;
+  r: 7;
+}
+
+.selectedNode
+{
+  r: 10;
+  fill: blue
+}
+
+.hoverNode{
+  fill: blue;
+  opacity: .5
+}
+
+#mainDiv, #quartets{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+svg {
+  border: 1px solid black;
+}

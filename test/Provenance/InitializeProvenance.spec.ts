@@ -385,8 +385,6 @@ describe('goBackOneStep function', () => {
 
     provenance.goBackOneStep();
     const newCurrentNodeId = provenance.current().id;
-    console.log(provenance.current().id);
-    console.log(newCurrentNodeId);
 
     expect(newCurrentNodeId).toBe(parentId);
   });

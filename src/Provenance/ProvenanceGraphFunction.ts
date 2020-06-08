@@ -5,7 +5,7 @@ import {
   NodeMetadata,
   Artifacts,
   StateNode,
-  ActionNode,
+  DiffNode,
   Diff,
   isStateNode,
   isChildNode,
@@ -128,7 +128,8 @@ export function applyActionFunction<T, S, A>(
   action: ActionFunction<T>,
   args?: any[],
   metadata?: NodeMetadata<S>,
-  artifacts: Partial<Artifacts<A>> = {}
+  artifacts: Partial<Artifacts<A>> = {},
+  complex: boolean = false
 ): ProvenanceGraph<T, S, A> {
   const newGraph = deepCopy(graph);
 
@@ -153,11 +154,11 @@ export function applyActionFunction<T, S, A>(
     state: state
   });
 
-  const createNewActionNode = (
+  const createNewDiffNode = (
     parent: NodeID,
     previousStateID: NodeID,
     diffs: Diff[]
-  ): ActionNode<T, S, A> => ({
+  ): DiffNode<T, S, A> => ({
     id: generateUUID(),
     label: label,
     metadata: {
@@ -175,25 +176,23 @@ export function applyActionFunction<T, S, A>(
     diffs: diffs
   });
 
-  let actionNode = false;
   let currNode = graph.nodes[currentId];
   let backCounter = 0;
   let previousState = undefined;
   let previousStateID = '';
 
-  while (isChildNode(currNode)) {
+  let d = true;
+
+  if (isChildNode(currNode)) {
     if (isStateNode(currNode)) {
       previousState = currNode.state;
       previousStateID = currNode.id;
-      actionNode = true;
-      break;
+    } else {
+      previousState = (graph.nodes[currNode.lastStateNode] as StateNode<T, S, A>).state;
+      previousStateID = currNode.lastStateNode;
     }
-
-    backCounter++;
-    currNode = graph.nodes[currNode.parent];
-  }
-
-  if (previousState === undefined) {
+  } else {
+    d = false;
     previousState = currNode.state;
     previousStateID = currNode.id;
   }
@@ -201,11 +200,21 @@ export function applyActionFunction<T, S, A>(
   const newState = args ? action(currentState, ...args) : action(currentState);
   const parentId = graph.current;
 
-  const diffs = deepDiff(previousState, newState);
+  let diffs = deepDiff(previousState, newState);
 
-  const newNode = actionNode
-    ? createNewActionNode(parentId, previousStateID, diffs)
-    : createNewStateNode(parentId, newState, diffs);
+  if (diffs === undefined) {
+    diffs = [];
+  }
+
+  //TODO:: figure out how to count nested keys
+  if (d && Object.keys(previousState).length / 2 < diffs.length) {
+    d = false;
+  }
+
+  const newNode =
+    d && !complex
+      ? createNewDiffNode(parentId, previousStateID, diffs)
+      : createNewStateNode(parentId, newState, diffs);
 
   newGraph.nodes[newNode.id] = newNode;
   newGraph.nodes[currentId].children.push(newNode.id);

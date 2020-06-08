@@ -5,7 +5,7 @@ import {
   isStateNode,
   isChildNode,
   StateNode,
-  ActionNode
+  DiffNode
 } from '../Interfaces/NodeInterfaces';
 
 const GLOBAL: string = 'GLOBAL';
@@ -33,7 +33,7 @@ export function initEventManager<T, S, A>(): EventManager<T, S, A> {
     }
   }
 
-  function callArtifactEvents(node: StateNode<T, S, A> | ActionNode<T, S, A>) {
+  function callArtifactEvents(node: StateNode<T, S, A> | DiffNode<T, S, A>) {
     if (artifactEventRegistry[ARTIFACT] && artifactEventRegistry[ARTIFACT].length > 0) {
       if (isChildNode(node)) {
         if (node.artifacts.extra) {
