@@ -3,6 +3,8 @@
 // ...
 
 import initProvenance from './Provenance/InitializeProvenance';
+import createAction from './Provenance/InitializeAction';
+
 import { ProvenanceGraph } from './Interfaces/ProvenanceGraph';
 import Provenance, { ActionFunction, SubscriberFunction } from './Interfaces/Provenance';
 import {
@@ -22,6 +24,7 @@ import {
 
 export {
   initProvenance,
+  createAction,
   ProvenanceGraph,
   Provenance,
   ActionFunction,

@@ -1,6 +1,7 @@
 import
 {
   initProvenance,
+  createAction,
   ProvenanceGraph,
   Provenance,
   ActionFunction,
@@ -53,16 +54,26 @@ let prov = initProvenance(initialState);
 
 let changeQuartetUpdate = function(newQuartet){
   //create prov Object
+  let action = createAction(initialState, (state:NodeState) => {
+    state.selectedQuartet = newQuartet;
+    return state;
+  })
 
-  prov.applyAction(
-    newQuartet + " Quartet Selected",
-    (state:NodeState) =>
-    {
-      state.selectedQuartet = newQuartet;
-      return state;
-    },
-    undefined, undefined, undefined, undefined, true
-  );
+  action
+    .addLabel(newQuartet)
+    .alwaysStoreState(true);
+
+  prov.changeState(action);
+
+  // prov.applyAction(
+  //   newQuartet + " Quartet Selected",
+  //   (state:NodeState) =>
+  //   {
+  //     state.selectedQuartet = newQuartet;
+  //     return state;
+  //   },
+  //   undefined, undefined, undefined, undefined, true
+  // );
 }
 
 /**
@@ -70,14 +81,14 @@ let changeQuartetUpdate = function(newQuartet){
 */
 
 let selectNodeUpdate = function(newSelected){
-  prov.applyAction(
-    newSelected + " Quartet Selected",
-    (state:NodeState) =>
-    {
-      state.selectedNode = newSelected;
-      return state;
-    }
-  );
+  let action = createAction(initialState, (state:NodeState) => {
+    state.selectedNode = newSelected;
+    return state;
+  });
+
+  action.addLabel(newSelected + " Selected");
+
+  prov.changeState(action);
 }
 
 /**
@@ -85,14 +96,22 @@ let selectNodeUpdate = function(newSelected){
 */
 
 let hoverNodeUpdate = function(newHover){
-  prov.applyAction(
-    newHover + " Hovered",
-    (state:NodeState) =>
-    {
-      state.hoveredNode = newHover;
-      return state;
-    }
-  );
+  let action = createAction(initialState, (state:NodeState) => {
+    state.hoveredNode = newHover;
+    return state;
+  });
+
+  action.addLabel(newHover + " Hovered");
+
+  prov.changeState(action);
+  // prov.applyAction(
+  //   newHover + " Hovered",
+  //   (state:NodeState) =>
+  //   {
+  //     state.hoveredNode = newHover;
+  //     return state;
+  //   }
+  // );
 }
 
 // Create our scatterplot class which handles the actual vis. Pass it our three action functions
@@ -113,7 +132,6 @@ let scatterplot = new Scatterplot(changeQuartetUpdate, selectNodeUpdate, hoverNo
 prov.addObserver(["selectedQuartet"], () => {
   scatterplot.changeQuartet(getState(prov.graph(), prov.current()).selectedQuartet);
   console.log("Is a state node? ", isStateNode(prov.current()), prov.current(), getState(prov.graph(), prov.current()))
-  getState(prov.graph(), prov.current())
 });
 
 /**

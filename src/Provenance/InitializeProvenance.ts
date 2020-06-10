@@ -6,6 +6,8 @@ import Provenance, {
 } from '../Interfaces/Provenance';
 import deepCopy from '../Utils/DeepCopy';
 import { ProvenanceGraph } from '../Interfaces/ProvenanceGraph';
+import { Action } from '../Interfaces/ActionObject';
+
 import {
   NodeID,
   NodeMetadata,
@@ -94,6 +96,25 @@ export default function initProvenance<T, S, A>(
       }
 
       graph = applyActionFunction(graph, label, action, args, metadata, artifacts, complex);
+      triggerEvents(oldState);
+      return getState(graph, graph.nodes[graph.current]);
+    },
+    changeState: (action: Action<T, S, A>) => {
+      const oldState = deepCopy(getState(graph, graph.nodes[graph.current]));
+
+      if (action.eventType) {
+        action.metadata.type = action.eventType;
+      }
+
+      graph = applyActionFunction(
+        graph,
+        action.label,
+        action.action,
+        action.args,
+        action.metadata,
+        action.artifacts,
+        action.complex
+      );
       triggerEvents(oldState);
       return getState(graph, graph.nodes[graph.current]);
     },
