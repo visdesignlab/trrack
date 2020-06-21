@@ -15,12 +15,26 @@
   opacity: .5
 }
 
-#mainDiv, #quartets{
+#mainDiv{
+  border: 1px solid black;
+  max-height: 800px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  float:left
 }
 
-svg {
-  border: 1px solid black;
+#quartDiv{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+#provDiv{
+  max-width: 300px;
+  display: flex;
+  float: right
+}
+
+#parent{
+  display: flex;
+  justify-content: center;
 }

@@ -9,14 +9,21 @@
   </head>
   <body>
 
-    <select name="Quartets" id="quartets">
-      <option value="I">I</option>
-      <option value="II">II</option>
-      <option value="III">III</option>
-      <option value="IV">IV</option>
-    </select>
+    <div id="quartDiv">
+      <select name="Quartets" id="quartets">
+        <option value="I">I</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+        <option value="IV">IV</option>
+      </select>
+    </div>
 
-    <div id="mainDiv";>
+    <div id="parent">
+      <div id="mainDiv">
+      </div>
+
+      <div id="provDiv">
+      </div>
     </div>
 
     <script type="module" src="./bundle.js"></script>

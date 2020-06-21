@@ -7,12 +7,25 @@ export default class Scatterplot{
   height:number;
   quartetNum:string;
   data:any[];
-  svg:any;
+  svg:d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   xScale:d3.ScaleLinear<number, number>;
   yScale:d3.ScaleLinear<number, number>;
 
-  constructor(changeQuartetFunc, selectNodeFunc, hoverNodeFunc)
-  {
+  constructor(
+    changeQuartetFunc: (s:string) => void,
+    selectNodeFunc: (s:string) => void,
+    hoverNodeFunc: (s:string) => void
+  ){
+    this.margin = {};
+    this.width = 0;
+    this.height = 0;
+    this.quartetNum = "";
+    this.data = [];
+    this.svg = d3.select("#mainDiv")
+      .append("svg")
+    this.xScale = d3.scaleLinear();
+    this.yScale = d3.scaleLinear();
+
     d3.csv("https://gist.githubusercontent.com/ericbusboom/b2ac1d366c005cd2ed8c/raw/c92c66e43d144fa9c29dbd602d5af6988e8db533/anscombes.csv")
       .then((d) =>
       {
@@ -22,18 +35,15 @@ export default class Scatterplot{
         this.height = 800 - this.margin.top - this.margin.bottom;
 
         this.quartetNum = "I";
-        this.xScale = d3.scaleLinear()
 
-        this.xScale.domain([d3.min(this.data, d => +d.x), d3.max(this.data, d => +d.x)])
+        this.xScale.domain([d3.min(this.data, d => +d.x)!, d3.max(this.data, d => +d.x)!])
         this.xScale.range([50, 750])
 
-        this.yScale = d3.scaleLinear()
-
-        this.yScale.domain([d3.min(this.data, d => +d.y), d3.max(this.data, d => +d.y)])
+        this.yScale.domain([d3.min(this.data, d => +d.y)!, d3.max(this.data, d => +d.y)!])
         this.yScale.range([50, 750])
 
         d3.select("#quartets")
-          .on("change", function(d){
+          .on("change", function(){
             changeQuartetFunc((this as HTMLSelectElement).value);
           })
 
@@ -45,10 +55,9 @@ export default class Scatterplot{
   * Creates an svg and draws the initial visualization
   */
 
-  initializeVis(selectNodeFunc, hoverNodeFunc)
+  initializeVis(selectNodeFunc: (s:string) => void, hoverNodeFunc: (s:string) => void)
   {
-    this.svg = d3.select("#mainDiv")
-      .append("svg")
+    this.svg
       .attr("width", this.width + this.margin.left + this.margin.right)
       .attr("height", this.height + this.margin.top + this.margin.bottom)
 
@@ -106,7 +115,7 @@ export default class Scatterplot{
   }
 
   /**
-  * Ensures the previously hovered node is no longe hovered
+  * Ensures the previously hovered node is no longer hovered
   * If hoverNode is not empty, hovers the new node
   */
 

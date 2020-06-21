@@ -1,3 +1,5 @@
+const applyChange = require('deep-diff').applyChange;
+
 import { ProvenanceGraph } from '../Interfaces/ProvenanceGraph';
 import {
   RootNode,
@@ -9,7 +11,7 @@ import {
   Diff,
   isStateNode,
   isChildNode,
-  getState,
+  isDiffNode,
   Extra
 } from '../Interfaces/NodeInterfaces';
 import generateUUID from '../Utils/generateUUID';
@@ -27,7 +29,10 @@ export function createProvenanceGraph<T, S, A>(state: T): ProvenanceGraph<T, S, 
       type: 'Root'
     },
     children: [],
-    state
+    state: state,
+    getState: () => {
+      return state;
+    }
   };
 
   const graph: ProvenanceGraph<T, S, A> = {
@@ -77,7 +82,10 @@ export function importState<T, S, A>(
     },
     parent: parent,
     children: [],
-    state
+    state: state,
+    getState: () => {
+      return state;
+    }
   });
 
   const diffs = deepDiff(initalState, importedState);
@@ -117,7 +125,7 @@ export function getExtraFromArtifact<T, S, A>(
 ): Extra<A>[] {
   const node = graph.nodes[id];
   if (isChildNode(node)) {
-    return node.artifacts.extra || [];
+    return node.artifacts.extra;
   }
   throw new Error('Root does not have artifacts');
 }
@@ -126,16 +134,16 @@ export function applyActionFunction<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   label: string,
   action: ActionFunction<T>,
+  complex: boolean,
   args?: any[],
   metadata?: NodeMetadata<S>,
-  artifacts: Partial<Artifacts<A>> = {},
-  complex: boolean = false
+  artifacts: Partial<Artifacts<A>> = {}
 ): ProvenanceGraph<T, S, A> {
   const newGraph = deepCopy(graph);
 
   const { current: currentId } = newGraph;
 
-  const currentState = deepCopy(getState(newGraph, newGraph.nodes[currentId]));
+  const currentState = deepCopy(graph.nodes[currentId].getState());
 
   const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
     id: generateUUID(),
@@ -151,7 +159,10 @@ export function applyActionFunction<T, S, A>(
     },
     parent: parent,
     children: [],
-    state: state
+    state: state,
+    getState: () => {
+      return state;
+    }
   });
 
   const createNewDiffNode = (
@@ -173,7 +184,27 @@ export function applyActionFunction<T, S, A>(
     parent: parent,
     children: [],
     lastStateNode: previousStateID,
-    diffs: diffs
+    diffs: diffs,
+    getState: () => {
+      let _state = (newGraph.nodes[previousStateID] as StateNode<T, S, A>).getState();
+      let state: T = deepCopy(_state);
+
+      let diffsTemp = diffs;
+
+      if (diffsTemp.length === 0) {
+        return state;
+      }
+
+      // console.log(JSON.stringify( {_state, diffs}, null, 4 ));
+
+      diffsTemp.forEach((diff: Diff) => {
+        applyChange(state, null, diff);
+      });
+
+      // console.log(state)
+
+      return state;
+    }
   });
 
   let currNode = graph.nodes[currentId];
@@ -185,15 +216,15 @@ export function applyActionFunction<T, S, A>(
 
   if (isChildNode(currNode)) {
     if (isStateNode(currNode)) {
-      previousState = currNode.state;
+      previousState = currNode.getState();
       previousStateID = currNode.id;
     } else {
-      previousState = (graph.nodes[currNode.lastStateNode] as StateNode<T, S, A>).state;
+      previousState = graph.nodes[currNode.lastStateNode].getState();
       previousStateID = currNode.lastStateNode;
     }
   } else {
     d = false;
-    previousState = currNode.state;
+    previousState = currNode.getState();
     previousStateID = currNode.id;
   }
 

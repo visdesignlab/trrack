@@ -34,20 +34,21 @@ export interface BaseNode<T, S> {
   label: string;
   metadata: NodeMetadata<S>;
   children: NodeID[];
+  getState: () => T;
 }
 
 export interface RootNode<T, S> extends BaseNode<T, S> {
   state: T;
 }
 
-export interface ChildNode<T, S, A> {
+export interface ChildNode<T, S, A> extends BaseNode<T, S> {
   parent: NodeID;
   artifacts: Artifacts<A>;
 }
 
 export interface StateNode<T, S, A> extends RootNode<T, S>, ChildNode<T, S, A> {}
 
-export interface DiffNode<T, S, A> extends BaseNode<T, S>, ChildNode<T, S, A> {
+export interface DiffNode<T, S, A> extends ChildNode<T, S, A> {
   diffs: Diff[];
   lastStateNode: NodeID;
 }
@@ -59,7 +60,7 @@ export type Nodes<T, S, A> = { [key: string]: ProvenanceNode<T, S, A> };
 export type CurrentNode<T, S, A> = ProvenanceNode<T, S, A>;
 
 export function isStateNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is StateNode<T, S, A> {
-  return 'state' in node && 'parent' in node;
+  return 'parent' in node && 'state' in node;
 }
 
 export function isDiffNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is DiffNode<T, S, A> {
@@ -70,32 +71,4 @@ export function isChildNode<T, S, A>(
   node: ProvenanceNode<T, S, A>
 ): node is DiffNode<T, S, A> | StateNode<T, S, A> {
   return 'parent' in node;
-}
-
-export function getState<T, S, A>(
-  graph: ProvenanceGraph<T, S, A>,
-  node: ProvenanceNode<T, S, A>
-): T {
-  if (isDiffNode(node)) {
-    let _state = (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state;
-    let state = deepCopy(_state);
-
-    let diffs = node.diffs;
-
-    if (diffs.length === 0) {
-      return state;
-    }
-
-    // console.log(JSON.stringify( {_state, diffs}, null, 4 ));
-
-    diffs.forEach((diff: Diff) => {
-      applyChange(state, null, diff);
-    });
-
-    // console.log(state)
-
-    return state;
-  } else {
-    return node.state;
-  }
 }

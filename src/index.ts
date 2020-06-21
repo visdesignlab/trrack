@@ -3,7 +3,6 @@
 // ...
 
 import initProvenance from './Provenance/InitializeProvenance';
-import createAction from './Provenance/InitializeAction';
 
 import { ProvenanceGraph } from './Interfaces/ProvenanceGraph';
 import Provenance, { ActionFunction, SubscriberFunction } from './Interfaces/Provenance';
@@ -13,7 +12,8 @@ import {
   Artifacts,
   Diff,
   isStateNode,
-  getState,
+  isChildNode,
+  isDiffNode,
   ProvenanceNode,
   StateNode,
   RootNode,
@@ -24,7 +24,6 @@ import {
 
 export {
   initProvenance,
-  createAction,
   ProvenanceGraph,
   Provenance,
   ActionFunction,
@@ -36,7 +35,8 @@ export {
   StateNode,
   ProvenanceNode,
   isStateNode,
-  getState,
+  isChildNode,
+  isDiffNode,
   Nodes,
   CurrentNode,
   Artifacts,
