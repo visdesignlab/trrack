@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: path.join(__dirname, '/src/Script.ts'),
+    entry: path.join(__dirname, '/src/ProvenanceSetup.ts'),
     output: {
         filename: 'bundle.js',
         path: __dirname

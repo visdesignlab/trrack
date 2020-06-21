@@ -113,23 +113,31 @@ let hoverNodeUpdate = function(newHover: string){
 // so it can use them when appropriate.
 let scatterplot = new Scatterplot(changeQuartetUpdate, selectNodeUpdate, hoverNodeUpdate);
 
+//Create function to pass to the ProvVis library for when a node is selected in the graph.
+//For our purposes, were simply going to jump to the selected node.
+let visCallback = function(newNode:NodeID)
+{
+  prov.goToNode(newNode);
+
+  //Incase the state doesn't change and the observers arent called, updating the ProvVis here.
+  ProvVisCreator(
+    document.getElementById("provDiv")!,
+    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
+    visCallback);
+}
+
 // Set up observers for the three keys in state. These observers will get called either when an applyAction
 // function changes the associated keys value.
 
 // Also will be called when an internal graph change such as goBackNSteps, goBackOneStep or goToNode
 // change the keys value.
 
-let visCallback = function(newNode:NodeID)
-{
-  prov.goToNode(newNode);
-}
-
 /**
 * Observer for when the quartet state is changed. Calls changeQuartet in scatterplot to update vis.
 */
 prov.addObserver(["selectedQuartet"], () => {
   scatterplot.changeQuartet(prov.current().getState().selectedQuartet);
-  console.log("Is a state node? ", isStateNode(prov.current()), prov.current(), prov.current().getState())
+
   ProvVisCreator(
     document.getElementById("provDiv")!,
     prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
@@ -142,7 +150,7 @@ prov.addObserver(["selectedQuartet"], () => {
 */
 prov.addObserver(["selectedNode"], () => {
   scatterplot.selectNode(prov.current().getState().selectedNode);
-  console.log("Is a state node? ", isStateNode(prov.current()), prov.current(), prov.current().getState())
+
   ProvVisCreator(
     document.getElementById("provDiv")!,
     prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
@@ -155,7 +163,7 @@ prov.addObserver(["selectedNode"], () => {
 */
 prov.addObserver(["hoveredNode"], () => {
   scatterplot.hoverNode(prov.current().getState().hoveredNode);
-  console.log("Is a state node? ", isStateNode(prov.current()), prov.current(), prov.current().getState())
+
   ProvVisCreator(
     document.getElementById("provDiv")!,
     prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
@@ -163,24 +171,29 @@ prov.addObserver(["hoveredNode"], () => {
 
 });
 
+//Setup ProvVis once initially
+
 ProvVisCreator(
   document.getElementById("provDiv")!,
   prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
   visCallback);
 
+
+// Undo function which simply goes one step backwards in the graph.
 function undo(){
   prov.goBackOneStep();
 }
 
+//Redo function which traverses down the tree one step.
 function redo(){
   if(prov.current().children.length == 0){
     return;
   }
-  prov.goToNode(prov.current().children[prov.current().children.length - 1])
+  prov.goForwardOneStep();
 }
 
 
-
+//Setting up undo/redo hotkey to typical buttons
 document.onkeydown = function(e){
   var mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
   console.log(mac);

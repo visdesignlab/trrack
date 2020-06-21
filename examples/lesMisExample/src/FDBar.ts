@@ -1,4 +1,4 @@
-import {NodeState} from "./Script"
+import {NodeState} from "./ProvenanceSetup"
 import * as d3 from "d3";
 
 export default class Bars {
