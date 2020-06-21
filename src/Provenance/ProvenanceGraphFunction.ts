@@ -233,6 +233,10 @@ export function applyActionFunction<T, S, A>(
 
   let diffs = deepDiff(previousState, newState);
 
+  if (diffs === undefined) {
+    diffs = [];
+  }
+
   // TODO:: figure out how to count nested keys
   if (d && Object.keys(previousState).length / 2 < diffs.length) {
     d = false;
