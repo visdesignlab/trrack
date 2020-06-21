@@ -88,7 +88,11 @@ export function importState<T, S, A>(
     }
   });
 
-  const diffs = deepDiff(initalState, importedState);
+  let diffs = deepDiff(initalState, importedState);
+
+  if (diffs === undefined) {
+    diffs = [];
+  }
 
   const newNode = createNewStateNode(graph.current, importedState, diffs);
 
