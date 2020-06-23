@@ -105,6 +105,7 @@ let hoverNodeUpdate = function(newHover: string){
   )
 
   action
+    .isEphemeral(true)
     .addEventType("Hover Node")
     .applyAction();
 }
@@ -181,7 +182,7 @@ ProvVisCreator(
 
 // Undo function which simply goes one step backwards in the graph.
 function undo(){
-  prov.goBackOneStep();
+  prov.goBackToNonEphemeral();
 }
 
 //Redo function which traverses down the tree one step.
@@ -189,7 +190,7 @@ function redo(){
   if(prov.current().children.length == 0){
     return;
   }
-  prov.goForwardOneStep();
+  prov.goForwardToNonEphemeral();
 }
 
 

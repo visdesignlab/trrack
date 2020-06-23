@@ -95,7 +95,8 @@ export default function initProvenance<T, S, A>(
       metadata: NodeMetadata<S> = {},
       artifacts?: Artifacts<A>,
       eventType?: S,
-      complex: boolean = false
+      complex: boolean = false,
+      ephemeral: boolean = false
     ) => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
 
@@ -103,7 +104,16 @@ export default function initProvenance<T, S, A>(
         metadata.type = eventType;
       }
 
-      graph = applyActionFunction(graph, label, action, complex, args, metadata, artifacts);
+      graph = applyActionFunction(
+        graph,
+        label,
+        action,
+        complex,
+        ephemeral,
+        args,
+        metadata,
+        artifacts
+      );
       triggerEvents(oldState);
       return graph.nodes[graph.current].getState();
     },
@@ -141,6 +151,47 @@ export default function initProvenance<T, S, A>(
           throw new Error(`Cannot go back ${num} steps. Reached root after ${num - n} steps`);
         }
         n--;
+      }
+      graph = tempGraph;
+      triggerEvents(oldState);
+    },
+    goBackToNonEphemeral: () => {
+      const oldState = deepCopy(graph.nodes[graph.current].getState());
+      let tempGraph: ProvenanceGraph<T, S, A> = deepCopy(graph) as any;
+      let currNode = tempGraph.nodes[tempGraph.current];
+      while (true) {
+        if (isChildNode(currNode)) {
+          tempGraph = goToNode(graph, currNode.parent) as any;
+          if (!tempGraph.nodes[tempGraph.current].ephemeral) {
+            break;
+          }
+          currNode = tempGraph.nodes[tempGraph.current];
+        } else {
+          tempGraph = goToNode(tempGraph, tempGraph.root);
+          break;
+        }
+      }
+      graph = tempGraph;
+      triggerEvents(oldState);
+    },
+    goForwardToNonEphemeral: () => {
+      const oldState = deepCopy(graph.nodes[graph.current].getState());
+      let tempGraph: ProvenanceGraph<T, S, A> = deepCopy(graph) as any;
+      let currNode = tempGraph.nodes[tempGraph.current];
+      while (true) {
+        if (currNode.children.length > 0) {
+          tempGraph = goToNode(tempGraph, currNode.children.reverse()[0]) as any;
+
+          if (!tempGraph.nodes[tempGraph.current].ephemeral) {
+            break;
+          }
+
+          currNode = tempGraph.nodes[tempGraph.current];
+        } else {
+          throw new Error(
+            'Already at the latest node in this branch or no non ephemeral nodes later'
+          );
+        }
       }
       graph = tempGraph;
       triggerEvents(oldState);

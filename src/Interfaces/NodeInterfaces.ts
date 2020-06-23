@@ -35,6 +35,7 @@ export interface BaseNode<T, S> {
   metadata: NodeMetadata<S>;
   children: NodeID[];
   getState: () => T;
+  ephemeral: boolean;
 }
 
 export interface RootNode<T, S> extends BaseNode<T, S> {

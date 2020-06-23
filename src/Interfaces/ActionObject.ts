@@ -10,6 +10,7 @@ export class Action<T, S, A> {
   artifacts?: Artifacts<A>;
   eventType?: S;
   complex?: boolean;
+  ephemeral?: boolean;
   prov: Provenance<T, S, A>;
 
   /**
@@ -92,6 +93,18 @@ export class Action<T, S, A> {
   }
 
   /**
+   * Tells provenance whether or not you want to store the entire state of the application on this node,
+   * or if you would like to store a diff from the last state node. If true, the entire state will always be stored.
+   * If false, the entire state will only be stored when deemed necessary based on the difference from the previos state.
+   *
+   * There is no difference in how you interact with this node. False by default.
+   */
+  isEphemeral(b: boolean): Action<T, S, A> {
+    this.ephemeral = b;
+    return this;
+  }
+
+  /**
    * Applies this action the provenance graph. Results in a node being created and set as the current node.
    */
   applyAction() {
@@ -102,7 +115,8 @@ export class Action<T, S, A> {
       this.metadata,
       this.artifacts,
       this.eventType,
-      this.complex
+      this.complex,
+      this.ephemeral
     );
   }
 }

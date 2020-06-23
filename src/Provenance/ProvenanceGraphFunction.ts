@@ -32,7 +32,8 @@ export function createProvenanceGraph<T, S, A>(state: T): ProvenanceGraph<T, S, 
     state: state,
     getState: () => {
       return state;
-    }
+    },
+    ephemeral: false
   };
 
   const graph: ProvenanceGraph<T, S, A> = {
@@ -85,7 +86,8 @@ export function importState<T, S, A>(
     state: state,
     getState: () => {
       return state;
-    }
+    },
+    ephemeral: false
   });
 
   let diffs = deepDiff(initalState, importedState);
@@ -139,6 +141,7 @@ export function applyActionFunction<T, S, A>(
   label: string,
   action: ActionFunction<T>,
   complex: boolean,
+  ephemeral: boolean,
   args?: any[],
   metadata?: NodeMetadata<S>,
   artifacts: Partial<Artifacts<A>> = {}
@@ -149,7 +152,12 @@ export function applyActionFunction<T, S, A>(
 
   const currentState = deepCopy(graph.nodes[currentId].getState());
 
-  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
+  const createNewStateNode = (
+    parent: NodeID,
+    state: T,
+    diffs: Diff[],
+    ephemeral: boolean
+  ): StateNode<T, S, A> => ({
     id: generateUUID(),
     label: label,
     metadata: {
@@ -166,13 +174,15 @@ export function applyActionFunction<T, S, A>(
     state: state,
     getState: () => {
       return state;
-    }
+    },
+    ephemeral: ephemeral
   });
 
   const createNewDiffNode = (
     parent: NodeID,
     previousStateID: NodeID,
-    diffs: Diff[]
+    diffs: Diff[],
+    ephemeral: boolean
   ): DiffNode<T, S, A> => ({
     id: generateUUID(),
     label: label,
@@ -208,7 +218,8 @@ export function applyActionFunction<T, S, A>(
       // console.log(state)
 
       return state;
-    }
+    },
+    ephemeral: ephemeral
   });
 
   let currNode = graph.nodes[currentId];
@@ -248,8 +259,8 @@ export function applyActionFunction<T, S, A>(
 
   const newNode =
     d && !complex
-      ? createNewDiffNode(parentId, previousStateID, diffs)
-      : createNewStateNode(parentId, newState, diffs);
+      ? createNewDiffNode(parentId, previousStateID, diffs, ephemeral)
+      : createNewStateNode(parentId, newState, diffs, ephemeral);
 
   newGraph.nodes[newNode.id] = newNode;
   newGraph.nodes[currentId].children.push(newNode.id);

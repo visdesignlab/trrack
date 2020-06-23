@@ -56,7 +56,8 @@ export default interface Provenance<T, S, A> {
     metadata?: NodeMetadata<S>,
     artifacts?: Artifacts<A>,
     eventType?: S,
-    complex?: boolean
+    complex?: boolean,
+    ephemeral?: boolean
   ) => T;
 
   /*
@@ -117,6 +118,9 @@ export default interface Provenance<T, S, A> {
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.
    */
   goForwardOneStep: () => void;
+
+  goBackToNonEphemeral: () => void;
+  goForwardToNonEphemeral: () => void;
 
   /**
    * Returns to the root node.
