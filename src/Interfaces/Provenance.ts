@@ -93,6 +93,7 @@ export default interface Provenance<T, S, A> {
   addExtraToNodeArtifact: (id: NodeID, extra: A) => void;
   getExtraFromArtifact: (id: NodeID) => Extra<A>[];
 
+  addAnnotationToNode: (id: NodeID, annotation: string) => void;
   /*
    * Jumps to the node in the provenance graph with the given id.
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.

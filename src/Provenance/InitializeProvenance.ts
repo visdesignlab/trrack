@@ -27,6 +27,7 @@ import {
   goToNode,
   importState,
   addExtraToNodeArtifact,
+  addAnnotationToNode,
   getExtraFromArtifact
 } from './ProvenanceGraphFunction';
 import { initEventManager } from '../Utils/EventManager';
@@ -124,6 +125,10 @@ export default function initProvenance<T, S, A>(
     },
     addExtraToNodeArtifact: (id: NodeID, extra: A) => {
       graph = addExtraToNodeArtifact(graph, id, extra);
+      EM.callEvents([], graph.nodes[id].getState(), graph.nodes[id]);
+    },
+    addAnnotationToNode: (id: NodeID, annotation: string) => {
+      graph = addAnnotationToNode(graph, id, annotation);
       EM.callEvents([], graph.nodes[id].getState(), graph.nodes[id]);
     },
     getExtraFromArtifact: (id: NodeID) => {

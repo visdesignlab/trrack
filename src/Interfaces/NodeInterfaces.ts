@@ -7,6 +7,7 @@ export type NodeID = string;
 export interface NodeMetadata<S> {
   createdOn?: number;
   type?: S | 'Root';
+  //remove?
   [key: string]: any;
 }
 
@@ -25,7 +26,10 @@ export interface Extra<A> {
 
 export interface Artifacts<A> {
   diffs?: Diff[];
+  annotation?: string;
+  //array
   extra: Extra<A>[];
+  //remove?
   [key: string]: any;
 }
 

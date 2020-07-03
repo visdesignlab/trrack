@@ -125,6 +125,23 @@ export function addExtraToNodeArtifact<T, S, A>(
   return newGraph;
 }
 
+export function addAnnotationToNode<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
+  id: NodeID,
+  annotation: string
+): ProvenanceGraph<T, S, A> {
+  const newGraph = deepCopy(graph);
+  const node = newGraph.nodes[id];
+
+  if (isChildNode(node)) {
+    node.artifacts.annotation = annotation;
+  } else {
+    throw new Error('Cannot add annotation to Root Node');
+  }
+
+  return newGraph;
+}
+
 export function getExtraFromArtifact<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   id: NodeID

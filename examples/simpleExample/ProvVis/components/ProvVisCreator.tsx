@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProvVis from './ProvVis';
+import UndoRedoButton from './UndoRedoButton';
+
 import { ProvenanceGraph, NodeID } from '../../../../src/index';
 
 export interface ProvVisConfig {
@@ -35,6 +37,22 @@ export function ProvVisCreator<T, S extends string, A>(
       changeCurrent={callback}
       current={graph.current}
       nodeMap={graph.nodes}
+    />,
+    node
+  );
+}
+
+export function UndoRedoButtonCreator<T, S extends string, A>(
+  node: Element,
+  graph: ProvenanceGraph<T, S, A>,
+  undoCallback: () => void,
+  redoCallback: () => void
+) {
+  ReactDOM.render(
+    <UndoRedoButton
+      graph={graph}
+      undoCallback={undoCallback}
+      redoCallback={redoCallback}
     />,
     node
   );

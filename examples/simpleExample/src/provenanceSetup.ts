@@ -22,7 +22,7 @@ import Scatterplot from "./scatterplot"
 import ReactDOM from 'react-dom'
 import * as d3 from "d3"
 
-import { ProvVis, EventConfig, Config, ProvVisConfig, ProvVisCreator } from '../ProvVis/provvis';
+import { ProvVis, EventConfig, Config, ProvVisConfig, ProvVisCreator, UndoRedoButtonCreator } from '../ProvVis/provvis';
 
 
 /**
@@ -105,7 +105,6 @@ let hoverNodeUpdate = function(newHover: string){
   )
 
   action
-    .isEphemeral(true)
     .addEventType("Hover Node")
     .applyAction();
 }
@@ -121,10 +120,7 @@ let visCallback = function(newNode:NodeID)
   prov.goToNode(newNode);
 
   //Incase the state doesn't change and the observers arent called, updating the ProvVis here.
-  ProvVisCreator(
-    document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    visCallback);
+  provVisUpdate()
 }
 
 // Set up observers for the three keys in state. These observers will get called either when an applyAction
@@ -139,10 +135,7 @@ let visCallback = function(newNode:NodeID)
 prov.addObserver(["selectedQuartet"], () => {
   scatterplot.changeQuartet(prov.current().getState().selectedQuartet);
 
-  ProvVisCreator(
-    document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    visCallback);
+  provVisUpdate()
 
 });
 
@@ -152,10 +145,7 @@ prov.addObserver(["selectedQuartet"], () => {
 prov.addObserver(["selectedNode"], () => {
   scatterplot.selectNode(prov.current().getState().selectedNode);
 
-  ProvVisCreator(
-    document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    visCallback);
+  provVisUpdate()
 
 });
 
@@ -165,24 +155,16 @@ prov.addObserver(["selectedNode"], () => {
 prov.addObserver(["hoveredNode"], () => {
   scatterplot.hoverNode(prov.current().getState().hoveredNode);
 
-  ProvVisCreator(
-    document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    visCallback);
+  provVisUpdate()
 
 });
 
 //Setup ProvVis once initially
-
-ProvVisCreator(
-  document.getElementById("provDiv")!,
-  prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-  visCallback);
-
+provVisUpdate()
 
 // Undo function which simply goes one step backwards in the graph.
 function undo(){
-  prov.goBackToNonEphemeral();
+  prov.goBackOneStep();
 }
 
 //Redo function which traverses down the tree one step.
@@ -190,14 +172,32 @@ function redo(){
   if(prov.current().children.length == 0){
     return;
   }
-  prov.goForwardToNonEphemeral();
+  prov.goForwardOneStep();
 }
 
+function provVisUpdate()
+{
+  ProvVisCreator(
+    document.getElementById("provDiv")!,
+    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
+    visCallback);
+
+  undoUpdate();
+}
+
+function undoUpdate()
+{
+  UndoRedoButtonCreator(
+    document.getElementById("buttons")!,
+    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
+    undo,
+    redo
+  )
+}
 
 //Setting up undo/redo hotkey to typical buttons
 document.onkeydown = function(e){
   var mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
-  console.log(mac);
 
   if(!e.shiftKey && (mac ? e.metaKey : e.ctrlKey) && e.which == 90){
     undo();

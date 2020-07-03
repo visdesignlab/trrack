@@ -1,6 +1,7 @@
 
-import { isStateNode, isChildNode, NodeID, Nodes, ProvenanceGraph, ProvenanceNode, StateNode } from '../../../../src/index';
-import { HierarchyNode, stratify } from 'd3';
+import { isStateNode, isChildNode, NodeID, Nodes, ProvenanceGraph, ProvenanceNode, StateNode, ChildNode, DiffNode } from '../../../../src/index';
+import { HierarchyNode, stratify, Symbol, symbol, symbolWye, symbolCross, symbolCircle, symbolTriangle, symbolSquare, symbolDiamond, symbolStar } from 'd3';
+
 import React, { ReactChild, useEffect, useState } from 'react';
 import { NodeGroup } from 'react-move';
 import { Popup } from 'semantic-ui-react';
@@ -10,6 +11,7 @@ import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
 import findBundleParent from '../Utils/findBundleParent';
 import translate from '../Utils/translate';
+
 import { treeLayout } from '../Utils/TreeLayout';
 import BackboneNode from './BackboneNode';
 import bundleTransitions from './BundleTransitions';
@@ -77,14 +79,125 @@ function ProvVis<T, S extends string, A>({
   linkWidth = 4,
   duration = 600,
   clusterLabels = true,
-  bundleMap,
+  bundleMap = {},
   eventConfig,
   popupContent,
   annotationContent,
 }: ProvVisProps<T, S, A>) {
   const [first, setFirst] = useState(true);
   const [annotationOpen, setAnnotationOpen] = useState(-1);
-  const [expandedClusterList, setExpandedClusterList] = useState<string[]>(bundleMap ? Object.keys(bundleMap).filter(d => bundleMap[d].metadata.includes(d)) : []);
+  let list: string[] = [];
+  let eventTypes = new Set<string>();
+  for(let j in nodeMap)
+  {
+    let child = nodeMap[j]
+    if(isChildNode(child))
+    {
+      if(child.metadata.type)
+      {
+        eventTypes.add(child.metadata.type);
+      }
+
+      if(child.ephemeral && child.children.length == 1 && (!nodeMap[child.parent].ephemeral || nodeMap[child.parent].children.length > 1))
+      {
+        let group:string[] = [];
+        let curr = child;
+        while(curr.ephemeral)
+        {
+          group.push(curr.id)
+          if(curr.children.length === 1 && nodeMap[curr.children[0]].ephemeral)
+          {
+            curr = nodeMap[curr.children[0]] as DiffNode<T, S, A>;
+          }
+          else{
+            break;
+          }
+        }
+
+        bundleMap[child.id] = {
+          metadata: "",
+          bundleLabel: "",
+          bunchedNodes: group
+        }
+      }
+
+    }
+  }
+
+  if(bundleMap)
+  {
+    list = list.concat(Object.keys(bundleMap).filter(d => bundleMap[d].metadata && bundleMap[d].metadata.includes(d)));
+  }
+
+
+  function setDefaultConfig<E extends string>(types:Set<string>): EventConfig<E> {
+    let symbols = [
+      symbol().type(symbolStar).size(50),
+      symbol().type(symbolDiamond),
+      symbol().type(symbolTriangle),
+      symbol().type(symbolCircle),
+      symbol().type(symbolCross),
+      symbol().type(symbolSquare),
+      symbol().type(symbolWye)
+    ]
+
+    console.log(types)
+
+    // Find nodes in the clusters whose entire cluster is on the backbone.
+    let conf: EventConfig<E> = {}
+    let counter = 0;
+
+    for(let j of types)
+    {
+      console.log(j)
+      conf[j] = {}
+      conf[j].backboneGlyph = (
+        <path
+          strokeWidth={2}
+          className={treeColor(false)}
+          d={symbols[counter]()!}
+        />
+      )
+
+      conf[j].bundleGlyph = (
+        <path
+          strokeWidth={2}
+          className={treeColor(false)}
+          d={symbols[counter]()!}
+        />
+      )
+
+      conf[j].currentGlyph = (
+        <path
+          strokeWidth={2}
+          className={treeColor(true)}
+          d={symbols[counter]()!}
+        />
+      )
+
+      conf[j].regularGlyph = (
+        <path
+          strokeWidth={2}
+          className={treeColor(false)}
+          d={symbols[counter]()!}
+        />
+      )
+
+      counter++;
+    }
+
+    console.log(conf)
+
+    return conf;
+  }
+
+
+  const [expandedClusterList, setExpandedClusterList] = useState<string[]>(list);
+
+  if(!eventConfig && eventTypes.size > 0)
+  {
+    eventConfig = setDefaultConfig<S>(eventTypes);
+  }
 
   useEffect(() => {
     setFirst(false);
@@ -337,7 +450,8 @@ function ProvVis<T, S extends string, A>({
                     <g key={key}>
                       <Link
                         {...state}
-                        className={treeColor(true)}
+                        fill={'#ccc'}
+                        stroke={'#ccc'}
                         strokeWidth={linkWidth}
                       />
                     </g>

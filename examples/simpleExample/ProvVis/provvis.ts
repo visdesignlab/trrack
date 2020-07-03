@@ -1,5 +1,5 @@
 import ProvVis from './components/ProvVis';
 import { EventConfig, Config } from './Utils/EventConfig';
-import { ProvVisConfig, ProvVisCreator } from './components/ProvVisCreator';
+import { ProvVisConfig, ProvVisCreator, UndoRedoButtonCreator } from './components/ProvVisCreator';
 
-export { ProvVis, EventConfig, Config, ProvVisConfig, ProvVisCreator };
+export { ProvVis, EventConfig, Config, ProvVisConfig, ProvVisCreator, UndoRedoButtonCreator };

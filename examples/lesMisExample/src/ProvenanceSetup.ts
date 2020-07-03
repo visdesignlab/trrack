@@ -21,7 +21,7 @@ import
 } from '../../../src/index';import Bars from "./FDBar"
 import Graph from "./FDGraph"
 
-import { ProvVis, EventConfig, Config, ProvVisConfig, ProvVisCreator } from '../ProvVis/provvis';
+import { ProvVis, EventConfig, Config, ProvVisConfig, ProvVisCreator, UndoRedoButtonCreator } from '../ProvVis/provvis';
 
 
 export interface NodeState {
@@ -106,22 +106,14 @@ d3.json("../data/miserables.json").then(graph => {
     barVis.selectBar(provenance.current().getState().selectedNode);
     graphVis.selectNode(provenance.current().getState().selectedNode);
 
-    ProvVisCreator(document.getElementById("provDiv")!,
-      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
-      (newNode:NodeID) => {
-        provenance.goToNode(newNode);
-      });
+    provVisUpdate()
   });
 
   provenance.addObserver(["nodeMap"], () => {
     graphVis.moveNodes(provenance.current().getState().nodeMap);
 
     console.log("moved")
-    ProvVisCreator(document.getElementById("provDiv")!,
-      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
-      (newNode:NodeID) => {
-        provenance.goToNode(newNode);
-      });
+    provVisUpdate()
   });
 
   /**
@@ -134,24 +126,50 @@ d3.json("../data/miserables.json").then(graph => {
     console.log(mac);
 
     if(!e.shiftKey && (mac ? e.metaKey : e.ctrlKey) && e.which == 90){
-      undo(e);
+      undo();
     }
     else if(e.shiftKey && (mac ? e.metaKey : e.ctrlKey) && e.which == 90){
-      redo(e);
+      redo();
     }
   }
 
-  function undo(e){
+  function undo(){
     provenance.goBackOneStep();
   }
 
-  function redo(e){
+  function redo(){
     if(provenance.current().children.length == 0){
       return;
     }
     provenance.goToNode(provenance.current().children[provenance.current().children.length - 1])
   }
+
+  function provVisUpdate()
+  {
+    ProvVisCreator(
+      document.getElementById("provDiv")!,
+      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
+      (id: NodeID) => {
+        provenance.goToNode(id);
+      });
+
+    undoUpdate();
+  }
+
+  function undoUpdate()
+  {
+    UndoRedoButtonCreator(
+      document.getElementById("buttons")!,
+      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
+      undo,
+      redo
+    )
+  }
+
+  provVisUpdate();
 });
+
+
 
 
 /*
@@ -172,11 +190,6 @@ function setupProvenance(graph) : Provenance<NodeState, any, any>{
   initialState.nodeMap = dict;
 
   const provenance = initProvenance(initialState);
-  ProvVisCreator(document.getElementById("provDiv")!,
-    provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    (newNode:NodeID) => {
-      provenance.goToNode(newNode);
-    });
 
   return provenance;
 }
