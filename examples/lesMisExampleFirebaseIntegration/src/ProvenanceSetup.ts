@@ -111,11 +111,6 @@ d3.json("../data/miserables.json").then(graph => {
 
   provenance.addGlobalObserver(() => {
 
-    var url = window.location.href;
-
-    url += provenance.exportState();
-
-    console.log(url)
   })
 
   provenance.addObserver(["nodeMap"], () => {
@@ -124,6 +119,8 @@ d3.json("../data/miserables.json").then(graph => {
     console.log("moved")
     provVisUpdate()
   });
+
+  provenance.done();
 
   /**
   *
@@ -157,22 +154,10 @@ d3.json("../data/miserables.json").then(graph => {
   {
     ProvVisCreator(
       document.getElementById("provDiv")!,
-      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
+      provenance,
       (id: NodeID) => {
         provenance.goToNode(id);
       });
-
-    undoUpdate();
-  }
-
-  function undoUpdate()
-  {
-    UndoRedoButtonCreator(
-      document.getElementById("buttons")!,
-      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
-      undo,
-      redo
-    )
   }
 
   provVisUpdate();
@@ -198,7 +183,15 @@ function setupProvenance(graph) : Provenance<NodeState, any, any>{
 
   initialState.nodeMap = dict;
 
-  const provenance = initProvenance(initialState);
+  const provenance = initProvenance(initialState, true, true, {
+    apiKey: "AIzaSyDykS8uY9vsevIJMiWGEX2xNm1X1xo2yV4",
+    authDomain: "fir-prov-project.firebaseapp.com",
+    databaseURL: "https://fir-prov-project.firebaseio.com",
+    projectId: "fir-prov-project",
+    storageBucket: "fir-prov-project.appspot.com",
+    messagingSenderId: "202608989650",
+    appId: "1:202608989650:web:bcebc6d29b89e59662e40b"
+  });
 
   return provenance;
 }

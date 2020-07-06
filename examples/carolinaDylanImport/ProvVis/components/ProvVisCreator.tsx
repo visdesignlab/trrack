@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ProvVis from './ProvVis';
 import UndoRedoButton from './UndoRedoButton';
 
-import { ProvenanceGraph, NodeID } from '../../../../src/index';
+import { Provenance, ProvenanceGraph, NodeID } from '../../../../src/index';
 
 export interface ProvVisConfig {
   height: number;
@@ -24,19 +24,23 @@ export interface ProvVisConfig {
 
 export function ProvVisCreator<T, S extends string, A>(
   node: Element,
-  graph: ProvenanceGraph<T, S, A>,
+  prov: Provenance<T, S, A>,
   callback?: (id: NodeID) => void,
-  fauxRoot: NodeID = graph.root,
+  buttons: boolean = true,
+  ephemeralUndo: boolean = false,
+  fauxRoot: NodeID = prov.graph().root,
   config: Partial<ProvVisConfig> = {}
 ) {
   ReactDOM.render(
     <ProvVis
       {...config}
-      graph={graph}
       root={fauxRoot}
       changeCurrent={callback}
-      current={graph.current}
-      nodeMap={graph.nodes}
+      current={prov.graph().current}
+      nodeMap={prov.graph().nodes}
+      prov={prov}
+      undoRedoButtons={true}
+      ephemeralUndo={ephemeralUndo}
     />,
     node
   );

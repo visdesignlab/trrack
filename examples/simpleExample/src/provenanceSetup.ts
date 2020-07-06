@@ -47,7 +47,7 @@ const initialState: NodeState = {
 type EventTypes = "Change Quartet" | "Select Node" | "Hover Node"
 
 //initialize provenance with the first state
-let prov = initProvenance<NodeState, EventTypes, string>(initialState);
+let prov = initProvenance<NodeState, EventTypes, string>(initialState, false);
 
 //Set up apply action functions for each of the 3 actions that affect state
 
@@ -97,7 +97,7 @@ let selectNodeUpdate = function(newSelected: string){
 
 let hoverNodeUpdate = function(newHover: string){
   let action = prov.addAction(
-    newHover === "" ? "Nothing hovered" : newHover + " hovered",
+    newHover === "" ? "Hover Removed" : newHover + " Hovered",
     (state:NodeState) => {
       state.hoveredNode = newHover;
       return state;
@@ -145,6 +145,8 @@ prov.addObserver(["selectedQuartet"], () => {
 prov.addObserver(["selectedNode"], () => {
   scatterplot.selectNode(prov.current().getState().selectedNode);
 
+  console.log("select obs called")
+
   provVisUpdate()
 
 });
@@ -161,6 +163,7 @@ prov.addObserver(["hoveredNode"], () => {
 
 //Setup ProvVis once initially
 provVisUpdate()
+
 
 // Undo function which simply goes one step backwards in the graph.
 function undo(){
@@ -179,20 +182,8 @@ function provVisUpdate()
 {
   ProvVisCreator(
     document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
+    prov,
     visCallback);
-
-  undoUpdate();
-}
-
-function undoUpdate()
-{
-  UndoRedoButtonCreator(
-    document.getElementById("buttons")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    undo,
-    redo
-  )
 }
 
 //Setting up undo/redo hotkey to typical buttons

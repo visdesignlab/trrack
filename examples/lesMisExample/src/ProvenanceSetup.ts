@@ -116,6 +116,8 @@ d3.json("../data/miserables.json").then(graph => {
     provVisUpdate()
   });
 
+  provenance.done();
+
   /**
   *
   * Setting up undo/redo keys
@@ -148,22 +150,11 @@ d3.json("../data/miserables.json").then(graph => {
   {
     ProvVisCreator(
       document.getElementById("provDiv")!,
-      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
+      provenance,
       (id: NodeID) => {
         provenance.goToNode(id);
       });
 
-    undoUpdate();
-  }
-
-  function undoUpdate()
-  {
-    UndoRedoButtonCreator(
-      document.getElementById("buttons")!,
-      provenance.graph() as ProvenanceGraph<NodeState, string, unknown>,
-      undo,
-      redo
-    )
   }
 
   provVisUpdate();

@@ -1,5 +1,10 @@
 const applyChange = require('deep-diff').applyChange;
 
+import 'firebase/database';
+import 'firebase/firestore';
+
+import firebase from 'firebase/app';
+
 import Provenance, {
   ActionFunction,
   SubscriberFunction,
@@ -8,6 +13,8 @@ import Provenance, {
 } from '../Interfaces/Provenance';
 import deepCopy from '../Utils/DeepCopy';
 import { ProvenanceGraph } from '../Interfaces/ProvenanceGraph';
+import { logToFirebase, initializeFirebase } from './FirebaseFunctions';
+
 import { Action } from '../Interfaces/ActionObject';
 
 import {
@@ -37,7 +44,9 @@ const compressToEncodedURIComponent = require('lz-string').compressToEncodedURIC
 
 export default function initProvenance<T, S, A>(
   initialState: T,
-  loadFromUrl: boolean = false
+  loadFromUrl: boolean = true,
+  storeFirebase: boolean = false,
+  firebaseConfig?: any
 ): Provenance<T, S, A> {
   let graph = createProvenanceGraph<T, S, A>(initialState);
 
@@ -47,23 +56,34 @@ export default function initProvenance<T, S, A>(
 
   const surroundChars = '||';
 
+  let store = undefined;
+  let log: (graph: ProvenanceGraph<T, S, A>) => void;
+
+  if (storeFirebase && firebaseConfig) {
+    store = initializeFirebase(firebaseConfig);
+    log = logToFirebase(store?.db);
+  }
+
   function loadUrl() {
     if (!window || !window.location || !window.location.href) {
       throw new Error(
-        'Window and/or location not defined. Make sure this is a browser environment.'
+        'Please use in a browser environment, or set loadFromUrl parameter in initProvenance to false'
       );
     }
-    const url = window.location.href;
 
-    if (!url.includes('||')) {
+    const url = new URL(window.location.href);
+
+    const params = new URLSearchParams(url.search);
+
+    if (params.get('provState') === null) {
       return;
     }
 
-    const importString = url.split('||').reverse()[0];
+    const importString = params.get('provState');
 
-    const importedState = JSON.parse(decompressFromEncodedURIComponent(importString)) as T;
+    const importedState = JSON.parse(decompressFromEncodedURIComponent(importString));
 
-    importStateAndAddNode(importedState);
+    importStateAndAddNode(importedState as T);
   }
 
   function curr() {
@@ -77,8 +97,50 @@ export default function initProvenance<T, S, A>(
     EM.callEvents(diffs || [], currentState, curr());
   }
 
-  function importStateAndAddNode(state: T) {
+  function importStateAndAddNode(state: T, newLabel?: string, newMetadata?: NodeMetadata<S>) {
     graph = importState(graph, initalStateRecord, state);
+    if (newLabel !== undefined) {
+      graph.nodes[graph.current].label = newLabel;
+    }
+    if (newMetadata !== undefined) {
+      graph.nodes[graph.current].metadata = newMetadata;
+    }
+  }
+
+  function addStateToURL(stateString: string) {
+    if (!loadFromUrl) {
+      return;
+    }
+    const url = new URL(window.location.href);
+
+    const params = new URLSearchParams(url.search);
+
+    const importString = params.delete('provState');
+    params.set('provState', stateString);
+
+    window.history.replaceState({}, '', `${url.pathname}?${params}`);
+  }
+
+  function createStateString(partial: boolean): string {
+    let exportedState: Partial<T> = {};
+    const currentState = graph.nodes[graph.current].getState() as any;
+
+    if (partial) {
+      Object.keys(currentState).forEach(key => {
+        const prev = initalStateRecord[key];
+        const curr = currentState[key];
+        if (JSON.stringify(prev) !== JSON.stringify(curr)) {
+          exportedState = { ...exportedState, [key]: currentState[key] };
+        }
+      });
+    } else {
+      exportedState = { ...currentState };
+    }
+
+    const exportedStateObject: ExportedState<T> = exportedState;
+    const compressedString = compressToEncodedURIComponent(JSON.stringify(exportedStateObject));
+
+    return `${compressedString}`;
   }
 
   return {
@@ -116,12 +178,18 @@ export default function initProvenance<T, S, A>(
         artifacts
       );
       triggerEvents(oldState);
+
+      addStateToURL(createStateString(false));
+      if (storeFirebase) {
+        log(graph);
+      }
       return graph.nodes[graph.current].getState();
     },
     goToNode: (id: NodeID) => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
       graph = goToNode(graph, id);
       triggerEvents(oldState);
+      addStateToURL(createStateString(false));
     },
     addExtraToNodeArtifact: (id: NodeID, extra: A) => {
       graph = addExtraToNodeArtifact(graph, id, extra);
@@ -143,6 +211,8 @@ export default function initProvenance<T, S, A>(
         throw new Error('Already at root');
       }
       triggerEvents(oldState);
+
+      addStateToURL(createStateString(false));
     },
     goBackNSteps: (n: number) => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
@@ -159,6 +229,7 @@ export default function initProvenance<T, S, A>(
       }
       graph = tempGraph;
       triggerEvents(oldState);
+      addStateToURL(createStateString(false));
     },
     goBackToNonEphemeral: () => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
@@ -178,6 +249,7 @@ export default function initProvenance<T, S, A>(
       }
       graph = tempGraph;
       triggerEvents(oldState);
+      addStateToURL(createStateString(false));
     },
     goForwardToNonEphemeral: () => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
@@ -200,6 +272,7 @@ export default function initProvenance<T, S, A>(
       }
       graph = tempGraph;
       triggerEvents(oldState);
+      addStateToURL(createStateString(false));
     },
     goForwardOneStep: () => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
@@ -211,11 +284,13 @@ export default function initProvenance<T, S, A>(
       }
 
       triggerEvents(oldState);
+      addStateToURL(createStateString(false));
     },
     reset: () => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
       graph = goToNode(graph, graph.root);
       triggerEvents(oldState);
+      addStateToURL(createStateString(false));
     },
     done: () => {
       if (loadFromUrl) {
@@ -243,25 +318,7 @@ export default function initProvenance<T, S, A>(
       EM.addArtifactObserver(func);
     },
     exportState: (partial: boolean = false) => {
-      let exportedState: Partial<T> = {};
-      const currentState = graph.nodes[graph.current].getState() as any;
-
-      if (partial) {
-        Object.keys(currentState).forEach(key => {
-          const prev = initalStateRecord[key];
-          const curr = currentState[key];
-          if (JSON.stringify(prev) !== JSON.stringify(curr)) {
-            exportedState = { ...exportedState, [key]: currentState[key] };
-          }
-        });
-      } else {
-        exportedState = { ...currentState };
-      }
-
-      const exportedStateObject: ExportedState<T> = exportedState;
-      const compressedString = compressToEncodedURIComponent(JSON.stringify(exportedStateObject));
-
-      return `${surroundChars}${compressedString}`;
+      return createStateString(partial);
     },
     importState: (importString: string) => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
@@ -272,7 +329,28 @@ export default function initProvenance<T, S, A>(
       importStateAndAddNode(state);
       triggerEvents(oldState);
     },
+    importLinearStates: (states: T[], labels?: string[], metadata?: NodeMetadata<S>[]) => {
+      for (let j = 0; j < states.length; j++) {
+        const oldState = deepCopy(graph.nodes[graph.current].getState());
+        if (labels !== undefined && metadata !== undefined) {
+          importStateAndAddNode(states[j], labels[j], metadata[j]);
+        } else {
+          importStateAndAddNode(states[j]);
+        }
+        triggerEvents(oldState);
+      }
+    },
     exportProvenanceGraph: () => JSON.stringify(graph),
+    getDiffFromNode: (id: NodeID) => {
+      let node = graph.nodes[id];
+
+      if (isChildNode(node)) {
+        return deepDiff(graph.nodes[node.parent].getState(), node.getState());
+      } else {
+        throw new Error(`Cannot get diff from root node`);
+        return [];
+      }
+    },
     importProvenanceGraph: (importString: string) => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
       graph = JSON.parse(importString);
@@ -298,8 +376,6 @@ export default function initProvenance<T, S, A>(
           diffsTemp.forEach((diff: Diff) => {
             applyChange(state, null, diff);
           });
-
-          // console.log(state)
 
           return state;
         }

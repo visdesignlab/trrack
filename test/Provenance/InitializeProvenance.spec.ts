@@ -496,20 +496,6 @@ describe('loadFromUrl', () => {
     expect(stateCopy).toStrictEqual(provenance.current().getState());
   });
 
-  test('test if url loading stops when state not found', () => {
-    const windowLoc = JSON.stringify(window.location);
-    delete window.location;
-    Object.defineProperty(window, 'location', {
-      value: JSON.parse(windowLoc),
-      writable: true
-    });
-    window.location.href = originalWindowLocationHref + 'Hello';
-
-    const { provenance } = setupApp(true);
-
-    expect(stateCopy).not.toStrictEqual(provenance.current().getState());
-  });
-
   test('if error is thrown in non-browser environment', () => {
     // const err = () => setupApp(true);
     // expect(err).toThrowError();

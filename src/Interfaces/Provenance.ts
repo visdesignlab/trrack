@@ -133,6 +133,8 @@ export default interface Provenance<T, S, A> {
    */
   done: () => void;
 
+  importLinearStates: (states: T[], labels?: string[], metadata?: NodeMetadata<S>[]) => void;
+
   /*
    * Exports the current nodes state. Returns a compressed string representing the JSON form of the current state
    */
@@ -148,6 +150,8 @@ export default interface Provenance<T, S, A> {
    * Exports the entire provenance graph in JSON form. Not compressed.
    */
   exportProvenanceGraph: () => string;
+
+  getDiffFromNode: (id: NodeID) => any[] | undefined;
 
   /*
    * Imports an entire, non compressed provenance graph in JSON form. Replaces the current provenance graph with the new one.

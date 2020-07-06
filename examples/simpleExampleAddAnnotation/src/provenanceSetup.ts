@@ -36,10 +36,9 @@ export interface NodeState {
 
 export interface NodeExtra {
   nodeNum: number;
-  selectedNode:string;
-  hoveredNode:string;
+  nodeX: number;
+  nodeY: number;
 };
-
 
 /**
 * Initial state
@@ -53,8 +52,9 @@ const initialState: NodeState = {
 
 type EventTypes = "Change Quartet" | "Select Node" | "Hover Node"
 
+
 //initialize provenance with the first state
-let prov = initProvenance<NodeState, EventTypes, NodeExtra>(initialState);
+let prov = initProvenance<NodeState, EventTypes, NodeExtra>(initialState, false);
 
 //Set up apply action functions for each of the 3 actions that affect state
 
@@ -84,16 +84,21 @@ let changeQuartetUpdate = function(newQuartet: string){
 * Function called when a node is selected. Applies an action to provenance.
 */
 
-let selectNodeUpdate = function(newSelected: string){
+let selectNodeUpdate = function(selectedNode: number, x:number, y:number){
   let action = prov.addAction(
-    newSelected + " Selected",
+    "node_" + selectedNode + " Selected",
     (state:NodeState) => {
-      state.selectedNode = newSelected;
+      state.selectedNode = "node_" + selectedNode;
       return state;
     }
   )
 
   action
+    .addExtra({
+      nodeNum: selectedNode,
+      nodeX: x,
+      nodeY: y
+    })
     .addEventType("Select Node")
     .applyAction();
 }
@@ -104,7 +109,7 @@ let selectNodeUpdate = function(newSelected: string){
 
 let hoverNodeUpdate = function(newHover: string){
   let action = prov.addAction(
-    newHover === "" ? "Nothing hovered" : newHover + " hovered",
+    newHover === "" ? "Hover Removed" : newHover + " Hovered",
     (state:NodeState) => {
       state.hoveredNode = newHover;
       return state;
@@ -163,7 +168,7 @@ prov.addObserver(["hoveredNode"], () => {
   scatterplot.hoverNode(prov.current().getState().hoveredNode);
 
   provVisUpdate()
-
+  console.log(prov.graph())
 });
 
 //Setup ProvVis once initially
@@ -186,20 +191,9 @@ function provVisUpdate()
 {
   ProvVisCreator(
     document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
+    prov,
     visCallback);
 
-  undoUpdate();
-}
-
-function undoUpdate()
-{
-  UndoRedoButtonCreator(
-    document.getElementById("buttons")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    undo,
-    redo
-  )
 }
 
 d3.select("#annotationButton")

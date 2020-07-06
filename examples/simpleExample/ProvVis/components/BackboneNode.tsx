@@ -104,12 +104,24 @@ function BackboneNode<T, S extends string, A>({
   let label: string = "";
   let annotate: string = "";
 
-  if (node.artifacts && node.artifacts.extra && node.artifacts.extra.length > 0) {
-    annotate = (node.artifacts.extra[node.artifacts.extra.length - 1].e as any)
-      .annotation;
+  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.ephemeral && expandedClusterList && !expandedClusterList.includes(node.id))
+  {
+    if(node.metadata && node.metadata.type)
+    {
+      label = "[" + bundleMap[node.id].bunchedNodes.length + "] " + node.metadata.type
+    }
+    else{
+      label = "[" + bundleMap[node.id].bunchedNodes.length + "]"
+    }
+  }
+  else{
+    label = node.label;
   }
 
-  label = node.label;
+  if (node.artifacts && node.artifacts.annotation && node.artifacts.annotation.length > 0) {
+    annotate = node.artifacts.annotation;
+  }
+
 
   if (!nodeMap[node.id]) {
     return null;

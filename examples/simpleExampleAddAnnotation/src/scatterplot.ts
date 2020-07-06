@@ -13,7 +13,7 @@ export default class Scatterplot{
 
   constructor(
     changeQuartetFunc: (s:string) => void,
-    selectNodeFunc: (s:string) => void,
+    selectNodeFunc: (s:number, x:number, y:number) => void,
     hoverNodeFunc: (s:string) => void
   ){
     this.margin = {};
@@ -55,7 +55,7 @@ export default class Scatterplot{
   * Creates an svg and draws the initial visualization
   */
 
-  initializeVis(selectNodeFunc: (s:string) => void, hoverNodeFunc: (s:string) => void)
+  initializeVis(selectNodeFunc: (s:number, x:number, y:number) => void, hoverNodeFunc: (s:string) => void)
   {
     this.svg
       .attr("width", this.width + this.margin.left + this.margin.right)
@@ -73,7 +73,7 @@ export default class Scatterplot{
       .attr("id", d => "node_" + d.id)
       .attr("cx", d => this.xScale(+d.x))
       .attr("cy", d => this.height - this.yScale(+d.y))
-      .on("click", d => selectNodeFunc("node_" + d.id))
+      .on("click", d => selectNodeFunc(d.id, d.x, d.y))
       .on("mouseover", d => hoverNodeFunc("node_" + d.id))
       .on("mouseout", d => hoverNodeFunc(""))
   }

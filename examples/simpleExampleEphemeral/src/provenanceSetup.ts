@@ -47,7 +47,7 @@ const initialState: NodeState = {
 type EventTypes = "Change Quartet" | "Select Node" | "Hover Node"
 
 //initialize provenance with the first state
-let prov = initProvenance<NodeState, EventTypes, string>(initialState);
+let prov = initProvenance<NodeState, EventTypes, string>(initialState, false);
 
 //Set up apply action functions for each of the 3 actions that affect state
 
@@ -97,7 +97,7 @@ let selectNodeUpdate = function(newSelected: string){
 
 let hoverNodeUpdate = function(newHover: string){
   let action = prov.addAction(
-    newHover === "" ? "Nothing hovered" : newHover + " hovered",
+    newHover === "" ? "Hover Removed" : newHover + " hovered",
     (state:NodeState) => {
       state.hoveredNode = newHover;
       return state;
@@ -151,6 +151,7 @@ prov.addObserver(["hoveredNode"], () => {
 });
 
 prov.addGlobalObserver(() => {
+  console.log("global observer called")
   provVisUpdate();
 })
 
@@ -174,20 +175,10 @@ function provVisUpdate()
 {
   ProvVisCreator(
     document.getElementById("provDiv")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    visCallback);
-
-  undoUpdate();
-}
-
-function undoUpdate()
-{
-  UndoRedoButtonCreator(
-    document.getElementById("buttons")!,
-    prov.graph() as ProvenanceGraph<NodeState, string, unknown>,
-    undo,
-    redo
-  )
+    prov,
+    visCallback,
+    true,
+    true);
 }
 
 //Setting up undo/redo hotkey to typical buttons

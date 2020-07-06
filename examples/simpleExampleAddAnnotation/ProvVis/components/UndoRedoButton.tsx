@@ -1,29 +1,13 @@
 
-import { isStateNode, isChildNode, NodeID, Nodes, ProvenanceGraph, ProvenanceNode, StateNode } from '../../../../src/index';
-import { HierarchyNode, stratify } from 'd3';
-import React, { ReactChild, useEffect, useState } from 'react';
-import { NodeGroup } from 'react-move';
-import { Popup } from 'semantic-ui-react';
+import { ProvenanceGraph } from '../../../../src/index';
+
+import React from 'react';
 import { style } from 'typestyle';
 
-import { BundleMap } from '../Utils/BundleMap';
-import { EventConfig } from '../Utils/EventConfig';
-import findBundleParent from '../Utils/findBundleParent';
-import translate from '../Utils/translate';
-import { treeLayout } from '../Utils/TreeLayout';
-import BackboneNode from './BackboneNode';
-import bundleTransitions from './BundleTransitions';
-import Link from './Link';
-import linkTransitions from './LinkTransitions';
-import nodeTransitions from './NodeTransitions';
-import { treeColor } from './Styles';
-
-import {Button} from 'semantic-ui-react';
-
 export interface UndoRedoConfig<T, S extends string, A> {
-  graph: ProvenanceGraph<T, S, A>;
   undoCallback: () => void;
   redoCallback: () => void;
+  graph?: ProvenanceGraph<T, S, A>;
 }
 
 function UndoRedoButton<T, S extends string, A>({
@@ -31,26 +15,81 @@ function UndoRedoButton<T, S extends string, A>({
   undoCallback,
   redoCallback
 } : UndoRedoConfig<T, S, A> ) {
+  if(graph === undefined)
+  {
+    return null;
+  }
+
   const isAtRoot = graph.root === graph.current;
   const isAtLatest = graph.nodes[graph.current].children.length === 0;
 
   return (
-   <Button.Group size="large">
-     <Button
-       icon="undo"
-       primary
-       content="Undo"
+    <div>
+     <button
+       className={undoButtonStyle}
        disabled={isAtRoot}
-       onClick={undoCallback}></Button>
-     <Button.Or></Button.Or>
-     <Button
-       icon="redo"
-       secondary
-       content="Redo"
+       onClick={undoCallback}>Undo</button>
+     <button
+       className={redoButtonStyle}
        disabled={isAtLatest}
-       onClick={redoCallback}></Button>
-   </Button.Group>
+       onClick={redoCallback}>Redo</button>
+    </div>
  );
 }
+
+const undoButtonStyle = style({
+  backgroundColor:"#768d87",
+	borderRadius:"2px",
+	border:"none",
+	display:"inline-block",
+	cursor:"pointer",
+	color:"#ffffff",
+  fontFamily:"Lato,Helvetica Neue,Arial,Helvetica,sans-serif",
+	fontSize:"14px",
+	padding:"5px 15px",
+  marginRight: "1px",
+  marginLeft: "10px",
+  $nest: {
+    "&:hover": {
+      backgroundColor: "#6c7c7c"
+    },
+
+    "&:disabled": {
+      backgroundColor: "#a8b3b0"
+    },
+
+    "&:active": {
+      backgroundColor: "#6c7c7c"
+    }
+  }
+});
+
+const redoButtonStyle = style({
+  backgroundColor:"#768d87",
+	borderRadius:"2px",
+	border:"none",
+	display:"inline-block",
+	cursor:"pointer",
+	color:"#ffffff",
+	fontFamily:"Lato,Helvetica Neue,Arial,Helvetica,sans-serif",
+	fontSize:"14px",
+	padding:"5px 15px",
+
+  $nest: {
+    "&:hover": {
+      backgroundColor: "#6c7c7c"
+    },
+
+    "&:disabled": {
+      backgroundColor: "#a8b3b0"
+    },
+
+    "&:active": {
+      backgroundColor: "#6c7c7c"
+    }
+
+  }
+
+});
 
 export default UndoRedoButton;

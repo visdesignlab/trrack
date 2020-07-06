@@ -1,4 +1,4 @@
-import { NodeMetadata, Artifacts } from './NodeInterfaces';
+import { NodeMetadata, Artifacts, Extra } from './NodeInterfaces';
 import Provenance, { ActionFunction } from './Provenance';
 import { ProvenanceGraph } from './ProvenanceGraph';
 
@@ -7,7 +7,7 @@ export class Action<T, S, A> {
   action: ActionFunction<T>;
   args?: any[];
   metadata: NodeMetadata<S>;
-  artifacts?: Artifacts<A>;
+  artifacts: Artifacts<A>;
   eventType?: S;
   complex?: boolean;
   ephemeral?: boolean;
@@ -21,7 +21,9 @@ export class Action<T, S, A> {
     this.action = a;
     this.args = undefined;
     this.metadata = {};
-    this.artifacts = undefined;
+    this.artifacts = {
+      extra: []
+    };
     this.eventType = undefined;
     this.complex = false;
     this.prov = prov;
@@ -68,6 +70,15 @@ export class Action<T, S, A> {
    */
   addArtifacts(artifacts: Artifacts<A>): Action<T, S, A> {
     this.artifacts = artifacts;
+    return this;
+  }
+
+  addExtra(extra: A) {
+    this.artifacts.extra.push({
+      time: Date.now(),
+      e: extra
+    });
+
     return this;
   }
 

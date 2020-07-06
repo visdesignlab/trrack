@@ -9,11 +9,11 @@
       "group": 1
     },
     {
-      "id": "Mlle.Baptistine",
+      "id": "MlleBaptistine",
       "group": 1
     },
     {
-      "id": "Mme.Magloire",
+      "id": "MmeMagloire",
       "group": 1
     },
     {
@@ -53,7 +53,7 @@
       "group": 3
     },
     {
-      "id": "Mme.deR",
+      "id": "MmedeR",
       "group": 2
     },
     {
@@ -97,7 +97,7 @@
       "group": 3
     },
     {
-      "id": "Mme.Thenardier",
+      "id": "MmeThenardier",
       "group": 4
     },
     {
@@ -189,7 +189,7 @@
       "group": 7
     },
     {
-      "id": "Mme.Burgon",
+      "id": "MmeBurgon",
       "group": 7
     },
     {
@@ -205,19 +205,19 @@
       "group": 5
     },
     {
-      "id": "Mlle.Gillenormand",
+      "id": "MlleGillenormand",
       "group": 5
     },
     {
-      "id": "Mme.Pontmercy",
+      "id": "MmePontmercy",
       "group": 5
     },
     {
-      "id": "Mlle.Vaubois",
+      "id": "MlleVaubois",
       "group": 5
     },
     {
-      "id": "Lt.Gillenormand",
+      "id": "LtGillenormand",
       "group": 5
     },
     {
@@ -305,7 +305,7 @@
       "group": 4
     },
     {
-      "id": "Mme.Hucheloup",
+      "id": "MmeHucheloup",
       "group": 8
     }
   ],
@@ -316,18 +316,18 @@
       "value": 1
     },
     {
-      "source": "Mlle.Baptistine",
+      "source": "MlleBaptistine",
       "target": "Myriel",
       "value": 8
     },
     {
-      "source": "Mme.Magloire",
+      "source": "MmeMagloire",
       "target": "Myriel",
       "value": 10
     },
     {
-      "source": "Mme.Magloire",
-      "target": "Mlle.Baptistine",
+      "source": "MmeMagloire",
+      "target": "MlleBaptistine",
       "value": 6
     },
     {
@@ -367,12 +367,12 @@
     },
     {
       "source": "Valjean",
-      "target": "Mme.Magloire",
+      "target": "MmeMagloire",
       "value": 3
     },
     {
       "source": "Valjean",
-      "target": "Mlle.Baptistine",
+      "target": "MlleBaptistine",
       "value": 3
     },
     {
@@ -386,7 +386,7 @@
       "value": 1
     },
     {
-      "source": "Mme.deR",
+      "source": "MmedeR",
       "target": "Valjean",
       "value": 1
     },
@@ -551,18 +551,18 @@
       "value": 9
     },
     {
-      "source": "Mme.Thenardier",
+      "source": "MmeThenardier",
       "target": "Fantine",
       "value": 2
     },
     {
-      "source": "Mme.Thenardier",
+      "source": "MmeThenardier",
       "target": "Valjean",
       "value": 7
     },
     {
       "source": "Thenardier",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 13
     },
     {
@@ -577,7 +577,7 @@
     },
     {
       "source": "Cosette",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 4
     },
     {
@@ -612,7 +612,7 @@
     },
     {
       "source": "Javert",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 1
     },
     {
@@ -797,7 +797,7 @@
     },
     {
       "source": "Eponine",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 2
     },
     {
@@ -817,7 +817,7 @@
     },
     {
       "source": "Anzelma",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 1
     },
     {
@@ -851,13 +851,13 @@
       "value": 2
     },
     {
-      "source": "Mme.Burgon",
+      "source": "MmeBurgon",
       "target": "Jondrette",
       "value": 1
     },
     {
       "source": "Gavroche",
-      "target": "Mme.Burgon",
+      "target": "MmeBurgon",
       "value": 2
     },
     {
@@ -892,57 +892,57 @@
     },
     {
       "source": "Magnon",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 1
     },
     {
-      "source": "Mlle.Gillenormand",
+      "source": "MlleGillenormand",
       "target": "Gillenormand",
       "value": 9
     },
     {
-      "source": "Mlle.Gillenormand",
+      "source": "MlleGillenormand",
       "target": "Cosette",
       "value": 2
     },
     {
-      "source": "Mlle.Gillenormand",
+      "source": "MlleGillenormand",
       "target": "Valjean",
       "value": 2
     },
     {
-      "source": "Mme.Pontmercy",
-      "target": "Mlle.Gillenormand",
+      "source": "MmePontmercy",
+      "target": "MlleGillenormand",
       "value": 1
     },
     {
-      "source": "Mme.Pontmercy",
+      "source": "MmePontmercy",
       "target": "Pontmercy",
       "value": 1
     },
     {
-      "source": "Mlle.Vaubois",
-      "target": "Mlle.Gillenormand",
+      "source": "MlleVaubois",
+      "target": "MlleGillenormand",
       "value": 1
     },
     {
-      "source": "Lt.Gillenormand",
-      "target": "Mlle.Gillenormand",
+      "source": "LtGillenormand",
+      "target": "MlleGillenormand",
       "value": 2
     },
     {
-      "source": "Lt.Gillenormand",
+      "source": "LtGillenormand",
       "target": "Gillenormand",
       "value": 1
     },
     {
-      "source": "Lt.Gillenormand",
+      "source": "LtGillenormand",
       "target": "Cosette",
       "value": 1
     },
     {
       "source": "Marius",
-      "target": "Mlle.Gillenormand",
+      "target": "MlleGillenormand",
       "value": 6
     },
     {
@@ -957,7 +957,7 @@
     },
     {
       "source": "Marius",
-      "target": "Lt.Gillenormand",
+      "target": "LtGillenormand",
       "value": 1
     },
     {
@@ -1347,7 +1347,7 @@
     },
     {
       "source": "Gueulemer",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 1
     },
     {
@@ -1382,7 +1382,7 @@
     },
     {
       "source": "Babet",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 1
     },
     {
@@ -1422,7 +1422,7 @@
     },
     {
       "source": "Claquesous",
-      "target": "Mme.Thenardier",
+      "target": "MmeThenardier",
       "value": 1
     },
     {
@@ -1546,37 +1546,37 @@
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Bossuet",
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Joly",
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Grantaire",
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Bahorel",
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Courfeyrac",
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Gavroche",
       "value": 1
     },
     {
-      "source": "Mme.Hucheloup",
+      "source": "MmeHucheloup",
       "target": "Enjolras",
       "value": 1
     }
