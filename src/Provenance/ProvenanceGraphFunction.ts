@@ -128,13 +128,9 @@ export function importState<T, S, A>(
         return state;
       }
 
-      // console.log(JSON.stringify( {_state, diffs}, null, 4 ));
-
       diffsTemp.forEach((diff: Diff) => {
         applyChange(state, null, diff);
       });
-
-      // console.log(state)
 
       return state;
     },
@@ -184,43 +180,7 @@ export function importState<T, S, A>(
   newGraph.nodes[currentId].children.push(newNode.id);
   newGraph.current = newNode.id;
 
-  // console.log(JSON.stringify(newGraph, null, 2));
-
   return newGraph;
-  //   const newGraph = deepCopy(graph);
-  //
-  //   const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
-  //     id: generateUUID(),
-  //     label: 'Imported state',
-  //     metadata: {
-  //       createdOn: generateTimeStamp()
-  //     },
-  //     artifacts: {
-  //       extra: [],
-  //       diffs
-  //     },
-  //     parent: parent,
-  //     children: [],
-  //     state: state,
-  //     getState: () => {
-  //       return state;
-  //     },
-  //     ephemeral: false
-  //   });
-  //
-  //   let diffs = deepDiff(initalState, importedState);
-  //
-  //   if (diffs === undefined) {
-  //     diffs = [];
-  //   }
-  //
-  //   const newNode = createNewStateNode(graph.current, importedState, diffs);
-  //
-  //   newGraph.nodes[newNode.id] = newNode;
-  //   newGraph.nodes[newGraph.current].children.push(newNode.id);
-  //   newGraph.current = newNode.id;
-  //
-  //   return newGraph;
 }
 
 export function addExtraToNodeArtifact<T, S, A>(
@@ -250,13 +210,11 @@ export function addAnnotationToNode<T, S, A>(
 ): ProvenanceGraph<T, S, A> {
   const newGraph = deepCopy(graph);
   const node = newGraph.nodes[id];
-
   if (isChildNode(node)) {
     node.artifacts.annotation = annotation;
   } else {
     throw new Error('Cannot add annotation to Root Node');
   }
-
   return newGraph;
 }
 
@@ -400,8 +358,6 @@ export function applyActionFunction<T, S, A>(
   newGraph.nodes[newNode.id] = newNode;
   newGraph.nodes[currentId].children.push(newNode.id);
   newGraph.current = newNode.id;
-
-  // console.log(JSON.stringify(newGraph, null, 2));
 
   return newGraph;
 }

@@ -345,9 +345,14 @@ export default function initProvenance<T, S, A>(
       let node = graph.nodes[id];
 
       if (isChildNode(node)) {
-        return deepDiff(graph.nodes[node.parent].getState(), node.getState());
+        let diff = deepDiff(graph.nodes[node.parent].getState(), node.getState());
+        if (diff === undefined) {
+          return [];
+        } else {
+          return diff;
+        }
       } else {
-        throw new Error(`Cannot get diff from root node`);
+        console.log(`Cannot get diff from root node`);
         return [];
       }
     },

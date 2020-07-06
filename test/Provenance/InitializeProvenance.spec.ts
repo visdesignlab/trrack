@@ -1,4 +1,4 @@
-import { ActionFunction, initProvenance } from '../../src';
+import { ActionFunction, initProvenance, Provenance } from '../../src';
 import {
   isStateNode,
   isChildNode,
@@ -37,7 +37,12 @@ type TestEvents = 'Name Change' | 'Add TODO';
 
 type Annotation = string;
 
-function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
+function setupApp(
+  loadFromUrl: boolean = false,
+  skipGlobal: boolean = false,
+  addFirebase: boolean = false,
+  firebaseConfig?: any
+) {
   const state: ToDoListState = {
     user: {
       name: 'Kiran',
@@ -62,7 +67,18 @@ function setupApp(loadFromUrl: boolean = false, skipGlobal: boolean = false) {
     user_total: 0
   };
 
-  const provenance = initProvenance<ToDoListState, TestEvents, Annotation>(state, loadFromUrl);
+  let provenance: Provenance<ToDoListState, TestEvents, Annotation>;
+
+  if (addFirebase) {
+    provenance = initProvenance<ToDoListState, TestEvents, Annotation>(
+      state,
+      loadFromUrl,
+      addFirebase,
+      firebaseConfig
+    );
+  } else {
+    provenance = initProvenance<ToDoListState, TestEvents, Annotation>(state, loadFromUrl);
+  }
 
   if (!skipGlobal) {
     provenance.addGlobalObserver(() => {
@@ -482,6 +498,10 @@ describe('loadFromUrl', () => {
 
   const originalWindowLocationHref = window.location.href;
 
+  test('if basic loading works is thrown in non-browser environment', () => {
+    expect(true).toBeTruthy();
+  });
+
   test('if error is thrown in non-browser environment', () => {
     // const err = () => setupApp(true);
     // expect(err).toThrowError();
@@ -615,6 +635,51 @@ function addThreeEmptyChanges(skipGlobal: boolean = false) {
   return { ...app, label: 'Adding identical state' };
 }
 
+function addThreeFirebase(skipGlobal: boolean = false) {
+  const app = setupApp(false, skipGlobal, true, {
+    apiKey: 'AIzaSyDykS8uY9vsevIJMiWGEX2xNm1X1xo2yV4',
+    authDomain: 'fir-prov-project.firebaseapp.com',
+    databaseURL: 'https://fir-prov-project.firebaseio.com',
+    projectId: 'fir-prov-project',
+    storageBucket: 'fir-prov-project.appspot.com',
+    messagingSenderId: '202608989650',
+    appId: '1:202608989650:web:bcebc6d29b89e59662e40b'
+  });
+
+  const { provenance } = app;
+
+  let actions = [];
+
+  for (let i = 0; i < 3; i++) {
+    let a = provenance.addAction('Adding identical state', (state: ToDoListState) => {
+      return state;
+    });
+    a.applyAction();
+  }
+
+  return { ...app, label: 'Adding identical state' };
+}
+
+function addThreeEphemeralExtra(skipGlobal: boolean = false) {
+  const app = setupApp(false, skipGlobal);
+
+  const { provenance } = app;
+
+  let actions = [];
+
+  for (let i = 0; i < 3; i++) {
+    let a = provenance.addAction('Adding identical state', (state: ToDoListState) => {
+      return state;
+    });
+
+    a.isEphemeral(true)
+      .addExtra('Extra testing')
+      .applyAction();
+  }
+
+  return { ...app, label: 'Adding identical state' };
+}
+
 function addThreeIdenticalTasksComplex(skipGlobal: boolean = false) {
   const app = setupApp(false, skipGlobal);
 
@@ -645,6 +710,89 @@ function addThreeIdenticalTasksComplex(skipGlobal: boolean = false) {
   }
 
   return { ...app, label: 'Adding edited task' };
+}
+
+function importLinearStates() {
+  const app = setupApp(false, true);
+
+  const { provenance } = app;
+
+  provenance.importLinearStates(
+    [
+      {
+        user: {
+          name: 'Zach',
+          totalTask: 1
+        },
+        todos: [
+          {
+            task: 'Add unit tests',
+            createdOn: new Date().toISOString(),
+            status: TodoStatus.ONGOING,
+            completedOn: ''
+          }
+        ]
+      },
+      {
+        user: {
+          name: 'Alex',
+          totalTask: 1
+        },
+        todos: [
+          {
+            task: 'Add unit tests',
+            createdOn: new Date().toISOString(),
+            status: TodoStatus.ONGOING,
+            completedOn: ''
+          }
+        ]
+      },
+      {
+        user: {
+          name: 'Kiran',
+          totalTask: 1
+        },
+        todos: [
+          {
+            task: 'Add unit tests',
+            createdOn: new Date().toISOString(),
+            status: TodoStatus.ONGOING,
+            completedOn: ''
+          }
+        ]
+      }
+    ],
+    ['New name', 'New name', 'New name'],
+    []
+  );
+
+  return { ...app, label: 'New name' };
+}
+
+function loadFromURLTesting() {
+  const app = setupApp(true, true);
+
+  const { provenance } = app;
+
+  const newTask: TodoItem = {
+    createdOn: new Date().toISOString(),
+    task: 'To check for coverage changes',
+    status: TodoStatus.ONGOING,
+    completedOn: ''
+  };
+
+  let actions = [];
+
+  for (let i = 0; i < 3; i++) {
+    let a = provenance.addAction('Adding new task', (state: ToDoListState) => {
+      state.todos.push(newTask);
+      state.user.totalTask = state.todos.length;
+      return state;
+    });
+    a.applyAction();
+  }
+
+  return { ...app, label: 'Adding new task' };
 }
 
 describe('applying an action that should create diffs only', () => {
@@ -738,6 +886,22 @@ describe('applying an action that makes enough changes to always store state onl
   });
 });
 
+describe('testing url loading', () => {
+  let { provenance, label } = loadFromURLTesting();
+
+  test('if some new node has added', () => {
+    const { nodes } = provenance.graph();
+    const nodeIds = Object.keys(nodes);
+    expect(nodeIds.length).toBe(4);
+  });
+
+  test('if new node has proper label', () => {
+    const { nodes, current } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(currentNode.label).toBe(label);
+  });
+});
+
 describe('applying an action with every optional parameter used', () => {
   let { provenance, label } = addActionsWithAllExtra(true);
 
@@ -751,6 +915,13 @@ describe('applying an action with every optional parameter used', () => {
     const { nodes, current } = provenance.graph();
     const currentNode = nodes[current];
     expect(currentNode.label).toBe(label);
+  });
+
+  test('if diffs are not empty', () => {
+    const { nodes, current } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(isDiffNode(nodes[current])).toBeTruthy();
+    expect(provenance.getDiffFromNode(current).length !== 0).toBeTruthy();
   });
 
   test('if last 2 nodes are diff nodes, as expected', () => {
@@ -858,6 +1029,16 @@ describe('add three identical tasks complex', () => {
     expect(currentNode.label).toBe(label);
   });
 
+  test('if annotation can be added', () => {
+    const { nodes, current } = provenance.graph();
+    provenance.addAnnotationToNode(current, 'Test annotation');
+    const currentNode = provenance.current();
+    expect(
+      (currentNode as ChildNode<ToDoListState, TestEvents, string>).artifacts.annotation ===
+        'Test annotation'
+    ).toBeTruthy();
+  });
+
   test('if last 2 nodes are diff nodes, as expected', () => {
     const { nodes, current } = provenance.graph();
 
@@ -898,12 +1079,78 @@ describe('add three identical tasks complex', () => {
   test('extra should always contain an empty object', () => {
     const { nodes, current } = provenance.graph();
 
-    expect(provenance.getExtraFromArtifact(current).length).toEqual(1);
+    expect(provenance.getExtraFromArtifact(current).length).toEqual(2);
   });
 });
 
 describe('add three states that change nothing', () => {
   let { provenance, label } = addThreeEmptyChanges(true);
+
+  test('if some new node has added', () => {
+    const { nodes } = provenance.graph();
+    const nodeIds = Object.keys(nodes);
+    expect(nodeIds.length).toBe(4);
+  });
+
+  test('if new node has proper label', () => {
+    const { nodes, current } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(currentNode.label).toBe(label);
+  });
+
+  test('if diffs are empty', () => {
+    const { nodes, current } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(isDiffNode(nodes[current])).toBeTruthy();
+    expect(provenance.getDiffFromNode(current).length === 0).toBeTruthy();
+  });
+
+  test('root diff returns empty', () => {
+    const { nodes, current, root } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(provenance.getDiffFromNode(root).length === 0).toBeTruthy();
+  });
+
+  test('if last 2 nodes are diff nodes, as expected', () => {
+    const { nodes, current } = provenance.graph();
+
+    expect(isDiffNode(nodes[current])).toBeTruthy();
+
+    let parent = (nodes[current] as ChildNode<ToDoListState, TestEvents, string>).parent;
+
+    expect(isDiffNode(nodes[parent])).toBeTruthy();
+
+    let nextParent = (nodes[parent] as ChildNode<ToDoListState, TestEvents, string>).parent;
+
+    expect(isStateNode(nodes[nextParent])).toBeTruthy();
+  });
+
+  test('if state stored matches the added task', () => {
+    const { nodes, current } = provenance.graph();
+    const currentState = nodes[current].getState();
+    const addedTodo = currentState.todos[0];
+
+    expect(addedTodo).toMatchInlineSnapshot(
+      {
+        createdOn: expect.any(String),
+        task: 'Add unit tests',
+        status: TodoStatus.ONGOING,
+        completedOn: expect.any(String)
+      },
+      `
+      Object {
+        "completedOn": Any<String>,
+        "createdOn": Any<String>,
+        "status": "ONGOING",
+        "task": "Add unit tests",
+      }
+    `
+    );
+  });
+});
+
+describe('add three states to firebase', () => {
+  let { provenance, label } = addThreeFirebase(true);
 
   test('if some new node has added', () => {
     const { nodes } = provenance.graph();
@@ -955,6 +1202,91 @@ describe('add three states that change nothing', () => {
   });
 });
 
+describe('add three with ephemeral and extra', () => {
+  let { provenance, label } = addThreeEphemeralExtra(true);
+
+  test('if some new node has added', () => {
+    const { nodes } = provenance.graph();
+    const nodeIds = Object.keys(nodes);
+    expect(nodeIds.length).toBe(4);
+  });
+
+  test('if new node has proper label', () => {
+    const { nodes, current } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(currentNode.label).toBe(label);
+  });
+
+  test('extra properly added', () => {
+    const { nodes, current } = provenance.graph();
+
+    expect(provenance.getExtraFromArtifact(current)[0].e === 'Extra testing').toBeTruthy();
+  });
+
+  test('if last 2 nodes are diff nodes, as expected', () => {
+    const { nodes, current } = provenance.graph();
+
+    expect(nodes[current].ephemeral).toBeTruthy();
+
+    let parent = (nodes[current] as ChildNode<ToDoListState, TestEvents, string>).parent;
+
+    expect(nodes[parent].ephemeral).toBeTruthy();
+
+    let nextParent = (nodes[parent] as ChildNode<ToDoListState, TestEvents, string>).parent;
+
+    expect(nodes[nextParent].ephemeral).toBeTruthy();
+  });
+
+  test('if state stored matches the added task', () => {
+    const { nodes, current } = provenance.graph();
+    const currentState = nodes[current].getState();
+    const addedTodo = currentState.todos[0];
+
+    expect(addedTodo).toMatchInlineSnapshot(
+      {
+        createdOn: expect.any(String),
+        task: 'Add unit tests',
+        status: TodoStatus.ONGOING,
+        completedOn: expect.any(String)
+      },
+      `
+      Object {
+        "completedOn": Any<String>,
+        "createdOn": Any<String>,
+        "status": "ONGOING",
+        "task": "Add unit tests",
+      }
+    `
+    );
+  });
+
+  test('go back ephemeral returns to root', () => {
+    provenance.goBackToNonEphemeral();
+    expect(provenance.current().id === provenance.root().id).toBeTruthy();
+  });
+
+  test('go forward ephemeral goes nowhere', () => {
+    let curr = provenance.current;
+    const err = () => provenance.goForwardToNonEphemeral();
+    expect(err).toThrowError();
+  });
+});
+
+describe('importing consecutive linear states', () => {
+  let { provenance, label } = importLinearStates();
+
+  test('if some new node has added', () => {
+    const { nodes } = provenance.graph();
+    const nodeIds = Object.keys(nodes);
+    expect(nodeIds.length).toBe(4);
+  });
+
+  test('if new node has proper label', () => {
+    const { nodes, current } = provenance.graph();
+    const currentNode = nodes[current];
+    expect(currentNode.label).toBe(label);
+  });
+});
 //
 // describe('isStateNode function', () => {
 //   const { provenance } = addOneTask();

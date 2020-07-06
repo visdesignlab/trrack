@@ -151,7 +151,7 @@ export default interface Provenance<T, S, A> {
    */
   exportProvenanceGraph: () => string;
 
-  getDiffFromNode: (id: NodeID) => any[] | undefined;
+  getDiffFromNode: (id: NodeID) => any[];
 
   /*
    * Imports an entire, non compressed provenance graph in JSON form. Replaces the current provenance graph with the new one.
