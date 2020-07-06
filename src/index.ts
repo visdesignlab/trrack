@@ -3,6 +3,7 @@
 // ...
 
 import initProvenance from './Provenance/InitializeProvenance';
+
 import { ProvenanceGraph } from './Interfaces/ProvenanceGraph';
 import Provenance, { ActionFunction, SubscriberFunction } from './Interfaces/Provenance';
 import {
@@ -11,8 +12,12 @@ import {
   Artifacts,
   Diff,
   isStateNode,
+  isChildNode,
+  isDiffNode,
   ProvenanceNode,
   StateNode,
+  ChildNode,
+  DiffNode,
   RootNode,
   CurrentNode,
   Nodes,
@@ -30,8 +35,12 @@ export {
   Diff,
   RootNode,
   StateNode,
+  ChildNode,
+  DiffNode,
   ProvenanceNode,
   isStateNode,
+  isChildNode,
+  isDiffNode,
   Nodes,
   CurrentNode,
   Artifacts,

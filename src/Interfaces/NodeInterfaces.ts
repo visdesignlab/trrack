@@ -1,3 +1,7 @@
+const applyChange = require('deep-diff').applyChange;
+import { ProvenanceGraph } from './ProvenanceGraph';
+import deepCopy from '../Utils/DeepCopy';
+
 export type NodeID = string;
 
 export interface NodeMetadata<S> {
@@ -21,33 +25,52 @@ export interface Extra<A> {
 
 export interface Artifacts<A> {
   diffs?: Diff[];
+  annotation?: string;
   extra: Extra<A>[];
   [key: string]: any;
 }
 
-export interface BaseNode<T> {
-  state: T;
-}
-
-export interface RootNode<T, S> extends BaseNode<T> {
+export interface BaseNode<T, S> {
   id: NodeID;
   label: string;
   metadata: NodeMetadata<S>;
   children: NodeID[];
+  getState: () => T;
+  ephemeral: boolean;
+}
+
+export interface RootNode<T, S> extends BaseNode<T, S> {
   state: T;
 }
 
-export interface StateNode<T, S, A> extends RootNode<T, S> {
+export interface ChildNode<T, S, A> extends BaseNode<T, S> {
   parent: NodeID;
   artifacts: Artifacts<A>;
 }
 
-export type ProvenanceNode<T, S, A> = RootNode<T, S> | StateNode<T, S, A>;
+export interface StateNode<T, S, A> extends RootNode<T, S>, ChildNode<T, S, A> {}
+
+export interface DiffNode<T, S, A> extends ChildNode<T, S, A> {
+  diffs: Diff[];
+  lastStateNode: NodeID;
+}
+
+export type ProvenanceNode<T, S, A> = RootNode<T, S> | StateNode<T, S, A> | DiffNode<T, S, A>;
 
 export type Nodes<T, S, A> = { [key: string]: ProvenanceNode<T, S, A> };
 
 export type CurrentNode<T, S, A> = ProvenanceNode<T, S, A>;
 
 export function isStateNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is StateNode<T, S, A> {
+  return 'parent' in node && 'state' in node;
+}
+
+export function isDiffNode<T, S, A>(node: ProvenanceNode<T, S, A>): node is DiffNode<T, S, A> {
+  return 'diffs' in node;
+}
+
+export function isChildNode<T, S, A>(
+  node: ProvenanceNode<T, S, A>
+): node is DiffNode<T, S, A> | StateNode<T, S, A> {
   return 'parent' in node;
 }

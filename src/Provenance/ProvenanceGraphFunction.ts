@@ -1,3 +1,5 @@
+const applyChange = require('deep-diff').applyChange;
+
 import { ProvenanceGraph } from '../Interfaces/ProvenanceGraph';
 import {
   RootNode,
@@ -5,8 +7,11 @@ import {
   NodeMetadata,
   Artifacts,
   StateNode,
+  DiffNode,
   Diff,
   isStateNode,
+  isChildNode,
+  isDiffNode,
   Extra
 } from '../Interfaces/NodeInterfaces';
 import generateUUID from '../Utils/generateUUID';
@@ -24,7 +29,11 @@ export function createProvenanceGraph<T, S, A>(state: T): ProvenanceGraph<T, S, 
       type: 'Root'
     },
     children: [],
-    state
+    state: state,
+    getState: () => {
+      return state;
+    },
+    ephemeral: false
   };
 
   const graph: ProvenanceGraph<T, S, A> = {
@@ -62,27 +71,113 @@ export function importState<T, S, A>(
 ) {
   const newGraph = deepCopy(graph);
 
-  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
+  const { current: currentId } = newGraph;
+
+  const currentState = deepCopy(graph.nodes[currentId].getState());
+
+  const createNewStateNode = (
+    parent: NodeID,
+    state: T,
+    diffs: Diff[],
+    ephemeral: boolean
+  ): StateNode<T, S, A> => ({
     id: generateUUID(),
-    label: 'Imported state',
+    label: 'Import Node',
     metadata: {
       createdOn: generateTimeStamp()
     },
     artifacts: {
-      extra: [],
-      diffs
+      diffs,
+      extra: []
     },
     parent: parent,
     children: [],
-    state
+    state: state,
+    getState: () => {
+      return state;
+    },
+    ephemeral: false
   });
 
-  const diffs = deepDiff(initalState, importedState);
+  const createNewDiffNode = (
+    parent: NodeID,
+    previousStateID: NodeID,
+    diffs: Diff[],
+    ephemeral: boolean
+  ): DiffNode<T, S, A> => ({
+    id: generateUUID(),
+    label: 'Import Node',
+    metadata: {
+      createdOn: generateTimeStamp()
+    },
+    artifacts: {
+      diffs,
+      extra: []
+    },
+    parent: parent,
+    children: [],
+    lastStateNode: previousStateID,
+    diffs: diffs,
+    getState: () => {
+      let _state = (newGraph.nodes[previousStateID] as StateNode<T, S, A>).getState();
+      let state: T = deepCopy(_state);
 
-  const newNode = createNewStateNode(graph.current, importedState, diffs);
+      let diffsTemp = diffs;
+
+      if (diffsTemp.length === 0) {
+        return state;
+      }
+
+      diffsTemp.forEach((diff: Diff) => {
+        applyChange(state, null, diff);
+      });
+
+      return state;
+    },
+    ephemeral: false
+  });
+
+  let currNode = graph.nodes[currentId];
+  let backCounter = 0;
+  let previousState = undefined;
+  let previousStateID = '';
+
+  let d = true;
+
+  if (isChildNode(currNode)) {
+    if (isStateNode(currNode)) {
+      previousState = currNode.getState();
+      previousStateID = currNode.id;
+    } else {
+      previousState = graph.nodes[currNode.lastStateNode].getState();
+      previousStateID = currNode.lastStateNode;
+    }
+  } else {
+    d = false;
+    previousState = currNode.getState();
+    previousStateID = currNode.id;
+  }
+
+  const newState = importedState;
+  const parentId = graph.current;
+
+  let diffs = deepDiff(previousState, newState);
+
+  if (diffs === undefined) {
+    diffs = [];
+  }
+
+  // TODO:: figure out how to count nested keys
+  if (d && Object.keys(previousState).length / 2 < diffs.length) {
+    d = false;
+  }
+
+  const newNode = d
+    ? createNewDiffNode(parentId, previousStateID, diffs, false)
+    : createNewStateNode(parentId, newState, diffs, false);
 
   newGraph.nodes[newNode.id] = newNode;
-  newGraph.nodes[newGraph.current].children.push(newNode.id);
+  newGraph.nodes[currentId].children.push(newNode.id);
   newGraph.current = newNode.id;
 
   return newGraph;
@@ -96,7 +191,7 @@ export function addExtraToNodeArtifact<T, S, A>(
   const newGraph = deepCopy(graph);
   const node = newGraph.nodes[id];
 
-  if (isStateNode(node)) {
+  if (isChildNode(node)) {
     node.artifacts.extra.push({
       time: generateTimeStamp(),
       e: extra
@@ -108,13 +203,28 @@ export function addExtraToNodeArtifact<T, S, A>(
   return newGraph;
 }
 
+export function addAnnotationToNode<T, S, A>(
+  graph: ProvenanceGraph<T, S, A>,
+  id: NodeID,
+  annotation: string
+): ProvenanceGraph<T, S, A> {
+  const newGraph = deepCopy(graph);
+  const node = newGraph.nodes[id];
+  if (isChildNode(node)) {
+    node.artifacts.annotation = annotation;
+  } else {
+    throw new Error('Cannot add annotation to Root Node');
+  }
+  return newGraph;
+}
+
 export function getExtraFromArtifact<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   id: NodeID
 ): Extra<A>[] {
   const node = graph.nodes[id];
-  if (isStateNode(node)) {
-    return node.artifacts.extra || [];
+  if (isChildNode(node)) {
+    return node.artifacts.extra;
   }
   throw new Error('Root does not have artifacts');
 }
@@ -123,6 +233,8 @@ export function applyActionFunction<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   label: string,
   action: ActionFunction<T>,
+  complex: boolean,
+  ephemeral: boolean,
   args?: any[],
   metadata?: NodeMetadata<S>,
   artifacts: Partial<Artifacts<A>> = {}
@@ -131,9 +243,14 @@ export function applyActionFunction<T, S, A>(
 
   const { current: currentId } = newGraph;
 
-  const currentState = deepCopy(newGraph.nodes[currentId].state);
+  const currentState = deepCopy(graph.nodes[currentId].getState());
 
-  const createNewStateNode = (parent: NodeID, state: T, diffs: Diff[]): StateNode<T, S, A> => ({
+  const createNewStateNode = (
+    parent: NodeID,
+    state: T,
+    diffs: Diff[],
+    ephemeral: boolean
+  ): StateNode<T, S, A> => ({
     id: generateUUID(),
     label: label,
     metadata: {
@@ -147,21 +264,100 @@ export function applyActionFunction<T, S, A>(
     },
     parent: parent,
     children: [],
-    state
+    state: state,
+    getState: () => {
+      return state;
+    },
+    ephemeral: ephemeral
   });
+
+  const createNewDiffNode = (
+    parent: NodeID,
+    previousStateID: NodeID,
+    diffs: Diff[],
+    ephemeral: boolean
+  ): DiffNode<T, S, A> => ({
+    id: generateUUID(),
+    label: label,
+    metadata: {
+      createdOn: generateTimeStamp(),
+      ...metadata
+    },
+    artifacts: {
+      diffs,
+      extra: [],
+      ...artifacts
+    },
+    parent: parent,
+    children: [],
+    lastStateNode: previousStateID,
+    diffs: diffs,
+    getState: () => {
+      let _state = (newGraph.nodes[previousStateID] as StateNode<T, S, A>).getState();
+      let state: T = deepCopy(_state);
+
+      let diffsTemp = diffs;
+
+      if (diffsTemp.length === 0) {
+        return state;
+      }
+
+      // console.log(JSON.stringify( {_state, diffs}, null, 4 ));
+
+      diffsTemp.forEach((diff: Diff) => {
+        applyChange(state, null, diff);
+      });
+
+      // console.log(state)
+
+      return state;
+    },
+    ephemeral: ephemeral
+  });
+
+  let currNode = graph.nodes[currentId];
+  let backCounter = 0;
+  let previousState = undefined;
+  let previousStateID = '';
+
+  let d = true;
+
+  if (isChildNode(currNode)) {
+    if (isStateNode(currNode)) {
+      previousState = currNode.getState();
+      previousStateID = currNode.id;
+    } else {
+      previousState = graph.nodes[currNode.lastStateNode].getState();
+      previousStateID = currNode.lastStateNode;
+    }
+  } else {
+    d = false;
+    previousState = currNode.getState();
+    previousStateID = currNode.id;
+  }
 
   const newState = args ? action(currentState, ...args) : action(currentState);
   const parentId = graph.current;
 
-  const diffs = deepDiff(graph.nodes[currentId].state, newState);
+  let diffs = deepDiff(previousState, newState);
 
-  const newNode = createNewStateNode(parentId, newState, diffs);
+  if (diffs === undefined) {
+    diffs = [];
+  }
+
+  // TODO:: figure out how to count nested keys
+  if (d && Object.keys(previousState).length / 2 < diffs.length) {
+    d = false;
+  }
+
+  const newNode =
+    d && !complex
+      ? createNewDiffNode(parentId, previousStateID, diffs, ephemeral)
+      : createNewStateNode(parentId, newState, diffs, ephemeral);
 
   newGraph.nodes[newNode.id] = newNode;
   newGraph.nodes[currentId].children.push(newNode.id);
   newGraph.current = newNode.id;
-
-  // console.log(JSON.stringify(newGraph, null, 2));
 
   return newGraph;
 }

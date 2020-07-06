@@ -18,7 +18,7 @@ describe('Creating Provenance Graph function', () => {
   });
 
   test('initalState should match root', () => {
-    const state = graph.nodes[graph.root].state;
+    const state = graph.nodes[graph.root].getState();
     expect(state).toMatchObject(initialState);
   });
 
