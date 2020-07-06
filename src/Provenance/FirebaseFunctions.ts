@@ -64,6 +64,7 @@ export function logToFirebase(rtd: firebase.database.Database) {
           };
         })
         .catch(err => {
+          console.log(err);
           throw new Error('Something went wrong while logging.');
         });
     });
