@@ -482,20 +482,6 @@ describe('loadFromUrl', () => {
 
   const originalWindowLocationHref = window.location.href;
 
-  test('test if url loading works', () => {
-    const windowLoc = JSON.stringify(window.location);
-    delete window.location;
-    Object.defineProperty(window, 'location', {
-      value: JSON.parse(windowLoc),
-      writable: true
-    });
-    window.location.href = originalWindowLocationHref + prov.exportState();
-
-    const { provenance } = setupApp(true);
-
-    expect(stateCopy).toStrictEqual(provenance.current().getState());
-  });
-
   test('if error is thrown in non-browser environment', () => {
     // const err = () => setupApp(true);
     // expect(err).toThrowError();

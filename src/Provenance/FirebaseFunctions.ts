@@ -64,13 +64,6 @@ export function logToFirebase(rtd: firebase.database.Database) {
           };
         })
         .catch(err => {
-          console.error(err);
-          const log = {
-            time: Date.now(),
-            status: 'error',
-            currentNodeId: graph.current
-          };
-          rtd.ref(`logging/${log.time}`).set(log);
           throw new Error('Something went wrong while logging.');
         });
     });
