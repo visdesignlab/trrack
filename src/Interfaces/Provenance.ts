@@ -90,10 +90,21 @@ export default interface Provenance<T, S, A> {
    */
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
 
+  /*
+   * Adds one extra object to the node with the given NodeID. Can be called multiple times on the same node to store multiple extras.
+   */
   addExtraToNodeArtifact: (id: NodeID, extra: A) => void;
+
+  /*
+   * Returns all extras stored on the node with the given NodeID
+   */
   getExtraFromArtifact: (id: NodeID) => Extra<A>[];
 
+  /*
+   * Stores the given annotation string in the artifacts of the node with the given NodeID
+   */
   addAnnotationToNode: (id: NodeID, annotation: string) => void;
+
   /*
    * Jumps to the node in the provenance graph with the given id.
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.
@@ -120,7 +131,14 @@ export default interface Provenance<T, S, A> {
    */
   goForwardOneStep: () => void;
 
+  /*
+   * Traverses up the graph until the most recent node which is not ephemeral is found. Sets that node to current.
+   */
   goBackToNonEphemeral: () => void;
+
+  /*
+   * Traverses down the graph until the most recent node which is not ephemeral is found. Sets that node to current.
+   */
   goForwardToNonEphemeral: () => void;
 
   /**
@@ -129,10 +147,14 @@ export default interface Provenance<T, S, A> {
   reset: () => void;
 
   /**
-   *
+   * Function to call when finished setting up observers. Allows for url state sharing easily.
    */
   done: () => void;
 
+  /*
+   * Given a series of linear states, constructs a new provenance graph. Designed mostly for
+   * recreating old provenance graphs. Using exportProvenanceGraph and importProvenanceGraph is preferred
+   */
   importLinearStates: (states: T[], labels?: string[], metadata?: NodeMetadata<S>[]) => void;
 
   /*
@@ -151,6 +173,9 @@ export default interface Provenance<T, S, A> {
    */
   exportProvenanceGraph: () => string;
 
+  /*
+   * Returns the deep-diff of a node compared to its parent
+   */
   getDiffFromNode: (id: NodeID) => any[];
 
   /*

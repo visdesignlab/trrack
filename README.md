@@ -6,6 +6,8 @@ A library to create and track provenance in web based apps.
 [![Build Status](https://travis-ci.com/visdesignlab/provenance-lib-core.svg?branch=master)](https://travis-ci.com/visdesignlab/provenance-lib-core)
 [![Coverage Status](https://coveralls.io/repos/github/visdesignlab/provenance-lib-core/badge.svg?branch=master)](https://coveralls.io/github/visdesignlab/provenance-lib-core?branch=master)
 
+For documenation, see src/Interfaces/Provenance.ts, as well as src/Interfaces/ActionObject.ts
+
 ## Features
 
 - Power you application to track user interactions or changes.
@@ -146,6 +148,8 @@ Project created using [Typescript library starter](https://github.com/alexjoverm
 ## Other provenance related projects
 
 [Example](https://github.com/visdesignlab/provenance-lib-core-demo) application using provenance. Also demonstrates how to import and export the current state of an application.
+
+[More Examples](https://github.com/visdesignlab/provenance-examples) using provenance with typescript and d3.
 
 [ProvVis](https://github.com/visdesignlab/ProvVis) is a library for visualizing the provenance graph created from this library.
 
