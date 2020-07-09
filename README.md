@@ -33,7 +33,7 @@ yarn add @visdesignlab/provenance-lib-core
 ## Usage
 
 ```typescript
-import { initProvenance, Provenance, ProvenanceGraph } from '@visdesignlab/provenance-lib-core';
+import { initProvenance } from '@visdesignlab/provenance-lib-core';
 
 // ************************************************
 // Setup all the interfaces and types
