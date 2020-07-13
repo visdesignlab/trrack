@@ -1,5 +1,5 @@
 {
-  "name": "@visdesignlab/provenance-lib-core",
+  "name": "@visdesignlab/trrack",
   "version": "0.0.0-development",
   "description": "",
   "keywords": [],
@@ -12,7 +12,7 @@
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/visdesignlab/provenance-lib-core.git"
+    "url": "git@github.com:visdesignlab/trrack.git"
   },
   "license": "MIT",
   "engines": {
@@ -65,9 +65,9 @@
     "coverageThreshold": {
       "global": {
         "branches": 80,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
       }
     },
     "collectCoverageFrom": [
