@@ -1,5 +1,10 @@
 {
   "name": "@visdesignlab/trrack",
+
+  "publishConfig": {
+    "access": "public"
+  },
+
   "version": "0.0.0-development",
   "description": "",
   "keywords": [],
