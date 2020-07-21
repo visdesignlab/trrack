@@ -64,7 +64,7 @@ export default function initProvenance<T, S, A>(
     log = logToFirebase(store?.db);
   }
 
-  function loadUrl() {
+  function loadUrl(): void {
     if (!window || !window.location || !window.location.href) {
       throw new Error(
         'Please use in a browser environment, or set loadFromUrl parameter in initProvenance to false'
