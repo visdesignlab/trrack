@@ -2,6 +2,12 @@ import { NodeMetadata, Artifacts, Extra } from './NodeInterfaces';
 import Provenance, { ActionFunction } from './Provenance';
 import { ProvenanceGraph } from './ProvenanceGraph';
 
+/**
+ * @template T Reprents the given state of an application as defined in initProvenance.
+ * @template S Reprents the given event types in your application. Event types are used to differentiate between different actions that create nodes.
+ * @template A Reprents the given "extra" type for storing metadata. Extra is a way to store customized metadata.
+ */
+
 export class Action<T, S, A> {
   label: string;
   action: ActionFunction<T>;

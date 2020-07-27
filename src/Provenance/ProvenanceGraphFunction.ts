@@ -33,7 +33,8 @@ export function createProvenanceGraph<T, S, A>(state: T): ProvenanceGraph<T, S, 
     getState: () => {
       return state;
     },
-    ephemeral: false
+    ephemeral: false,
+    bookmarked: false
   };
 
   const graph: ProvenanceGraph<T, S, A> = {
@@ -96,7 +97,8 @@ export function importState<T, S, A>(
     getState: () => {
       return state;
     },
-    ephemeral: false
+    ephemeral: false,
+    bookmarked: false
   });
 
   const createNewDiffNode = (
@@ -134,7 +136,8 @@ export function importState<T, S, A>(
 
       return state;
     },
-    ephemeral: false
+    ephemeral: false,
+    bookmarked: false
   });
 
   let currNode = graph.nodes[currentId];
@@ -268,7 +271,8 @@ export function applyActionFunction<T, S, A>(
     getState: () => {
       return state;
     },
-    ephemeral: ephemeral
+    ephemeral: ephemeral,
+    bookmarked: false
   });
 
   const createNewDiffNode = (
@@ -312,7 +316,8 @@ export function applyActionFunction<T, S, A>(
 
       return state;
     },
-    ephemeral: ephemeral
+    ephemeral: ephemeral,
+    bookmarked: false
   });
 
   let currNode = graph.nodes[currentId];

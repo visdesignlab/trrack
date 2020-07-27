@@ -20,23 +20,27 @@ export type ActionFunction<T> = (currentState: T, ...args: any[]) => T;
 
 export type ExportedState<T> = Partial<T>;
 
+/**
+ * @template T Reprents the given state of an application as defined in initProvenance.
+ * @template S Reprents the given event types in your application. Event types are used to differentiate between different actions that create nodes.
+ * @template A Reprents the given "extra" type for storing metadata. Extra is a way to store customized metadata.
+ */
 export default interface Provenance<T, S, A> {
-  /*
+  /**
    * Returns the ProvenanceGraph object
    */
   graph: () => ProvenanceGraph<T, S, A>;
 
-  /*
+  /**
    * Returns the current Provenance Node object
    */
   current: () => ProvenanceNode<T, S, A>;
-
-  /*
+  /**
    * Returns the Root Node object
    */
   root: () => RootNode<T, S>;
 
-  /*
+  /**
    * Function for creating new nodes in the graph.
    * Creates and returns an Action object which can be further customized before applying the action, which created a new node.
    * For further documentation on the Action object, see Action.ts
@@ -60,7 +64,7 @@ export default interface Provenance<T, S, A> {
     ephemeral?: boolean
   ) => T;
 
-  /*
+  /**
    * Adds an observer to the key in the state Object which propPath leads to.
    * For example, if your state looked like
    {
@@ -85,58 +89,58 @@ export default interface Provenance<T, S, A> {
 
   addArtifactObserver: (func: ArtifactSubscriberFunction<A>) => void;
 
-  /*
+  /**
    * Global observer which is called whenever the state of the application changes whatsoever.
    */
   addGlobalObserver: (func: SubscriberFunction<T>) => void;
 
-  /*
+  /**
    * Adds one extra object to the node with the given NodeID. Can be called multiple times on the same node to store multiple extras.
    */
   addExtraToNodeArtifact: (id: NodeID, extra: A) => void;
 
-  /*
+  /**
    * Returns all extras stored on the node with the given NodeID
    */
   getExtraFromArtifact: (id: NodeID) => Extra<A>[];
 
-  /*
+  /**
    * Stores the given annotation string in the artifacts of the node with the given NodeID
    */
   addAnnotationToNode: (id: NodeID, annotation: string) => void;
 
-  /*
+  /**
    * Jumps to the node in the provenance graph with the given id.
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.
    * @param id: NodeID of the node in the ProvenanceGraph to jump to.
    */
   goToNode: (id: NodeID) => void;
 
-  /*
+  /**
    * Goes one step backwards in the provenance graph. Equivalent to 'undo'
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.
    */
   goBackOneStep: () => void;
 
-  /*
+  /**
    * Goes N step backwards in the provenance graph.
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.
    * @param n: number of steps to traverse backwards in the provenance graph.
    */
   goBackNSteps: (n: number) => void;
 
-  /*
+  /**
    * Goes one step forward in the provenance graph. Equivalent to 'redo'
    * Calls the Global Observer if there is one. Also calls any observers for which their associated state has changed with the new node.
    */
   goForwardOneStep: () => void;
 
-  /*
+  /**
    * Traverses up the graph until the most recent node which is not ephemeral is found. Sets that node to current.
    */
   goBackToNonEphemeral: () => void;
 
-  /*
+  /**
    * Traverses down the graph until the most recent node which is not ephemeral is found. Sets that node to current.
    */
   goForwardToNonEphemeral: () => void;
@@ -151,34 +155,39 @@ export default interface Provenance<T, S, A> {
    */
   done: () => void;
 
-  /*
+  /**
    * Given a series of linear states, constructs a new provenance graph. Designed mostly for
    * recreating old provenance graphs. Using exportProvenanceGraph and importProvenanceGraph is preferred
    */
   importLinearStates: (states: T[], labels?: string[], metadata?: NodeMetadata<S>[]) => void;
 
-  /*
+  /**
    * Exports the current nodes state. Returns a compressed string representing the JSON form of the current state
    */
   exportState: (partial?: boolean) => string;
 
-  /*
+  /**
    * Imports the given state. Decompresses the given string and creates a new node with that state.
    * @param importString: Decompressed string recieved from exportState function to import.
    */
   importState: (importString: string) => void;
 
-  /*
+  /**
    * Exports the entire provenance graph in JSON form. Not compressed.
    */
   exportProvenanceGraph: () => string;
 
-  /*
+  /**
    * Returns the deep-diff of a node compared to its parent
    */
   getDiffFromNode: (id: NodeID) => any[];
 
-  /*
+  /**
+   * Sets the bookmark of the node with the given ID. the bookmark is set to true or false, equivalent on the second parameter.
+   */
+  setBookmark: (id: NodeID, b: boolean) => void;
+
+  /**
    * Imports an entire, non compressed provenance graph in JSON form. Replaces the current provenance graph with the new one.
    */
   importProvenanceGraph: (importString: string) => void;
