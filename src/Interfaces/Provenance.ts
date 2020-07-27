@@ -67,22 +67,22 @@ export default interface Provenance<T, S, A> {
   /**
    * Adds an observer to the key in the state Object which propPath leads to.
    * For example, if your state looked like
-   {
-    selected: 'A',
-    position:
-      {
-        A: 10
-        B: 5
-        C: 13
-      }
-   }
-
-   And you wanted an observer which was called whenever a node is selected, your propPath would be
-   ['selected'].
-
-   If you wanted an observer strictly for when the position of A changed, your propPath would be
-   ['position', 'A']
-
+   * {
+   *    selected: 'A',
+   *    position:
+   *      {
+   *        A: 10
+   *        B: 5
+   *        C: 13
+   *      }
+   *   }
+   *
+   *   And you wanted an observer which was called whenever a node is selected, your propPath would be
+   *   ['selected'].
+   *
+   *   If you wanted an observer strictly for when the position of A changed, your propPath would be
+   *   ['position', 'A']
+   *
    * Second parameter is associated subscriber function which is called when the observer is triggered
    */
   addObserver: (propPath: string[], func: SubscriberFunction<T>) => void;
