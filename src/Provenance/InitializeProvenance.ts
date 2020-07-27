@@ -359,6 +359,9 @@ export default function initProvenance<T, S, A>(
     setBookmark: (id: NodeID, b: boolean) => {
       graph.nodes[id].bookmarked = b;
     },
+    getBookmark: (id: NodeID) => {
+      return graph.nodes[id].bookmarked;
+    },
     importProvenanceGraph: (importString: string) => {
       const oldState = deepCopy(graph.nodes[graph.current].getState());
       graph = JSON.parse(importString);

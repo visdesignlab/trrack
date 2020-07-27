@@ -188,6 +188,11 @@ export default interface Provenance<T, S, A> {
   setBookmark: (id: NodeID, b: boolean) => void;
 
   /**
+   * Gets the bookmark of the node with the given ID.
+   */
+  getBookmark: (id: NodeID) => boolean;
+
+  /**
    * Imports an entire, non compressed provenance graph in JSON form. Replaces the current provenance graph with the new one.
    */
   importProvenanceGraph: (importString: string) => void;
