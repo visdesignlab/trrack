@@ -68,6 +68,22 @@ yarn add @visdesignlab/trrack
 
 ## Usage
 
+To use Trrack, your application has to be explicit about state: any action that you want to track has to be captured as part of a state that you pass to the Trrack library. 
+
+
+![Overview of how Trrack integrates with client software.](trrack_architecture.png)
+
+
+### Sharing a State Through a URL Parameter
+
+### Integrating with Trrack-VIS for provenance visualziation
+
+### Integrating with FireBase and Other Servers
+
+
+
+
+
 ```typescript
 import { initProvenance, Provenance, ProvenanceGraph } from '@visdesignlab/trrack';
 
