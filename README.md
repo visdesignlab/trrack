@@ -1,12 +1,14 @@
-# Trrack Library
-
-A library to create and track provenance in web based apps. Trrack allows you to create and maintain a non linear provenance graph representing the history of the state of your visualization. Through this graph, you can easily implement complete action recovery, as well as store custom metadata and annotations.
-
-Trrack also allows for easy sharing of a visualization's current state through URL sharing. To share entire session history, Trrack allows for the import and exporting of provenance graphs, as well as has built in integration with firebase to store the graphs. 
-
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Build Status](https://travis-ci.com/visdesignlab/provenance-lib-core.svg?branch=master)](https://travis-ci.com/visdesignlab/provenance-lib-core)
 [![Coverage Status](https://coveralls.io/repos/github/visdesignlab/provenance-lib-core/badge.svg?branch=master)](https://coveralls.io/github/visdesignlab/provenance-lib-core?branch=master)
+
+# The Trrack Provenance Tracking Library
+
+Trrack is a library to create and track provenance (history) in web-based apps. Trrack allows you to create and maintain a non-linear provenance graph representing the history of the state of your visualization. Through this graph, you can easily implement complete action recovery, as well as store custom metadata and annotations.
+
+![Overview of applications implementing the trrack library, and the trrack provenance visualization](trrack_overview.png)
+
+Trrack also allows for easy sharing of a visualization's current state through URL sharing. To share entire session history, Trrack allows for the import and exporting of provenance graphs, as well as has built in integration with firebase to store the graphs. 
 
 For full documentation, see http://vdl.sci.utah.edu/trrack-examples/api/trrack
 
@@ -14,11 +16,41 @@ For full documentation, see http://vdl.sci.utah.edu/trrack-examples/api/trrack
 
 - Power you application to track user interactions or changes
 - Enable undo/redo functionality
+- Easy state sharing through a URL
 - Track changes in non-linear manner with branches
 - Add custom metadata and annotations to each node in the graph
 - Built in Firebase support for storing large graphs
 - Simple API
 - Full Typescript support
+
+Also check out [the paper](https://doi.org/10.31219/osf.io/wnctb) to learn about the design philosophy.
+
+If you're using Trrack in an academic project, please cite: 
+
+```
+Z. T. Cutler, K. Gadhaveand A. Lex, “Trrack: A Library for Provenance Tracking in Web-Based Visualizations”, osf.io preprint. https://doi.org/10.31219/osf.io/wnctb.
+```
+
+## Companion Library 
+
+Trrack does back-end history management only. If you want to use the history/provenance visualization as well, check out the [trrack-vis library](https://github.com/visdesignlab/trrack-vis), which is designed to provide a customizable front-end for the Trrack library.
+
+
+## Examples
+
+Here are some examples showing you how to get started: 
+
+ * [Basic Usage](https://github.com/visdesignlab/trrack-examples) using provenance with typescript and d3.
+ * [A slightly more advanced example](https://github.com/visdesignlab/provenance-lib-core-demo) application using provenance. Also demonstrates how to import and export the current state of an application.
+
+
+
+Here are example of a few complex system susing Trrack:
+
+ * The [Intent System](https://github.com/visdesignlab/intent-system) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.
+ * [BloodVis](https://github.com/visdesignlab/bloodvis) visualizes blood product usage and outcomes in surgical procedures. 
+ * The [Workforce Project](http://vdl.sci.utah.edu/workforce-frontend/) ([Code](https://github.com/visdesignlab/workforce-frontend)) visualizes a model for predicting workforce needs in the medical sector in Utah.
+
 
 ## Installation
 
@@ -154,12 +186,4 @@ git clone git@github.com:visdesignlab/trrack.git
 
 Project created using [Typescript library starter](https://github.com/alexjoverm/typescript-library-starter) by [alexjoverm](https://github.com/alexjoverm/)
 
-## Other provenance related projects
 
-[Example](https://github.com/visdesignlab/provenance-lib-core-demo) application using provenance. Also demonstrates how to import and export the current state of an application.
-
-[More Examples](https://github.com/visdesignlab/trrack-examples) using provenance with typescript and d3.
-
-[trrack-vis](https://github.com/visdesignlab/trrack-vis) is a library for visualizing the provenance graph created from this library.
-
-[Intent System](https://github.com/visdesignlab/intent-system) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.
