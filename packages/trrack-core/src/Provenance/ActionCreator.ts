@@ -1,8 +1,10 @@
 import { action, toJS } from 'mobx';
 import { ActionFunction, ActionObject, ActionType } from '../Interfaces/Action';
 
-export function createAction<T>(func: ActionFunction<T>): ActionObject<T> {
-  let _label: string | undefined = undefined;
+export default function createAction<T>(
+  func: ActionFunction<T>,
+): ActionObject<T> {
+  let _label: string | undefined;
   let _args: any[] = [];
   let _actionType: ActionType = 'Regular';
 
@@ -26,7 +28,7 @@ export function createAction<T>(func: ActionFunction<T>): ActionObject<T> {
         state: toJS(st),
         label: _label,
         complex: false,
-        ephemeral: false,
+        actionType: _actionType,
       };
     }),
   };

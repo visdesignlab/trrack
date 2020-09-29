@@ -11,7 +11,7 @@ export type ActionReturnType<T> = {
   state: T;
   label: string;
   complex: boolean;
-  ephemeral: boolean;
+  ephemeral: ActionType;
 };
 
 export type ActionFunction<T> = (state: T, ...args: any[]) => T;

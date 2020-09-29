@@ -1,5 +1,0 @@
-{
-    "inputFiles": ["./src/Interfaces/Provenance.ts"],
-    "mode": "file",
-    "out": "docs"
-}
