@@ -25,7 +25,7 @@
     "bootstrap": "lerna bootstrap --use-workspaces",
     "build": "lerna run build",
     "test:watch": "lerna run --parallel --stream test:watch",
-    "lint": "lerna exec lint"
+    "lint": "lerna run lint"
   },
   "husky": {
     "hooks": {
