@@ -3,7 +3,7 @@
   "private": true,
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
   "description": "",
-  "keywords": [],
+  "keywords": ["trrack"],
   "repository": {
     "type": "git",
     "url": "https://github.com/visdesignlab/trrack.git"
