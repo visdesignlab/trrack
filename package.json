@@ -32,13 +32,13 @@
     "bootstrap": "lerna bootstrap --use-workspaces",
     "build": "lerna run build",
     "test:watch": "lerna run --parallel --stream test:watch",
-    "lint": "lerna run lint"
+    "lint": "lerna run lint",
+    "commit": "git cz"
   },
   "husky": {
     "hooks": {
       "pre-commit": "yarn run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "commitlint": {
