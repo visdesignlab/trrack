@@ -31,7 +31,9 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
     "build": "lerna run build",
-    "test:watch": "lerna run --parallel --stream test:watch",
+    "start": "lerna exec --parallel --stream -- yarn start",
+    "storybook:vis": "lerna exec --scope @visdesignlab/trrack-vis -- yarn storybook",
+    "test:core:watch": "lerna exec --scope @visdesignlab/trrack -- yarn test:watch",
     "lint": "lerna run lint",
     "commit": "git cz"
   },

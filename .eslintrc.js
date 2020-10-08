@@ -3,6 +3,7 @@ module.exports = {
     browser: true,
     es2020: true,
     node: true,
+    jest: true,
   },
   extends: ['airbnb-base', 'eslint:recommended', 'plugin:import/typescript'],
   parser: '@typescript-eslint/parser',
@@ -17,5 +18,7 @@ module.exports = {
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
     'import/extensions': 'off',
+    'no-param-reassign': 0,
+    'import/no-cycle': 0,
   },
 };

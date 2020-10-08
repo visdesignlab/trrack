@@ -26,7 +26,7 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --coverage",
-    "test:watch": "tsdx test --coverage --watch",
+    "test:watch": "tsdx test --coverage --verbose --watch",
     "docs": "typedoc --out docs --target es6 --mode file src",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
@@ -47,10 +47,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
+        "branches": 95,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
       }
     },
     "collectCoverageFrom": [
