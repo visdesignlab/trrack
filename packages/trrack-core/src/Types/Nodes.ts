@@ -31,7 +31,6 @@ export interface BaseNode<S> {
   actionType: ActionType;
   bookmarked: boolean;
 }
-
 export interface RootNode<T, S> extends BaseNode<S> {
   state: T;
 }
