@@ -14,7 +14,7 @@ import {
 import generateUUID from '../Utils/generateUUID';
 import generateTimeStamp from '../Utils/generateTimeStamp';
 import deepDiff from '../Utils/DeepDiff';
-import { ActionObject, ActionType } from '../Types/Action';
+import { ApplyObject, ActionType } from '../Types/Action';
 
 export function createProvenanceGraph<T, S, A>(
   state: T,
@@ -47,7 +47,6 @@ function createNewStateNode<T, S, A>(
   parent: NodeID,
   state: T,
   label: string,
-  diffs: Diff<T>[],
   actionType: ActionType,
   eventType: S,
   meta: Meta,
@@ -61,8 +60,8 @@ function createNewStateNode<T, S, A>(
       ...meta,
     },
     artifacts: {
-      diffs,
-      extra: [],
+      annotations: [],
+      customArtifacts: [],
     },
     parent,
     children: [],
@@ -90,8 +89,8 @@ function createNewDiffNode<T, S, A>(
       ...meta,
     },
     artifacts: {
-      diffs,
-      extra: [],
+      annotations: [],
+      customArtifacts: [],
     },
     parent,
     children: [],
@@ -129,7 +128,7 @@ export const goToNode = action(
 export const applyActionFunction = action(
   <T, S, A>(
     _graph: ProvenanceGraph<T, S, A>,
-    actionFn: ActionObject<T, S>,
+    actionFn: ApplyObject<T, S>,
     currentState: T,
   ) => {
     const graph = _graph;
@@ -182,7 +181,6 @@ export const applyActionFunction = action(
         parentId,
         state,
         label,
-        diffs,
         actionType,
         eventType,
         meta,
@@ -198,14 +196,10 @@ export const applyActionFunction = action(
 
 export const importState = action(
   <T, S, A>(graph: ProvenanceGraph<T, S, A>, importedState: T) => {
-    const currentState = getState(graph, graph.nodes[graph.current]);
-    const diffs = deepDiff(currentState, importedState) || [];
-
     const newNode = createNewStateNode(
       graph.current,
       importedState,
       'Import',
-      diffs,
       'Regular',
       null as any,
       {},

@@ -1,4 +1,5 @@
 import { Diff, applyChange } from 'deep-diff';
+import { toJS } from 'mobx';
 import { ActionType } from './Action';
 import { ProvenanceGraph } from './ProvenanceGraph';
 import deepCopy from '../Utils/DeepCopy';
@@ -12,16 +13,22 @@ export type NodeMetadata<S> = {
   eventType: S | 'Root';
 } & Meta;
 
-export interface Extra<A = void> {
-  time: number;
-  e: A;
-}
+type BaseArtifact = {
+  timestamp: number;
+};
 
-export interface Artifacts<A, LHS, RHS = LHS> {
-  diffs?: Diff<LHS, RHS>[];
-  annotation?: string;
-  extra: Extra<A>[];
-}
+export type Annotation = BaseArtifact & {
+  annotation: string;
+};
+
+export type Artifact<A> = BaseArtifact & {
+  artifact: A;
+};
+
+export type Artifacts<A> = {
+  annotations: Annotation[];
+  customArtifacts: Artifact<A>[];
+};
 
 export interface BaseNode<S> {
   id: NodeID;
@@ -35,16 +42,14 @@ export interface RootNode<T, S> extends BaseNode<S> {
   state: T;
 }
 
-export interface ChildNode<T, S, A> extends BaseNode<S> {
+export interface ChildNode<S, A> extends BaseNode<S> {
   parent: NodeID;
-  artifacts: Artifacts<A, T, T>;
+  artifacts: Artifacts<A>;
 }
 
-export interface StateNode<T, S, A>
-  extends RootNode<T, S>,
-    ChildNode<T, S, A> {}
+export interface StateNode<T, S, A> extends RootNode<T, S>, ChildNode<S, A> {}
 
-export interface DiffNode<T, S, A> extends ChildNode<T, S, A> {
+export interface DiffNode<T, S, A> extends ChildNode<S, A> {
   diffs: Diff<T>[];
   lastStateNode: NodeID;
 }
@@ -82,49 +87,18 @@ export function isRootNode<T, S, A>(
   return node.label === 'Root';
 }
 
-function getPath<T, S, A>(
-  graph: ProvenanceGraph<T, S, A>,
-  start: ProvenanceNode<T, S, A>,
-  end: ProvenanceNode<T, S, A>,
-  track: NodeID[] = [],
-  comingFrom = start,
-) {
-  if (start && start.id === end.id) {
-    track.unshift(start.id);
-    return true;
-  }
-  if (start) {
-    const nodesToCheck = [...start.children];
-    if (isChildNode(start)) {
-      nodesToCheck.push(start.parent);
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const node of nodesToCheck) {
-      // eslint-disable-next-line no-continue
-      if (node === comingFrom.id) continue;
-      if (getPath(graph, graph.nodes[node], end, track, start)) {
-        track.unshift(start.id);
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
 export function getState<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   node: ProvenanceNode<T, S, A>,
 ): T {
   if (isRootNode(node) || isStateNode(node)) {
-    return node.state;
+    return toJS(node.state);
   }
 
-  getPath(graph, graph.nodes[graph.current], node, []);
-
   // eslint-disable-next-line no-underscore-dangle
-  const _state = (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state;
+  const _state = toJS(
+    (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state,
+  );
 
   const state = deepCopy(_state);
 

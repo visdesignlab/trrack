@@ -5,6 +5,7 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent,
 } from 'lz-string';
+import serialize from 'serialize-javascript';
 import {
   applyActionFunction,
   createProvenanceGraph,
@@ -20,7 +21,7 @@ import {
   getState,
 } from '../Types/Nodes';
 import { Provenance } from '../Types/Provenance';
-import { ActionObject } from '../Types/Action';
+import { ApplyObject } from '../Types/Action';
 import {
   GlobalObserver,
   ObserverEffect,
@@ -37,7 +38,12 @@ type ProvenanceOpts = {
   };
 };
 
-configure({ enforceActions: 'always' });
+export function deserialize(serialized: string) {
+  // eslint-disable-next-line no-eval
+  return eval(`(${serialized})`);
+}
+
+configure({ enforceActions: 'observed' });
 
 export default function initProvenance<T, S, A = void>(
   initialState: T,
@@ -64,9 +70,7 @@ export default function initProvenance<T, S, A = void>(
       (st) => {
         const url = new URL(window.location.href);
         const params = new URLSearchParams(url.search);
-        const stateEncodedString = compressToEncodedURIComponent(
-          JSON.stringify(st),
-        );
+        const stateEncodedString = compressToEncodedURIComponent(serialize(st));
         params.set(PROVSTATEKEY, stateEncodedString);
       },
     );
@@ -85,7 +89,7 @@ export default function initProvenance<T, S, A = void>(
     get root() {
       return toJS(graph.nodes[graph.root] as RootNode<T, S>);
     },
-    apply(act: ActionObject<T, S>) {
+    apply(act: ApplyObject<T, S>) {
       if (!setupFinished) {
         throw new Error(
           'Provenance setup not finished. Please call done function on provenance object after setting up any observers.)',
@@ -110,20 +114,65 @@ export default function initProvenance<T, S, A = void>(
     goToNode(id: NodeID) {
       goToNode(graph, state, id);
     },
-    addArtifact: action((id: NodeID, artifact: A) => {
+    addArtifact: action((artifact: A, id?: NodeID) => {
+      if (!id) id = graph.current;
       const node = graph.nodes[id];
+
       if (isChildNode(node)) {
-        node.artifacts.extra.push({
-          time: generateTimeStamp(),
-          e: artifact,
+        node.artifacts.customArtifacts.push({
+          timestamp: generateTimeStamp(),
+          artifact,
         });
       }
     }),
-    addAnnotation(id: NodeID, annotation: string) {
+    addAnnotation: action((annotation: string, id?: NodeID) => {
+      if (!id) id = graph.current;
       const node = graph.nodes[id];
+
       if (isChildNode(node)) {
-        node.artifacts.annotation = annotation;
+        node.artifacts.annotations.push({
+          timestamp: generateTimeStamp(),
+          annotation,
+        });
       }
+    }),
+    getAllArtifacts(id?: NodeID) {
+      if (!id) id = graph.current;
+      const node = graph.nodes[id];
+
+      if (isChildNode(node)) {
+        return node.artifacts.customArtifacts;
+      }
+      return [];
+    },
+    getLatestArtifact(id?: NodeID) {
+      if (!id) id = graph.current;
+      const node = graph.nodes[id];
+
+      if (isChildNode(node)) {
+        const arts = node.artifacts.customArtifacts;
+        return arts[arts.length - 1];
+      }
+      return null;
+    },
+    getAllAnnotation(id?: NodeID) {
+      if (!id) id = graph.current;
+      const node = graph.nodes[id];
+
+      if (isChildNode(node)) {
+        return node.artifacts.annotations;
+      }
+      return [];
+    },
+    getLatestAnnotation(id?: NodeID) {
+      if (!id) id = graph.current;
+      const node = graph.nodes[id];
+
+      if (isChildNode(node)) {
+        const { annotations } = node.artifacts;
+        return annotations[annotations.length - 1];
+      }
+      return null;
     },
     goBackOneStep() {
       const current = graph.nodes[graph.current];
@@ -195,14 +244,14 @@ export default function initProvenance<T, S, A = void>(
       }
 
       const compressedString = compressToEncodedURIComponent(
-        JSON.stringify(exportedState),
+        serialize(exportedState),
       );
 
       return compressedString;
     },
     importState(s: string | Partial<T>) {
       let st: T;
-      if (typeof s === 'string') st = JSON.parse(decompressFromEncodedURIComponent(s) || '') as any;
+      if (typeof s === 'string') st = deserialize(decompressFromEncodedURIComponent(s) || '') as any;
       else st = { ...toJS(state), ...s };
 
       updateMobxObservable(state, st);
@@ -211,14 +260,14 @@ export default function initProvenance<T, S, A = void>(
     importProvenanceGraph(g: string | ProvenanceGraph<T, S, A>) {
       let gg: ProvenanceGraph<T, S, A>;
       if (typeof g === 'string') {
-        gg = JSON.parse(g) as ProvenanceGraph<T, S, A>;
+        gg = deserialize(g) as ProvenanceGraph<T, S, A>;
       } else {
         gg = g;
       }
       updateMobxObservable(graph, gg);
     },
     exportProvenanceGraph() {
-      return JSON.stringify(toJS(graph));
+      return serialize(toJS(graph));
     },
     getState(node: ProvenanceNode<T, S, A>) {
       return getState(graph, node);
@@ -236,7 +285,7 @@ export default function initProvenance<T, S, A = void>(
         const params = new URLSearchParams(url.search);
         const importString = params.get(PROVSTATEKEY);
         if (!importString) return;
-        let importedState: T = JSON.parse(
+        let importedState: T = deserialize(
           decompressFromEncodedURIComponent(importString) || '',
         ) as any;
 

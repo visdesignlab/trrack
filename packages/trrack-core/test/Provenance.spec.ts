@@ -1,4 +1,5 @@
 import { compressToEncodedURIComponent } from 'lz-string';
+import serializeJavascript from 'serialize-javascript';
 import {
   setupTodoManager,
   TodoManager,
@@ -20,14 +21,14 @@ describe('Testing provenance functions', () => {
 
     it('should return current state after applying action', () => {
       const { provenance, initState, changeName } = setupTodoManager();
-      provenance.apply(changeName.setArgs(['JEST']));
+      provenance.apply(changeName('JEST'));
       expect(provenance.state).toEqual({ ...initState, user: 'JEST' });
     });
   });
 
   it('current: current should return current node', () => {
     const { provenance, changeName } = setupTodoManager();
-    provenance.apply(changeName.setArgs(['JEST']));
+    provenance.apply(changeName('JEST'));
 
     const { graph } = provenance;
 
@@ -44,10 +45,10 @@ describe('Testing provenance functions', () => {
 
   it('goToNode: should go to node with correct id', () => {
     const { provenance, changeName } = setupTodoManager();
-    provenance.apply(changeName.setArgs(['JEST']));
-    provenance.apply(changeName.setArgs(['JEST 2']));
-    provenance.apply(changeName.setArgs(['JEST 3']));
-    provenance.apply(changeName.setArgs(['JEST 4']));
+    provenance.apply(changeName('JEST'));
+    provenance.apply(changeName('JEST 2'));
+    provenance.apply(changeName('JEST 3'));
+    provenance.apply(changeName('JEST 4'));
 
     const { current } = provenance;
 
@@ -65,7 +66,7 @@ describe('Testing provenance functions', () => {
   describe('addArtifact: should add artifact to specified node', () => {
     function setup() {
       const { provenance, changeName } = setupTodoManager();
-      provenance.apply(changeName.setArgs(['JEST']));
+      provenance.apply(changeName('JEST'));
       if (!isChildNode(provenance.current)) throw new Error('Error applying action');
 
       const preArtifact = (provenance.current as ChildNode<
@@ -74,11 +75,11 @@ describe('Testing provenance functions', () => {
         TodoArtifacts
       >).artifacts;
 
-      expect(preArtifact.extra).toHaveLength(0);
+      expect(preArtifact.customArtifacts).toHaveLength(0);
       const artifact: TodoArtifacts = {
         notes: 'This is test note',
       };
-      provenance.addArtifact(provenance.current.id, artifact);
+      provenance.addArtifact(artifact);
 
       const postArtifact = (provenance.current as ChildNode<
         TodoManager,
@@ -96,35 +97,35 @@ describe('Testing provenance functions', () => {
     it('artifacts should be empty', () => {
       const { preArtifact } = setup();
 
-      expect(preArtifact.extra).toHaveLength(0);
+      expect(preArtifact.customArtifacts).toHaveLength(0);
     });
 
     it('should have one artifact', () => {
       const { postArtifact } = setup();
 
-      expect(postArtifact.extra).toHaveLength(1);
+      expect(postArtifact.customArtifacts).toHaveLength(1);
     });
     it('artifact should match what was added', () => {
       const { postArtifact, artifact } = setup();
-      expect(postArtifact.extra[0].e).toEqual(artifact);
+      expect(postArtifact.customArtifacts[0].artifact).toEqual(artifact);
     });
   });
 
   describe('addAnnotation: should add annotation to current node', () => {
     function setup() {
       const { provenance, changeName } = setupTodoManager();
-      provenance.apply(changeName.setArgs(['JEST']));
+      provenance.apply(changeName('JEST'));
       if (!isChildNode(provenance.current)) throw new Error('Error applying action');
 
-      const preAnnotation = (provenance.current as ChildNode<any, any, any>)
-        .artifacts.annotation;
+      const preAnnotation = (provenance.current as ChildNode<any, any, any>).artifacts
+        .annotations[0]?.annotation || undefined;
 
       const annotation = 'This is test annotation';
 
-      provenance.addAnnotation(provenance.current.id, annotation);
+      provenance.addAnnotation(annotation);
 
       const postAnnotation = (provenance.current as ChildNode<any, any, any>)
-        .artifacts.annotation;
+        .artifacts.annotations[0].annotation;
 
       expect(postAnnotation).toBe(annotation);
 
@@ -168,18 +169,18 @@ describe('Testing provenance functions', () => {
       const { provenance, action } = setupProvenanceAndAction(initialState);
 
       // Apply once
-      provenance.apply(action.setLabel('Test Action'));
+      provenance.apply(action.setLabel('Test Action')());
       const baseNode = provenance.current.id;
 
       // Apply second time
-      provenance.apply(action.setLabel('Test Action'));
+      provenance.apply(action.setLabel('Test Action')());
       const firstChild = provenance.current.id;
 
       // Go back once
       provenance.goBackOneStep();
 
       // Apply third time
-      provenance.apply(action.setLabel('Test Action'));
+      provenance.apply(action.setLabel('Test Action')());
       const secondChild = provenance.current.id;
 
       provenance.goBackOneStep();
@@ -218,23 +219,23 @@ describe('Testing provenance functions', () => {
         initialState,
       );
       action.setLabel('Increase counter');
-      provenance.apply(action);
+      provenance.apply(action());
       const baseNode = provenance.current;
 
       const ephemeralNodeList: string[] = [];
 
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
 
-      provenance.apply(action);
+      provenance.apply(action());
       const regularNode = provenance.current.id;
 
       return {
@@ -287,23 +288,23 @@ describe('Testing provenance functions', () => {
         initialState,
       );
       action.setLabel('Increase counter');
-      provenance.apply(action);
+      provenance.apply(action());
       const baseNode = provenance.current;
 
       const ephemeralNodeList: string[] = [];
 
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
 
-      provenance.apply(action);
+      provenance.apply(action());
       const regularNode = provenance.current.id;
 
       provenance.goToNode(baseNode.id);
@@ -356,20 +357,20 @@ describe('Testing provenance functions', () => {
         initialState,
       );
       action.setLabel('Increase counter');
-      provenance.apply(action);
+      provenance.apply(action());
       const baseNode = provenance.current;
 
       const ephemeralNodeList: string[] = [];
 
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       ephemeralNodeList.push(provenance.current.id);
 
       provenance.goToNode(baseNode.id);
@@ -386,9 +387,9 @@ describe('Testing provenance functions', () => {
         initialState,
       );
       action.setLabel('Increase counter');
-      provenance.apply(action);
+      provenance.apply(action());
 
-      provenance.apply(ephemeralAction);
+      provenance.apply(ephemeralAction());
       expect(() => provenance.goForwardToNonEphemeral()).toThrow();
     });
   });
@@ -399,7 +400,7 @@ describe('Testing provenance functions', () => {
 
       action.setLabel('Test');
 
-      provenance.apply(action);
+      provenance.apply(action());
 
       provenance.setBookmark(provenance.current.id, true);
 
@@ -423,7 +424,7 @@ describe('Testing provenance functions', () => {
       const { provenance, action } = setupProvenanceAndAction(initialState);
       const rootNode = provenance.root;
       action.setLabel('Test');
-      provenance.apply(action);
+      provenance.apply(action());
       const nonRootNode = provenance.current;
 
       return { provenance, rootNode, nonRootNode };
@@ -445,7 +446,7 @@ describe('Testing provenance functions', () => {
     function setup() {
       const { provenance, action } = setupProvenanceAndAction(initialState);
 
-      provenance.apply(action.setLabel('Test'));
+      provenance.apply(action.setLabel('Test')());
       const completeExportedString = provenance.exportState();
       const partialExportedString = provenance.exportState(true);
 
@@ -456,7 +457,7 @@ describe('Testing provenance functions', () => {
       const { completeExportedString } = setup();
 
       const compressedString = compressToEncodedURIComponent(
-        JSON.stringify({ ...initialState, counter: 1 }),
+        serializeJavascript({ ...initialState, counter: 1 }),
       );
 
       expect(completeExportedString).toEqual(compressedString);
@@ -466,7 +467,7 @@ describe('Testing provenance functions', () => {
       const { partialExportedString } = setup();
 
       const compressedString = compressToEncodedURIComponent(
-        JSON.stringify({ counter: 1 }),
+        serializeJavascript({ counter: 1 }),
       );
 
       expect(partialExportedString).toEqual(compressedString);
@@ -485,13 +486,13 @@ describe('Testing provenance functions', () => {
         changeMessageAction,
       } = setupProvenanceAndAction(initialState);
 
-      provenance.apply(action.setLabel('Test'));
+      provenance.apply(action.setLabel('Test')());
       counterChangeState = { counter: 1 };
       counterChangeString = provenance.exportState(true);
       provenance.goBackOneStep();
-      provenance.apply(changeMessageAction.setArgs(['Test']));
+      provenance.apply(changeMessageAction('Test'));
       messageChangeString = provenance.exportState(false);
-      provenance.apply(action);
+      provenance.apply(action());
       allChangeString = provenance.exportState();
     });
 
@@ -540,10 +541,10 @@ describe('Testing provenance functions', () => {
     it('should return provenance graph as string', () => {
       const { provenance, action } = setupProvenanceAndAction(initialState);
       action.setLabel('Test');
-      provenance.apply(action);
+      provenance.apply(action());
 
       expect(provenance.exportProvenanceGraph()).toEqual(
-        JSON.stringify(provenance.graph),
+        serializeJavascript(provenance.graph),
       );
     });
   });
@@ -552,7 +553,7 @@ describe('Testing provenance functions', () => {
     function setup() {
       const { provenance, action } = setupProvenanceAndAction(initialState);
 
-      provenance.apply(action.setLabel('Test'));
+      provenance.apply(action.setLabel('Test')());
 
       const provString = provenance.exportProvenanceGraph();
 
@@ -593,7 +594,7 @@ describe('Testing provenance functions', () => {
         initialState,
       );
 
-      provenance.apply(changeMessageAction.setArgs(['Test']));
+      provenance.apply(changeMessageAction('Test'));
 
       const exportString = provenance.exportState();
 
@@ -623,7 +624,7 @@ describe('Testing provenance functions', () => {
         true,
       );
 
-      expect(() => provenance.apply(action.setLabel('Test'))).toThrow();
+      expect(() => provenance.apply(action.setLabel('Test')())).toThrow();
     });
   });
 
@@ -640,12 +641,12 @@ describe('Testing provenance functions', () => {
       );
 
       action.setLabel('Test');
-      provenance.apply(action);
+      provenance.apply(action());
 
       setTimeout(() => {
         expect(
           compressToEncodedURIComponent(
-            JSON.stringify(provenance.getState(provenance.current)),
+            serializeJavascript(provenance.getState(provenance.current)),
           ),
         ).toBe(getLocationString());
       }, 100);

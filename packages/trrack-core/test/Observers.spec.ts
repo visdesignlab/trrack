@@ -51,17 +51,21 @@ function setup() {
   resetCounters();
   const provenance = initProvenance<State, Events>(initialState);
 
-  const changeName = createAction<State, Events>((state, name: string) => {
-    state.userName = name;
-  })
+  const changeName = createAction<State, [string], Events>(
+    (state, name: string) => {
+      state.userName = name;
+    },
+  )
     .setLabel('Changing Name')
     .setLabel('ChangeName');
-  const changeEmail = createAction<State, Events>((state, email: string) => {
-    state.userDetails.email = email;
-  })
+  const changeEmail = createAction<State, [string], Events>(
+    (state, email: string) => {
+      state.userDetails.email = email;
+    },
+  )
     .setLabel('Changing Email')
     .setEventType('ChangeEmail');
-  const changeAddress = createAction<State, Events>(
+  const changeAddress = createAction<State, [string, string], Events>(
     (state, st: string, country: string) => {
       state.userDetails.address.state = st;
       state.userDetails.address.country = country;
@@ -69,14 +73,14 @@ function setup() {
   )
     .setLabel('Changing Address')
     .setEventType('ChangeAddress');
-  const changeStateName = createAction<State, Events>(
+  const changeStateName = createAction<State, [string], Events>(
     (state, stateName: string) => {
       state.userDetails.address.state = stateName;
     },
   )
     .setLabel('Changing State')
     .setEventType('ChangeState');
-  const changeCountry = createAction<State, Events>(
+  const changeCountry = createAction<State, [string], Events>(
     (state, country: string) => {
       state.userDetails.address.country = country;
     },
@@ -144,7 +148,7 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer and userName change observer work correctly', () => {
     const { provenance, changeName } = setup();
 
-    provenance.apply(changeName.setArgs(['Test']));
+    provenance.apply(changeName('Test'));
 
     expect(nameChanged).toEqual(1);
     expect(globalChanged).toEqual(1);
@@ -153,7 +157,7 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer, email change change observer works correctly', () => {
     const { provenance, changeEmail } = setup();
 
-    provenance.apply(changeEmail.setArgs(['123@abc.com']));
+    provenance.apply(changeEmail('123@abc.com'));
 
     expect(emailChanged).toEqual(1);
     expect(globalChanged).toEqual(1);
@@ -163,7 +167,7 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer, userDetails change, email change observer works correctly when changing email', () => {
     const { provenance, changeEmail } = setup();
 
-    provenance.apply(changeEmail.setArgs(['123@abc.com']));
+    provenance.apply(changeEmail('123@abc.com'));
 
     expect(emailChanged).toEqual(1);
     expect(globalChanged).toEqual(1);
@@ -173,9 +177,7 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer, userDetails change, address change observer works correctly when changing state', () => {
     const { provenance, changeStateName } = setup();
 
-    changeStateName.setArgs(['AZ']);
-
-    provenance.apply(changeStateName);
+    provenance.apply(changeStateName('AZ'));
 
     expect(stateChanged).toEqual(1);
     expect(globalChanged).toEqual(1);
@@ -187,7 +189,7 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer, userDetails change, address change observer works correctly when changing country', () => {
     const { provenance, changeCountry } = setup();
 
-    provenance.apply(changeCountry.setArgs(['USA']));
+    provenance.apply(changeCountry('USA'));
 
     expect(countryChanged).toEqual(1);
     expect(stateChanged).toEqual(0);
@@ -199,7 +201,7 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer, userDetails change, address change observer works correctly when changing address object', () => {
     const { provenance, changeAddress } = setup();
 
-    provenance.apply(changeAddress.setArgs([{ state: 'AZ', country: 'USA' }]));
+    provenance.apply(changeAddress('AZ', 'USA'));
 
     expect(countryChanged).toEqual(1);
     expect(stateChanged).toEqual(1);
@@ -211,8 +213,8 @@ describe('addGlobalObserver & addObserver', () => {
   it('global observer, userDetails change, address change, stateChange, country change observer works correctly when changing state and country separately', () => {
     const { provenance, changeStateName, changeCountry } = setup();
 
-    provenance.apply(changeStateName.setArgs(['AZ']));
-    provenance.apply(changeCountry.setArgs(['USA']));
+    provenance.apply(changeStateName('AZ'));
+    provenance.apply(changeCountry('USA'));
 
     expect(countryChanged).toEqual(1);
     expect(stateChanged).toEqual(1);

@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { NodeID, ProvenanceNode, RootNode } from './Nodes';
+import {
+  Annotation,
+  Artifact,
+  NodeID,
+  ProvenanceNode,
+  RootNode,
+} from './Nodes';
 import { ProvenanceGraph } from './ProvenanceGraph';
-import { ActionObject } from './Action';
+import { ApplyObject } from './Action';
 import {
   GlobalObserver,
   ObserverExpression,
@@ -13,15 +19,19 @@ export type Provenance<T, S = void, A = void> = {
   graph: ProvenanceGraph<T, S, A>;
   current: ProvenanceNode<T, S, A>;
   root: RootNode<T, S>;
-  apply: (action: ActionObject<T, S>) => void;
+  apply: (action: ApplyObject<T, S>) => void;
   addGlobalObserver: (observer: GlobalObserver<T, S, A>) => void;
   addObserver: (
     expression: ObserverExpression<T>,
     effect: ObserverEffect<T>
   ) => void;
   goToNode: (id: NodeID) => void;
-  addArtifact: (id: NodeID, artifact: A) => void;
-  addAnnotation: (id: NodeID, annotation: string) => void;
+  addArtifact: (artifact: A, id?: NodeID) => void;
+  addAnnotation: (annotation: string, id?: NodeID) => void;
+  getAllArtifacts: (id?: NodeID) => Artifact<A>[];
+  getLatestArtifact: (id?: NodeID) => Artifact<A> | null;
+  getAllAnnotation: (id?: NodeID) => Annotation[];
+  getLatestAnnotation: (id?: NodeID) => Annotation | null;
   goBackOneStep: () => void;
   goForwardOneStep: (to?: 'latest' | 'oldest') => void;
   goBackToNonEphemeral: () => void;

@@ -25,17 +25,17 @@ export function setupProvenanceAndAction(
 ) {
   const provenance = initProvenance<State, Events>(initState, { loadFromUrl });
 
-  const action = createAction<State, Events>((state: State) => {
+  const action = createAction<State, [void], Events>((state: State) => {
     state.counter += 1;
   });
 
-  const ephemeralAction = createAction<State, Events>((state) => {
+  const ephemeralAction = createAction<State, [void], Events>((state) => {
     state.counter -= 1;
   })
     .setLabel('Ephemeral decrease counter')
     .setActionType('Ephemeral');
 
-  const changeMessageAction = createAction<State, Events>(
+  const changeMessageAction = createAction<State, [string], Events>(
     (state: State, msg: string) => {
       state.message = msg;
     },
@@ -63,7 +63,7 @@ export type TodoManager = {
   totalTodos: number;
   totalCompleted: number;
   totalIncomplete: number;
-  logs: string[];
+  logs: Set<string>;
 };
 
 export type TodoEvents =
@@ -83,7 +83,7 @@ export const initialTodoState: TodoManager = {
   totalTodos: 0,
   totalIncomplete: 0,
   totalCompleted: 0,
-  logs: [],
+  logs: new Set<string>(['log']),
 };
 
 export function setupTodoManager() {
@@ -91,7 +91,7 @@ export function setupTodoManager() {
     initialTodoState,
   );
 
-  const changeName = createAction<TodoManager, TodoEvents>(
+  const changeName = createAction<TodoManager, [string], TodoEvents>(
     (state, name: string) => {
       state.user = name;
     },
@@ -99,7 +99,7 @@ export function setupTodoManager() {
     .setLabel('Change Name')
     .setEventType('SetName');
 
-  const addTodoAction = createAction<TodoManager, TodoEvents>(
+  const addTodoAction = createAction<TodoManager, [Todo], TodoEvents>(
     (state, todo: Todo) => {
       state.todos.push(todo);
       if (todo.status === 'incomplete') state.totalIncomplete += 1;

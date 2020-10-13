@@ -13,7 +13,10 @@ export type ActionType = 'Ephemeral' | 'Regular';
 
 export type ActionSaveStateMode = 'Complete' | 'Diff';
 
-export type ActionFunction<T> = (state: T, ...args: any[]) => void;
+export type ActionFunction<T, Args extends any[]> = (
+  state: T,
+  ...args: Args
+) => void;
 
 export type ActionReturnType<T, S> = {
   state: T;
@@ -24,12 +27,14 @@ export type ActionReturnType<T, S> = {
   meta: Meta;
 };
 
-export type ActionObject<T, S> = {
-  setLabel: (label: string) => ActionObject<T, S>;
-  setArgs: (args: any[]) => ActionObject<T, S>;
-  setActionType: (actionType: ActionType) => ActionObject<T, S>;
-  saveStateMode: (mode: ActionSaveStateMode) => ActionObject<T, S>;
-  setEventType: (eventType: S) => ActionObject<T, S>;
-  setMetaData: (metadata: Meta) => ActionObject<T, S>;
-  apply: (state: T, ...args: any[]) => ActionReturnType<T, S>;
+export type ApplyObject<T, S> = {
+  apply: (state: T) => ActionReturnType<T, S>;
 };
+
+export type ActionObject<T, S, Args extends any[]> = {
+  setLabel: (label: string) => ActionObject<T, S, Args>;
+  setActionType: (actionType: ActionType) => ActionObject<T, S, Args>;
+  saveStateMode: (mode: ActionSaveStateMode) => ActionObject<T, S, Args>;
+  setEventType: (eventType: S) => ActionObject<T, S, Args>;
+  setMetaData: (metadata: Meta) => ActionObject<T, S, Args>;
+} & ((...args: Args) => ApplyObject<T, S>);

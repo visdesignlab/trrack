@@ -21,7 +21,7 @@ describe('apply action should work properly', () => {
       false,
     );
 
-    expect(() => provenance.apply(action)).toThrowError(
+    expect(() => provenance.apply(action())).toThrowError(
       new Error('Please specify a label for the action'),
     );
   });
@@ -30,7 +30,7 @@ describe('apply action should work properly', () => {
     const { provenance, action } = setupProvenanceAndAction(initialState);
     const label = 'Increase counter by 1';
     action.setLabel(label);
-    provenance.apply(action);
+    provenance.apply(action());
 
     expect(provenance.current.label).toBe(label);
   });
@@ -39,7 +39,7 @@ describe('apply action should work properly', () => {
     const { provenance, action } = setupProvenanceAndAction(initialState);
     const label = 'Increase counter by 1';
     action.setLabel(label).setActionType('Ephemeral');
-    provenance.apply(action);
+    provenance.apply(action());
 
     expect(provenance.current.actionType).toBe<ActionType>('Ephemeral');
   });
@@ -49,7 +49,7 @@ describe('apply action should work properly', () => {
 
     const originalValue = getState(provenance.graph, provenance.current)
       .counter;
-    provenance.apply(action.setLabel('Increase Counter'));
+    provenance.apply(action.setLabel('Increase Counter')());
     const newValue = getState(provenance.graph, provenance.current).counter;
 
     expect(newValue - originalValue).toEqual(1);
@@ -61,7 +61,7 @@ describe('apply action should work properly', () => {
     );
 
     const msg = 'Hello, World!';
-    provenance.apply(changeMessageAction.setArgs([msg]));
+    provenance.apply(changeMessageAction(msg));
     const newMessage = provenance.getState(provenance.current).message;
     expect(newMessage).toEqual(msg);
   });
@@ -74,7 +74,7 @@ describe('apply action should work properly', () => {
       testMetaData: val,
     };
 
-    provenance.apply(action.setLabel('Increment counter').setMetaData(meta));
+    provenance.apply(action.setLabel('Increment counter').setMetaData(meta)());
 
     const currentNode = provenance.current;
     if (isChildNode(currentNode)) {
@@ -88,7 +88,7 @@ describe('apply action should work properly', () => {
     const { provenance, action } = setupProvenanceAndAction(initialState);
 
     provenance.apply(
-      action.setLabel('Increment Counter').setEventType('IncreaseCounter'),
+      action.setLabel('Increment Counter').setEventType('IncreaseCounter')(),
     );
 
     const currentNode = provenance.current;
@@ -102,34 +102,27 @@ describe('apply action should work properly', () => {
   it('should save diff', () => {
     const { provenance, changeName, addTodoAction } = setupTodoManager();
 
-    provenance.apply(changeName.setArgs(['New Name']));
+    provenance.apply(changeName('New Name'));
     provenance.apply(
-      addTodoAction.setArgs([
-        {
-          title: 'Task 1',
-          description: 'This is a test task',
-          status: 'incomplete',
-        },
-      ]),
+      addTodoAction({
+        title: 'Task 1',
+        description: 'This is a test task',
+        status: 'incomplete',
+      }),
     );
-
     expect('diffs' in provenance.current).toEqual(true);
   });
 
   it('should save complete state', () => {
     const { provenance, changeName, addTodoAction } = setupTodoManager();
 
-    provenance.apply(changeName.setArgs(['New Name']));
+    provenance.apply(changeName('New Name'));
     provenance.apply(
-      addTodoAction
-        .setArgs([
-          {
-            title: 'Task 1',
-            description: 'This is a test task',
-            status: 'incomplete',
-          },
-        ])
-        .saveStateMode('Complete'),
+      addTodoAction.saveStateMode('Complete')({
+        title: 'Task 1',
+        description: 'This is a test task',
+        status: 'incomplete',
+      }),
     );
 
     expect('state' in provenance.current).toEqual(true);
