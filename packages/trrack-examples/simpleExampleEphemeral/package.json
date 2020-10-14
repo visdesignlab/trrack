@@ -1,6 +1,6 @@
 {
   "name": "example-simple-ephemeral",
-  "private":true,
+  "private": true,
   "version": "1.0.0",
   "description": "Examples for using provenance library",
   "main": "index.js",
@@ -13,13 +13,13 @@
   "license": "ISC",
   "dependencies": {
     "@types/d3": "^5.7.2",
+    "@visdesignlab/trrack": "^1.2.0",
+    "@visdesignlab/trrack-vis": "^1.1.0",
     "awesome-typescript-loader": "^5.2.1",
     "d3": "^5.12.0",
     "font-awesome": "^4.7.0",
     "http-server": "^0.12.0",
     "ts-loader": "^6.0.4",
-    "@visdesignlab/trrack": "^0.0.0-development",
-    "@visdesignlab/trrack-vis": "^0.0.0-development",
     "typestyle": "^2.1.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",

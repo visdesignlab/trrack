@@ -32,7 +32,7 @@
     "packages/**"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap --use-workspaces",
+    "bootstrap": "npx lerna bootstrap --use-workspaces",
     "build": "lerna exec --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- yarn build",
     "start": "lerna exec --parallel --stream --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- yarn start",
     "prestart": "yarn run build",
