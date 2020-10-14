@@ -2,7 +2,6 @@ import firebase from 'firebase/app';
 import { ProvenanceGraph } from '../Types/ProvenanceGraph';
 
 import 'firebase/database';
-import 'firebase/firestore';
 
 export function initializeFirebase(config: any) {
   const app: firebase.app.App = firebase.apps.length === 0
