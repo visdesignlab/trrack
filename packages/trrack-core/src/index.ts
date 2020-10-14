@@ -10,7 +10,8 @@ import {
   isChildNode,
   Nodes,
   ProvenanceNode,
-  DiffNode, ChildNode,
+  DiffNode,
+  ChildNode,
 } from './Types/Nodes';
 import { Provenance } from './Types/Provenance';
 
@@ -24,7 +25,8 @@ export {
   isStateNode,
   getState,
   NodeID,
-  StateNode, ChildNode,
+  StateNode,
+  ChildNode,
   Nodes,
   ProvenanceNode,
   Provenance,

@@ -53,37 +53,27 @@ function BookmarkNode<T, S extends string, A>({
   let dropDownAdded = false;
   const eventType = node.metadata.type;
   //
-  // console.log(node);
-  // console.log(current);
-  // console.log(node.id)
+
+  if(eventConfig)
+  {
+    const { bundleGlyph, currentGlyph, backboneGlyph } = eventConfig[eventType];
 
 
-  // if(eventype !== selectedNode || (eventype !== selectedBar || (eventype !== movedNode){
-  //   currentGlyph =
-  // }
-
-  // console.log(eventType);
-  // console.log(eventConfig[eventType]);
-  const { bundleGlyph, currentGlyph, backboneGlyph } = eventConfig[eventType];
-
-
-  if (current) {
-    glyph = (
-      <g style={cursorStyle} fontWeight={"none"}>
-        {currentGlyph}
-      </g>
-    );
-  } else {
-    console.log("in else");
-    glyph = (
-      <g style={cursorStyle} fontWeight={"none"}>
-        {backboneGlyph}
-      </g>
-    );
+    if (current) {
+      glyph = (
+        <g style={cursorStyle} fontWeight={"none"}>
+          {currentGlyph}
+        </g>
+      );
+    } else {
+      console.log("in else");
+      glyph = (
+        <g style={cursorStyle} fontWeight={"none"}>
+          {backboneGlyph}
+        </g>
+      );
+    }
   }
-
-
-
   // glyph = (
   //   <g style={cursorStyle} fontWeight={"none"}>
   //     {backboneGlyph}
@@ -93,8 +83,8 @@ function BookmarkNode<T, S extends string, A>({
   let label: string = "";
   let annotate: string = "";
 
-  if (node.artifacts && node.artifacts.annotation && node.artifacts.annotation.length > 0) {
-    annotate = node.artifacts.annotation;
+  if (node.artifacts && node.artifacts.annotations.length > 0 && node.artifacts.annotations[0].annotation.length > 0) {
+    annotate = node.artifacts.annotations[0].annotation;
   }
 
   label = node.label;

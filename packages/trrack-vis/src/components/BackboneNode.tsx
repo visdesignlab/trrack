@@ -71,10 +71,9 @@ function BackboneNode<T, S extends string, A>({
 
   const annotateText = useRef('Edit Annotation');
 
-  const handleChange = (evt) => {
-    prov.addAnnotationToNode(node.id, evt.target.value);
+  const handleChange = (evt:any) => {
+    prov.addAnnotation(node.id, evt.target.value);
     annotateText.current = evt.target.value;
-    console.log(prov.graph().nodes[node.id]);
   };
 
   // console.log(JSON.parse(JSON.stringify(node)));
@@ -127,7 +126,7 @@ function BackboneNode<T, S extends string, A>({
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
-  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.ephemeral && expandedClusterList && !expandedClusterList.includes(node.id)) {
+  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.actionType === "Ephemeral" && expandedClusterList && !expandedClusterList.includes(node.id)) {
     if (node.metadata && node.metadata.type) {
       label = `[${bundleMap[node.id].bunchedNodes.length}] ${node.metadata.type}`;
     } else {
@@ -137,8 +136,8 @@ function BackboneNode<T, S extends string, A>({
     label = node.label;
   }
 
-  if (node.artifacts && node.artifacts.annotation && node.artifacts.annotation.length > 0) {
-    annotate = node.artifacts.annotation;
+  if (node.artifacts && node.artifacts.annotations[0].annotation.length && node.artifacts.annotations[0].annotation.length > 0) {
+    annotate = node.artifacts.annotations[0].annotation;
   }
 
   const showHtml = (

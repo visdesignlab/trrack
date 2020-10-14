@@ -43,7 +43,7 @@ export function deserialize(serialized: string) {
   return eval(`(${serialized})`);
 }
 
-configure({ enforceActions: 'observed' });
+configure({ enforceActions: 'observed', isolateGlobalState: true });
 
 export default function initProvenance<T, S, A = void>(
   initialState: T,

@@ -1,11 +1,8 @@
 import 'semantic-ui-css/semantic.min.css';
 
+import { Meta } from '@storybook/react';
 import {
-  createAction,
-  initProvenance,
-  NodeID,
-  ProvenanceGraph,
-  StateNode,
+  createAction, initProvenance, NodeID, ProvenanceGraph, StateNode,
 } from '@visdesignlab/trrack';
 import { observable } from 'mobx';
 import { inject, observer, Provider } from 'mobx-react';
@@ -36,91 +33,24 @@ type Events = 'Add Task' | 'Change Task';
 
 const prov = initProvenance<DemoState, Events, DemoAnnotation>(defaultState);
 
-class DemoStore {
-  @observable graph: ProvenanceGraph<DemoState, Events, DemoAnnotation> =
-    prov.graph;
-
-  @observable tasks: Task[] = defaultState.tasks;
-
-  @observable isRoot: boolean = false;
-
-  @observable isLatest: boolean = false;
-}
-
-const demoStore = new DemoStore();
-
-let map: BundleMap;
-const idList: string[] = [];
-
-const popup = (node: StateNode<DemoState, Events, DemoAnnotation>) => (
-  <p>{node.id}</p>
-);
-
-const annotiation = () => (
-  // console.log(JSON.parse(JSON.stringify(node)))
-
-  <g transform="translate(0, 5)">
-    <text x="10" y="35" fontSize="1em">
-      Sample annotation
-    </text>
-  </g>
-);
-prov.addGlobalObserver(() => {
-  const { current } = prov;
-
-  const isRoot = current.id === prov.graph.root;
-
-  demoStore.isRoot = isRoot;
-  demoStore.isLatest = prov.current.children.length === 0;
-
-  demoStore.graph = prov.graph;
-});
-
-prov.addObserver(
-  (state) => state.tasks,
-  (state?: DemoState) => {
-    idList.push(prov.graph.current);
-    if (idList.length > 30) {
-      map = {
-        [idList[12]]: {
-          metadata: idList[12],
-          bundleLabel: 'Clustering Label',
-          bunchedNodes: [idList[10], idList[11]],
-        },
-
-        [idList[24]]: {
-          metadata: idList[24],
-          bundleLabel: 'Clustering Label',
-          bunchedNodes: [idList[22], idList[23], idList[21]],
-        },
-      };
-    }
-    if (state) {
-      demoStore.tasks = [...state.tasks];
-    }
-  },
-);
-
 prov.done();
 
 let taskNo: number = 1;
 
 const addTask = (desc: string = 'Random Task') => {
-  const action = createAction<DemoState, [string], Events>(
-    (state, dsc: string) => {
-      state.tasks.push({ key: taskNo, desc: dsc });
-    },
-  )
+  const action = createAction<DemoState, Events>((state) => {
+    state.tasks.push({ key: taskNo, desc });
+  })
     .setLabel(`Adding task #: ${taskNo}`)
     .setEventType('Add Task');
 
-  prov.apply(action(desc));
+  prov.apply(action);
 
   taskNo += 1;
 };
 
 function updateTask(taskId: number, desc: string = 'Changed String ') {
-  const action = createAction<DemoState, [], Events>((state) => {
+  const action = createAction<DemoState, Events>((state) => {
     const idx = state.tasks.findIndex((d) => d.key === taskId);
     if (idx !== -1) {
       state.tasks[idx].desc = desc;
@@ -129,11 +59,12 @@ function updateTask(taskId: number, desc: string = 'Changed String ') {
     .setLabel(`Changing task #: ${taskId}`)
     .setEventType('Change Task');
 
-  prov.apply(action());
+  prov.apply(action);
 }
 
 const undo = () => prov.goBackOneStep();
 const redo = () => prov.goForwardOneStep();
+
 const goToNode = (nodeId: NodeID) => {
   prov.goToNode(nodeId);
 };

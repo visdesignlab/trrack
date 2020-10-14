@@ -1,0 +1,40 @@
+{
+  "name": "example-lesmis",
+  "private":true,
+  "version": "1.0.0",
+  "description": "Examples for using provenance library",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "test",
+    "start": "webpack-dev-server --mode development"
+  },
+  "author": "Zach Cutler",
+  "license": "ISC",
+  "dependencies": {
+    "@types/d3": "^5.7.2",
+    "@types/react": "^16.9.38",
+    "@types/react-dom": "^16.9.8",
+    "@visdesignlab/trrack": "^0.0.0-development",
+    "@visdesignlab/trrack-vis": "^0.0.0-development",
+    "awesome-typescript-loader": "^5.2.1",
+    "d3": "^5.12.0",
+    "font-awesome": "^4.7.0",
+    "http-server": "^0.11.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-move": "^6.1.0",
+    "semantic-ui-react": "^0.88.2",
+    "ts-loader": "^6.0.4",
+    "typestyle": "^2.1.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2",
+    "tslint": "^5.19.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.2"
+  }
+}

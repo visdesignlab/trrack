@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provenance, ProvenanceGraph, NodeID } from '@visdesignlab/trrack';
+import { configure } from 'mobx';
 import ProvVis from './ProvVis';
 import UndoRedoButton from './UndoRedoButton';
 import { EventConfig } from '../Utils/EventConfig';
@@ -28,7 +29,7 @@ export interface ProvVisConfig {
   linkWidth: number;
   duration: number;
 }
-
+configure({ isolateGlobalState: true });
 export function ProvVisCreator<T, S extends string, A>(
   node: Element,
   prov: Provenance<T, S, A>,
