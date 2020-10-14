@@ -1,8 +1,11 @@
 import 'semantic-ui-css/semantic.min.css';
 
-import { Meta } from '@storybook/react';
 import {
-  createAction, initProvenance, NodeID, ProvenanceGraph, StateNode,
+  createAction,
+  initProvenance,
+  NodeID,
+  ProvenanceGraph,
+  StateNode,
 } from '@visdesignlab/trrack';
 import { observable } from 'mobx';
 import { inject, observer, Provider } from 'mobx-react';
@@ -103,19 +106,21 @@ prov.done();
 let taskNo: number = 1;
 
 const addTask = (desc: string = 'Random Task') => {
-  const action = createAction<DemoState, Events>((state) => {
-    state.tasks.push({ key: taskNo, desc });
-  })
+  const action = createAction<DemoState, [string], Events>(
+    (state, dsc: string) => {
+      state.tasks.push({ key: taskNo, desc: dsc });
+    },
+  )
     .setLabel(`Adding task #: ${taskNo}`)
     .setEventType('Add Task');
 
-  prov.apply(action);
+  prov.apply(action(desc));
 
   taskNo += 1;
 };
 
 function updateTask(taskId: number, desc: string = 'Changed String ') {
-  const action = createAction<DemoState, Events>((state) => {
+  const action = createAction<DemoState, [], Events>((state) => {
     const idx = state.tasks.findIndex((d) => d.key === taskId);
     if (idx !== -1) {
       state.tasks[idx].desc = desc;
@@ -124,7 +129,7 @@ function updateTask(taskId: number, desc: string = 'Changed String ') {
     .setLabel(`Changing task #: ${taskId}`)
     .setEventType('Change Task');
 
-  prov.apply(action);
+  prov.apply(action());
 }
 
 const undo = () => prov.goBackOneStep();

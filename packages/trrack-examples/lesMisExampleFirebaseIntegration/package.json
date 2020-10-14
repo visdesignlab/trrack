@@ -1,5 +1,6 @@
 {
-  "name": "examples",
+  "name": "example-lesmis-firebase",
+  "private":true,
   "version": "1.0.0",
   "description": "Examples for using provenance library",
   "main": "index.js",
