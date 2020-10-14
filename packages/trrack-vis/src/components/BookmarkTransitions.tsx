@@ -7,14 +7,7 @@ export default function BookmarkTransitions(
   xOffset = -xOffset;
 
   const start = (data: any) => {
-    let index;
-
-    // TODO: Please use something like nodeList.filter or findIndex here. This is a bad practice
-    for (let i = 0; i < nodeList.length; i++) {
-      if (nodeList[i] === data) {
-        index = i;
-      }
-    }
+    let index = nodeList.findIndex(data);
 
     const x = 0;
     const y = 40 * index;
@@ -26,13 +19,7 @@ export default function BookmarkTransitions(
   };
 
   const enter = (data: any) => {
-    let index;
-
-    for (let i = 0; i < nodeList.length; i++) {
-      if (nodeList[i] == data) {
-        index = i;
-      }
-    }
+    let index = nodeList.findIndex(data);
 
     const { source, target } = data;
 
@@ -54,13 +41,8 @@ export default function BookmarkTransitions(
   };
 
   const update = (data: any) => {
-    let index;
+    let index = nodeList.findIndex(data);
 
-    for (let i = 0; i < nodeList.length; i++) {
-      if (nodeList[i] == data) {
-        index = i;
-      }
-    }
     // let backboneBundleNodes = findBackboneBundleNodes(nodeMap, bundleMap);
     const x = 0;
     const y = 40 * index;

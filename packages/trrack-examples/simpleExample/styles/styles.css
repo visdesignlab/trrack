@@ -1,0 +1,40 @@
+.normalNode
+{
+  fill: #333333;
+  r: 7;
+}
+
+.selectedNode
+{
+  r: 10;
+  fill: blue
+}
+
+.hoverNode{
+  fill: blue;
+  opacity: .5
+}
+
+#mainDiv{
+  border: 1px solid black;
+  max-height: 800px;
+  display: flex;
+  float:left
+}
+
+#quartDiv{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+#provDiv{
+  max-width: 300px;
+  display: flex;
+  float: right;
+}
+
+#parent{
+  display: flex;
+  justify-content: center;
+}
