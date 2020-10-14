@@ -31,5 +31,8 @@ jobs:
             - name: Build Libraries
               run: yarn build
 
+            - name: Create npmrc for publishing
+              run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
             - name: Try publish
               run: yarn release

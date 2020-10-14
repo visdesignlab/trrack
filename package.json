@@ -40,7 +40,7 @@
     "test:core:watch": "lerna exec --scope @visdesignlab/trrack -- yarn test:watch",
     "lint": "lerna run lint",
     "commit": "git cz",
-    "release": "CI=true cross-env HUSKY_BYPASS=true lerna publish --conventional-commits"
+    "release": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --no-push"
   },
   "husky": {
     "hooks": {
