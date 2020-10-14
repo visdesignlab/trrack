@@ -1,0 +1,32 @@
+name: Publish & Deploy
+on:
+    push:
+    pull_request:
+        branches:
+            - master
+jobs:
+    test:
+        name: Test Job
+        runs-on: ubuntu-latest
+        steps:
+        - name: Print
+          run:
+              echo Hello
+    publish-core:
+        name: Publish trrack-core
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-versions: [12.x]
+            fail-fast: false
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+            - name: Fetch all
+              run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                node-version: ${{ matrix.node-version }}
+

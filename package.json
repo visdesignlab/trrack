@@ -3,7 +3,9 @@
   "private": true,
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
   "description": "",
-  "keywords": ["trrack"],
+  "keywords": [
+    "trrack"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/visdesignlab/trrack.git"
@@ -14,6 +16,7 @@
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "commitizen": "^4.2.1",
+    "cross-env": "^7.0.2",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -35,7 +38,8 @@
     "storybook:vis": "lerna exec --scope @visdesignlab/trrack-vis -- yarn storybook",
     "test:core:watch": "lerna exec --scope @visdesignlab/trrack -- yarn test:watch",
     "lint": "lerna run lint",
-    "commit": "git cz"
+    "commit": "git cz",
+    "release": "CI=true cross-env HUSKY_BYPASS=true lerna publish --conventional-commits"
   },
   "husky": {
     "hooks": {
