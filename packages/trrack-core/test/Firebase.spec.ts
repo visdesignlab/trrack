@@ -10,21 +10,12 @@ const firebaseConfig = {
   appId: '1:39631851502:web:9da7375282f0b27e1b48ff',
 };
 
-const { db } = initializeFirebase(firebaseConfig);
-
 describe('Test', () => {
   it('works', () => {
-    db.ref('test/hello')
-      .set('World')
-      .then((d) => console.log(d))
-      .catch((err) => {
-        console.error(err);
-        throw new Error(err);
-      });
-
-    db.ref()
-      .once('value')
-      .then((d) => console.log(d.val()))
-      .catch((err) => console.error(err));
+    const { db } = initializeFirebase(firebaseConfig);
+    const ref = db.ref();
+    ref.on('value', (snap) => {
+      console.log(snap.val());
+    });
   });
 });
