@@ -13,17 +13,20 @@ jobs:
                 node-versions: [12.x]
             fail-fast: false
         steps:
-            - name: Checkout repo
-              uses: actions/checkout@v2
+            - uses: actions/checkout@v2
               with:
                   fetch-depth: 0
-              run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-              
+            
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v1
               with:
                 node-version: ${{ matrix.node-version }}
+     
+            - name: Fetch all
+              run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+            
             - name: Install Packages
               run: yarn install
+     
             - name: Build Libraries
               run: yarn build
