@@ -30,3 +30,6 @@ jobs:
      
             - name: Build Libraries
               run: yarn build
+
+            - name: Try publish
+              run: yarn release
