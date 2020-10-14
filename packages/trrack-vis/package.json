@@ -1,6 +1,6 @@
 {
   "name": "@visdesignlab/trrack-vis",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "description": "",
   "keywords": [],
   "main": "dist/index.js",
