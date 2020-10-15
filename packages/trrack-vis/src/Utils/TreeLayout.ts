@@ -1,6 +1,6 @@
 import { HierarchyNode } from 'd3';
-import { StratifiedMap } from '../components/ProvVis';
 import { ProvenanceNode } from '@visdesignlab/trrack';
+import { StratifiedMap } from '../components/ProvVis';
 
 export type TreeNode = HierarchyNode<unknown>;
 
@@ -26,18 +26,18 @@ function DFS<T, S, A>(
   nodes: StratifiedMap<T, S, A>,
   node: string,
   depthMap: any,
-  currentPath: string[]
+  currentPath: string[],
 ) {
-  let explored = new Set();
+  const explored = new Set();
 
-  let toExplore = [];
+  const toExplore = [];
 
   let currDepth = 0;
 
   toExplore.push(nodes[node]);
 
   while (toExplore.length > 0) {
-    let temp: any = toExplore.pop();
+    const temp: any = toExplore.pop();
 
     if (!explored.has(temp.id)) {
       temp.width = currDepth;
@@ -53,10 +53,10 @@ function DFS<T, S, A>(
           const aIncludes = currentPath.includes(a.id) ? 1 : 0;
           const bIncludes = currentPath.includes(b.id) ? 1 : 0;
           return aIncludes - bIncludes;
-        })
+        }),
       );
     } else {
-      currDepth++;
+      currDepth += 1;
     }
   }
 }
@@ -64,7 +64,7 @@ function DFS<T, S, A>(
 export function getPathTo<T, S, A>(
   nodes: StratifiedMap<T, S, A>,
   from: string,
-  to: string
+  to: string,
 ): string[] {
   const path: string[] = [];
 
@@ -77,7 +77,7 @@ function search<T, S, A>(
   nodes: StratifiedMap<T, S, A>,
   node: string,
   final: string,
-  path: string[]
+  path: string[],
 ) {
   if (!nodes[node]) return false;
 
@@ -88,7 +88,8 @@ function search<T, S, A>(
 
   const children = nodes[node].children || [];
 
-  for (let child of children) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const child of children) {
     if (search(nodes, child.id!, final, path)) {
       path.push(child.id!);
       return true;

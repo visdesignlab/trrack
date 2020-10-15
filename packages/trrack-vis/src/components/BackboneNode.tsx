@@ -86,6 +86,8 @@ function BackboneNode<T, S extends string, A>({
     />
   );
 
+  console.log('HELLLOOOOO');
+
   // let backboneBundleNodes = findBackboneBundleNodes(nodeMap, bundleMap)
 
   let dropDownAdded = false;
@@ -126,7 +128,7 @@ function BackboneNode<T, S extends string, A>({
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
-  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.actionType === "Ephemeral" && expandedClusterList && !expandedClusterList.includes(node.id)) {
+  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.actionType === 'Ephemeral' && expandedClusterList && !expandedClusterList.includes(node.id)) {
     if (node.metadata && node.metadata.type) {
       label = `[${bundleMap[node.id].bunchedNodes.length}] ${node.metadata.type}`;
     } else {
@@ -136,7 +138,8 @@ function BackboneNode<T, S extends string, A>({
     label = node.label;
   }
 
-  if (node.artifacts && node.artifacts.annotations[0].annotation.length && node.artifacts.annotations[0].annotation.length > 0) {
+  if (node.artifacts
+     && node.artifacts.annotations.length > 0) {
     annotate = node.artifacts.annotations[0].annotation;
   }
 
@@ -238,7 +241,7 @@ function BackboneNode<T, S extends string, A>({
           <text
             style={cursorStyle}
             onClick={(e) => {
-              if (annotationOpen === -1 || nodeMap[node.id].depth != annotationOpen) {
+              if (annotationOpen === -1 || nodeMap[node.id].depth !== annotationOpen) {
                 setAnnotationOpen(nodeMap[node.id].depth);
               } else {
                 setAnnotationOpen(-1);
@@ -246,7 +249,8 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa-edit"
-            opacity={bookmark.includes(node.id) || annotationOpen === nodeMap[node.id].depth ? 1 : 0}
+            opacity={bookmark.includes(node.id)
+              || annotationOpen === nodeMap[node.id].depth ? 1 : 0}
             fill={annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'}
             textAnchor="middle"
             alignmentBaseline="middle"
@@ -327,27 +331,25 @@ function BackboneNode<T, S extends string, A>({
     </Animate>
   );
 
-  function labelClicked(node: ProvenanceNode<T, S, A>) {
-    if (!annotationContent) {
-
-    } else if (annotationOpen === nodeMap[node.id].depth) {
+  function labelClicked(innerNode: ProvenanceNode<T, S, A>) {
+    if (annotationOpen === nodeMap[innerNode.id].depth && annotationContent) {
       setAnnotationOpen(-1);
     } else {
-      setAnnotationOpen(nodeMap[node.id].depth);
+      setAnnotationOpen(nodeMap[innerNode.id].depth);
     }
   }
 
-  function nodeClicked(node: ProvenanceNode<T, S, A>, event: any) {
-    if (bundleMap && Object.keys(bundleMap).includes(node.id)) {
+  function nodeClicked(innerNode: ProvenanceNode<T, S, A>, event: any) {
+    if (bundleMap && Object.keys(bundleMap).includes(innerNode.id)) {
       const exemptCopy: string[] = Array.from(exemptList);
 
-      if (exemptCopy.includes(node.id)) {
+      if (exemptCopy.includes(innerNode.id)) {
         exemptCopy.splice(
-          exemptCopy.findIndex((d) => d === node.id),
+          exemptCopy.findIndex((d) => d === innerNode.id),
           1,
         );
       } else {
-        exemptCopy.push(node.id);
+        exemptCopy.push(innerNode.id);
       }
 
       setExemptList(exemptCopy);

@@ -382,6 +382,7 @@ function ProvVis<T, S extends string, A>({
         return eventConfig[eventType].bundleGlyph;
       }
     }
+
     return (
       <circle
         r={regularCircleRadius}
@@ -442,7 +443,6 @@ function ProvVis<T, S extends string, A>({
           <BookmarkListView
             graph={prov ? prov.graph : undefined}
             eventConfig={eventConfig}
-            popupContent={popupContent}
             currentNode={current}
           />
         </g>
@@ -489,11 +489,8 @@ function ProvVis<T, S extends string, A>({
                   clusterVerticalSpace,
                   backboneGutter - gutter,
                   duration,
-                  stratifiedList,
-                  stratifiedMap,
                   annotationOpen,
                   annotationHeight,
-                  bundleMap,
                 )}
               >
                 {(linkArr) => (
@@ -525,11 +522,8 @@ function ProvVis<T, S extends string, A>({
                   clusterVerticalSpace,
                   backboneGutter - gutter,
                   duration,
-                  stratifiedList,
-                  stratifiedMap,
                   annotationOpen,
                   annotationHeight,
-                  bundleMap,
                 )}
               >
                 {(nodes) => (

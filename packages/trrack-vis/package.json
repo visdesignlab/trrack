@@ -47,11 +47,11 @@
   "size-limit": [
     {
       "path": "dist/trrack-vis.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "500 KB"
     },
     {
       "path": "dist/trrack-vis.esm.js",
-      "limit": "10 KB"
+      "limit": "500 KB"
     }
   ],
   "devDependencies": {

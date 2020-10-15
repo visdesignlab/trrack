@@ -36,13 +36,15 @@ export default function bundleTransitions(
         //   validity = false;
         // }
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]] && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]]
+          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
         ) {
           highestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
 
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]] && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]]
+          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
         ) {
           lowestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
@@ -57,6 +59,7 @@ export default function bundleTransitions(
 
     let height = 0;
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const j in bundleMap![data].bunchedNodes) {
       if (stratifiedMap[bundleMap![data].bunchedNodes[j]]) {
         height++;
@@ -104,13 +107,15 @@ export default function bundleTransitions(
         //   validity = false;
         // }
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]] && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]]
+          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
         ) {
           highestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
 
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]] && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]]
+          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
         ) {
           lowestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
@@ -124,13 +129,14 @@ export default function bundleTransitions(
     }
 
     let height = 0;
+    // eslint-disable-next-line no-restricted-syntax
     for (const j in bundleMap![data].bunchedNodes) {
       if (stratifiedMap[bundleMap![data].bunchedNodes[j]]) {
         height++;
       }
     }
 
-    height = clusterOffset * height;
+    height *= clusterOffset;
 
     if (!expandedClusterList.includes(data)) {
       height = 10;
