@@ -50,13 +50,11 @@ function BackboneNode<T, S extends string, A>({
   textSize,
   nodeMap,
   annotationOpen,
-  setBookmark,
   bookmark,
   setAnnotationOpen,
   exemptList,
   setExemptList,
   bundleMap,
-  clusterLabels,
   eventConfig,
   popupContent,
   editAnnotations,
@@ -86,14 +84,12 @@ function BackboneNode<T, S extends string, A>({
     />
   );
 
-  console.log('HELLLOOOOO');
-
   // let backboneBundleNodes = findBackboneBundleNodes(nodeMap, bundleMap)
 
   let dropDownAdded = false;
 
   if (eventConfig) {
-    const eventType = node.metadata.type;
+    const { eventType } = node.metadata;
     if (eventType && eventType in eventConfig && eventType !== 'Root') {
       const { bundleGlyph, currentGlyph, backboneGlyph } = eventConfig[
         eventType
@@ -128,9 +124,12 @@ function BackboneNode<T, S extends string, A>({
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
-  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.actionType === 'Ephemeral' && expandedClusterList && !expandedClusterList.includes(node.id)) {
-    if (node.metadata && node.metadata.type) {
-      label = `[${bundleMap[node.id].bunchedNodes.length}] ${node.metadata.type}`;
+  if (bundleMap
+    && Object.keys(bundleMap).includes(node.id)
+    && node.actionType === 'Ephemeral' && expandedClusterList
+    && !expandedClusterList.includes(node.id)) {
+    if (node.metadata && node.metadata.eventType) {
+      label = `[${bundleMap[node.id].bunchedNodes.length}] ${node.metadata.eventType}`;
     } else {
       label = `[${bundleMap[node.id].bunchedNodes.length}]`;
     }
@@ -139,7 +138,7 @@ function BackboneNode<T, S extends string, A>({
   }
 
   if (node.artifacts
-     && node.artifacts.annotations.length > 0) {
+    && node.artifacts.annotations.length > 0) {
     annotate = node.artifacts.annotations[0].annotation;
   }
 
@@ -334,7 +333,7 @@ function BackboneNode<T, S extends string, A>({
   function labelClicked(innerNode: ProvenanceNode<T, S, A>) {
     if (annotationOpen === nodeMap[innerNode.id].depth && annotationContent) {
       setAnnotationOpen(-1);
-    } else {
+    } else if (annotationContent) {
       setAnnotationOpen(nodeMap[innerNode.id].depth);
     }
   }

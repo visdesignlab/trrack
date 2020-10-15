@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Provenance, ProvenanceGraph, NodeID } from '@visdesignlab/trrack';
 import { configure } from 'mobx';
@@ -39,6 +39,22 @@ export function ProvVisCreator<T, S extends string, A>(
   fauxRoot: NodeID = prov.graph.root,
   config: Partial<ProvVisConfig> = {},
 ) {
+  prov.addGlobalObserver(() => {
+    ReactDOM.render(
+      <ProvVis
+        {...config}
+        root={fauxRoot}
+        changeCurrent={callback}
+        current={prov.graph.current}
+        nodeMap={prov.graph.nodes}
+        prov={prov}
+        undoRedoButtons={true}
+        ephemeralUndo={ephemeralUndo}
+      />,
+      node,
+    );
+  });
+
   ReactDOM.render(
     <ProvVis
       {...config}
