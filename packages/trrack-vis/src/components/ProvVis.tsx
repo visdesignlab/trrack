@@ -114,13 +114,14 @@ function ProvVis<T, S extends string, A>({
   const [bookmark, setBookmark] = useState<any[]>([]);
   const [annotationOpen, setAnnotationOpen] = useState(-1);
   const [bookmarkView, setBookmarkView] = useState(false);
+
   let list: string[] = [];
   const eventTypes = new Set<string>();
   for (const j in nodeMap) {
     const child = nodeMap[j];
     if (isChildNode(child)) {
-      if (child.metadata.type) {
-        eventTypes.add(child.metadata.type);
+      if (child.metadata.eventType) {
+        eventTypes.add(child.metadata.eventType);
       }
 
       if (child.actionType === 'Ephemeral' && child.children.length === 1 && (nodeMap[child.parent].actionType !== 'Ephemeral' || nodeMap[child.parent].children.length > 1)) {
@@ -356,7 +357,7 @@ function ProvVis<T, S extends string, A>({
 
   function regularGlyph(node: ProvenanceNode<T, S, A>) {
     if (eventConfig) {
-      const eventType = node.metadata.type;
+      const { eventType } = node.metadata;
       if (
         eventType
         && eventType in eventConfig
@@ -377,7 +378,7 @@ function ProvVis<T, S extends string, A>({
 
   function bundleGlyph(node: ProvenanceNode<T, S, A>) {
     if (eventConfig) {
-      const eventType = node.metadata.type;
+      const { eventType } = node.metadata;
       if (eventType && eventType in eventConfig && eventType !== 'Root') {
         return eventConfig[eventType].bundleGlyph;
       }

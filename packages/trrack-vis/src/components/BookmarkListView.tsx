@@ -44,17 +44,7 @@ function BookmarkListView<T, S extends string, A>({
     current = graph.nodes[current.parent];
   }
 
-  // let nodeList = bookmarks;
-
-  //  const items = [];
-  //  for (const [index, value] of bookmarkList.entries()) {
-  //   items.push(<li key={index}>{value}</li>)
-  // }
-
-  console.log(bookmarks);
-
   return (
-    // <svg>
     <NodeGroup
       data={bookmarks}
       keyAccessor={(d) => d.label}
@@ -80,7 +70,6 @@ function BookmarkListView<T, S extends string, A>({
         </>
       )}
     </NodeGroup>
-    // </svg>
   );
 }
 

@@ -102,9 +102,6 @@ const scatterplot = new Scatterplot(changeQuartetUpdate, selectNodeUpdate, hover
 // For our purposes, were simply going to jump to the selected node.
 const visCallback = function (newNode:NodeID) {
   prov.goToNode(newNode);
-
-  // Incase the state doesn't change and the observers arent called, updating the ProvVis here.
-  provVisUpdate();
 };
 
 // Set up observers for the three keys in state. These observers will get called either when
@@ -118,8 +115,6 @@ const visCallback = function (newNode:NodeID) {
 */
 prov.addObserver((state) => state.selectedQuartet, () => {
   scatterplot.changeQuartet(prov.getState(prov.current).selectedQuartet);
-
-  provVisUpdate();
 });
 
 /**
@@ -128,8 +123,6 @@ prov.addObserver((state) => state.selectedQuartet, () => {
 */
 prov.addObserver((state) => state.selectedNode, () => {
   scatterplot.selectNode(prov.getState(prov.current).selectedNode);
-
-  provVisUpdate();
 });
 
 /**
@@ -137,14 +130,16 @@ prov.addObserver((state) => state.selectedNode, () => {
 */
 prov.addObserver((state) => state.hoveredNode, () => {
   scatterplot.hoverNode(prov.getState(prov.current).hoveredNode);
-
-  provVisUpdate();
 });
 
 prov.done();
 
 // Setup ProvVis once initially
-provVisUpdate();
+ProvVisCreator(
+    document.getElementById('provDiv')!,
+    prov,
+    visCallback,
+);
 
 // Undo function which simply goes one step backwards in the graph.
 function undo() {
@@ -157,14 +152,6 @@ function redo() {
     return;
   }
   prov.goForwardOneStep();
-}
-
-function provVisUpdate() {
-  ProvVisCreator(
-    document.getElementById('provDiv')!,
-    prov,
-    visCallback,
-  );
 }
 
 // Setting up undo/redo hotkey to typical buttons
