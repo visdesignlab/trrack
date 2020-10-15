@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
-import {
-  Provenance, ProvenanceNode, StateNode,
-} from '@visdesignlab/trrack';
+import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useRef } from 'react';
 import { Animate } from 'react-move';
 import { Popup } from 'semantic-ui-react';
@@ -71,7 +69,7 @@ function BackboneNode<T, S extends string, A>({
 
   const annotateText = useRef('Edit Annotation');
 
-  const handleChange = (evt:any) => {
+  const handleChange = (evt: any) => {
     prov.addAnnotation(node.id, evt.target.value);
     annotateText.current = evt.target.value;
   };
@@ -85,8 +83,6 @@ function BackboneNode<T, S extends string, A>({
       strokeWidth={strokeWidth}
     />
   );
-
-  console.log('HELLLOOOOO');
 
   // let backboneBundleNodes = findBackboneBundleNodes(nodeMap, bundleMap)
 
@@ -128,9 +124,17 @@ function BackboneNode<T, S extends string, A>({
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
-  if (bundleMap && Object.keys(bundleMap).includes(node.id) && node.actionType === 'Ephemeral' && expandedClusterList && !expandedClusterList.includes(node.id)) {
+  if (
+    bundleMap
+    && Object.keys(bundleMap).includes(node.id)
+    && node.actionType === 'Ephemeral'
+    && expandedClusterList
+    && !expandedClusterList.includes(node.id)
+  ) {
     if (node.metadata && node.metadata.type) {
-      label = `[${bundleMap[node.id].bunchedNodes.length}] ${node.metadata.type}`;
+      label = `[${bundleMap[node.id].bunchedNodes.length}] ${
+        node.metadata.type
+      }`;
     } else {
       label = `[${bundleMap[node.id].bunchedNodes.length}]`;
     }
@@ -138,8 +142,7 @@ function BackboneNode<T, S extends string, A>({
     label = node.label;
   }
 
-  if (node.artifacts
-     && node.artifacts.annotations.length > 0) {
+  if (node.artifacts && node.artifacts.annotations.length > 0) {
     annotate = node.artifacts.annotations[0].annotation;
   }
 
@@ -189,9 +192,10 @@ function BackboneNode<T, S extends string, A>({
             <g></g>
           )}
           {editAnnotations ? (
-            <button
-            ><i className="fas fa-undo marginRight"></i>
-               Undo</button>
+            <button>
+              <i className="fas fa-undo marginRight"></i>
+              Undo
+            </button>
           ) : (
             <g></g>
           )}
@@ -228,7 +232,9 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa"
-            opacity={bookmark.includes(node.id) || prov.getBookmark(node.id) ? 1 : 0}
+            opacity={
+              bookmark.includes(node.id) || prov.getBookmark(node.id) ? 1 : 0
+            }
             fill={prov.getBookmark(node.id) ? '#2185d0' : '#cccccc'}
             textAnchor="middle"
             alignmentBaseline="middle"
@@ -237,11 +243,15 @@ function BackboneNode<T, S extends string, A>({
             fontFamily="FontAwesome"
           >
             {'\uf02e'}
-          </text>,
+          </text>
+          ,
           <text
             style={cursorStyle}
             onClick={(e) => {
-              if (annotationOpen === -1 || nodeMap[node.id].depth !== annotationOpen) {
+              if (
+                annotationOpen === -1
+                || nodeMap[node.id].depth !== annotationOpen
+              ) {
                 setAnnotationOpen(nodeMap[node.id].depth);
               } else {
                 setAnnotationOpen(-1);
@@ -249,9 +259,15 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa-edit"
-            opacity={bookmark.includes(node.id)
-              || annotationOpen === nodeMap[node.id].depth ? 1 : 0}
-            fill={annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'}
+            opacity={
+              bookmark.includes(node.id)
+              || annotationOpen === nodeMap[node.id].depth
+                ? 1
+                : 0
+            }
+            fill={
+              annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'
+            }
             textAnchor="middle"
             alignmentBaseline="middle"
             x={210}
@@ -312,9 +328,7 @@ function BackboneNode<T, S extends string, A>({
 
           {annotationOpen !== -1
           && nodeMap[node.id].depth === annotationOpen ? (
-              <g
-                transform="translate(15, 25)"
-              >
+              <g transform="translate(15, 25)">
                 <foreignObject width="200" height="400">
                   <ContentEditable
                     html={annotateText.current} // innerHTML of the editable div
