@@ -18,11 +18,11 @@ export default function createAction<T, Args extends any[] = any[], S = void>(
   let _eventType: S;
   let _meta: Meta = {};
 
-  const actionObject: ActionObject<T, S, Args> = function (args: Args) {
+  const actionObject: ActionObject<T, S, Args> = function (...args: Args) {
     return {
       apply: action((state: T) => {
         if (!_label) throw new Error('Please specify a label for the action');
-        func(state, ...([args] as any));
+        func(state, ...args);
         return {
           state: toJS(state),
           label: _label,
