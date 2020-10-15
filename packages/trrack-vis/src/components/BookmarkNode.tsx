@@ -28,7 +28,6 @@ function BookmarkNode<T, S extends string, A>({
     cursor: 'pointer',
   } as React.CSSProperties;
 
-  // console.log(JSON.parse(JSON.stringify(node)));
   let glyph = (
     <circle
       style={cursorStyle}
@@ -38,11 +37,8 @@ function BookmarkNode<T, S extends string, A>({
     />
   );
 
-  // console.log("in bookmark node");
-
   const dropDownAdded = false;
   const eventType = node.metadata.type;
-  //
 
   if (eventConfig) {
     const { currentGlyph, backboneGlyph } = eventConfig[eventType];
@@ -54,7 +50,6 @@ function BookmarkNode<T, S extends string, A>({
         </g>
       );
     } else {
-      console.log('in else');
       glyph = (
         <g style={cursorStyle} fontWeight={'none'}>
           {backboneGlyph}
@@ -92,7 +87,6 @@ function BookmarkNode<T, S extends string, A>({
             {glyph}
 
             <text
-            // y={annotate.length === 0 ? 0 : -7}
               y ={0}
               x={20}
               dominantBaseline="middle"
@@ -114,7 +108,6 @@ function BookmarkNode<T, S extends string, A>({
               {annotate}
             </text>
           </g>
-
         </>
       )}
     </Animate>
