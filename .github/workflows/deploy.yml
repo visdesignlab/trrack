@@ -44,10 +44,7 @@ jobs:
               run: mkdir build
 
             - name: Copy examples
-              run: cp -r ./packages/trrack-examples/ ./build
-
-            - name: Remove everything but test
-              run: find build -mindepth 1 ! -regex '.*dist.*' | xargs rm -rf
+              run: for f in `/bin/ls ./packages/trrack-examples/`; do mkdir -p ./build/${f} && cp -r ./packages/trrack-examples/${f}/dist ./build/${f}/; done
 
             - name: Build docs
               run: yarn docs
