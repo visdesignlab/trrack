@@ -1,26 +1,21 @@
-import
-{
-  initProvenance,
-  NodeID,
-  createAction,
-} from '@visdesignlab/trrack';
+import { initProvenance, NodeID, createAction } from '@visdesignlab/trrack';
 
 import { ProvVisCreator } from '@visdesignlab/trrack-vis';
-
+import '../styles/styles.css';
 import Scatterplot from './scatterplot';
 
 /**
-* interface representing the state of the application
-*/
+ * interface representing the state of the application
+ */
 export interface NodeState {
-  selectedQuartet:string;
-  selectedNode:string;
-  hoveredNode:string;
+  selectedQuartet: string;
+  selectedNode: string;
+  hoveredNode: string;
 }
 
 /**
-* Initial state
-*/
+ * Initial state
+ */
 
 const initialState: NodeState = {
   selectedQuartet: 'I',
@@ -28,7 +23,7 @@ const initialState: NodeState = {
   hoveredNode: 'none',
 };
 
-type EventTypes = 'Change Quartet' | 'Select Node' | 'Hover Node'
+type EventTypes = 'Change Quartet' | 'Select Node' | 'Hover Node';
 
 // initialize provenance with the first state
 const prov = initProvenance<NodeState, EventTypes, string>(initialState, {
@@ -38,12 +33,12 @@ const prov = initProvenance<NodeState, EventTypes, string>(initialState, {
 // Set up apply action functions for each of the 3 actions that affect state
 
 /**
-* Function called when the quartet number is changed. Applies an action to provenance.
-* This is a complex action, meaning it always stores a state node.
-*/
+ * Function called when the quartet number is changed. Applies an action to provenance.
+ * This is a complex action, meaning it always stores a state node.
+ */
 
 const quartetUpdateAction = createAction<NodeState, any, EventTypes>(
-  (state:NodeState, newQuartet:string) => {
+  (state: NodeState, newQuartet: string) => {
     state.selectedQuartet = newQuartet;
   },
 );
@@ -58,29 +53,27 @@ const changeQuartetUpdate = function (newQuartet: string) {
 };
 
 /**
-* Function called when a node is selected. Applies an action to provenance.
-*/
+ * Function called when a node is selected. Applies an action to provenance.
+ */
 
 const nodeSelectAction = createAction<NodeState, any, EventTypes>(
-  (state:NodeState, newSelected:string) => {
+  (state: NodeState, newSelected: string) => {
     state.selectedNode = newSelected;
   },
 );
 
 const selectNodeUpdate = function (newSelected: string) {
-  nodeSelectAction
-    .setLabel(`${newSelected} Selected`)
-    .setEventType('Select Node');
+  nodeSelectAction.setLabel(`${newSelected} Selected`).setEventType('Select Node');
 
   prov.apply(nodeSelectAction(newSelected));
 };
 
 /**
-* Function called when a node is hovered. Applies an action to provenance.
-*/
+ * Function called when a node is hovered. Applies an action to provenance.
+ */
 
 const hoverAction = createAction<NodeState, any, EventTypes>(
-  (state:NodeState, newHover:string) => {
+  (state: NodeState, newHover: string) => {
     state.hoveredNode = newHover;
     return state;
   },
@@ -101,7 +94,7 @@ const scatterplot = new Scatterplot(changeQuartetUpdate, selectNodeUpdate, hover
 
 // Create function to pass to the ProvVis library for when a node is selected in the graph.
 // For our purposes, were simply going to jump to the selected node.
-const visCallback = function (newNode:NodeID) {
+const visCallback = function (newNode: NodeID) {
   prov.goToNode(newNode);
 };
 
@@ -113,26 +106,35 @@ const visCallback = function (newNode:NodeID) {
 // change the keys value.
 
 /**
-* Observer for when the quartet state is changed. Calls changeQuartet in scatterplot to update vis.
-*/
-prov.addObserver((state) => state.selectedQuartet, () => {
-  scatterplot.changeQuartet(prov.getState(prov.current).selectedQuartet);
-});
+ * Observer for when the quartet state is changed. Calls changeQuartet in scatterplot to update vis.
+ */
+prov.addObserver(
+  (state) => state.selectedQuartet,
+  () => {
+    scatterplot.changeQuartet(prov.getState(prov.current).selectedQuartet);
+  },
+);
 
 /**
-* Observer for when the selected node state is changed.
-* Calls selectNode in scatterplot to update vis.
-*/
-prov.addObserver((state) => state.selectedNode, () => {
-  scatterplot.selectNode(prov.getState(prov.current).selectedNode);
-});
+ * Observer for when the selected node state is changed.
+ * Calls selectNode in scatterplot to update vis.
+ */
+prov.addObserver(
+  (state) => state.selectedNode,
+  () => {
+    scatterplot.selectNode(prov.getState(prov.current).selectedNode);
+  },
+);
 
 /**
-* Observer for when the hovered node state is changed. Calls hoverNode in scatterplot to update vis.
-*/
-prov.addObserver((state) => state.hoveredNode, () => {
-  scatterplot.hoverNode(prov.getState(prov.current).hoveredNode);
-});
+ * Observer for when the hovered node state is changed. Calls hoverNode in scatterplot to update vis.
+ */
+prov.addObserver(
+  (state) => state.hoveredNode,
+  () => {
+    scatterplot.hoverNode(prov.getState(prov.current).hoveredNode);
+  },
+);
 
 prov.done();
 

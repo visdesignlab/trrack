@@ -5,20 +5,16 @@
   "description": "Examples for using provenance library",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "webpack",
     "test": "test",
     "start": "webpack-dev-server --mode development"
   },
-  "author": "Zach Cutler",
   "license": "ISC",
   "dependencies": {
-    "@types/d3": "^5.7.2",
     "@types/react": "^16.9.38",
     "@types/react-dom": "^16.9.8",
     "@visdesignlab/trrack": "^1.2.0",
     "@visdesignlab/trrack-vis": "^1.1.0",
-    "awesome-typescript-loader": "^5.2.1",
-    "css-loader": "^5.0.0",
     "d3": "^5.12.0",
     "font-awesome": "^4.7.0",
     "http-server": "^0.11.1",
@@ -26,17 +22,23 @@
     "react-dom": "^16.13.1",
     "react-move": "^6.1.0",
     "semantic-ui-react": "^0.88.2",
-    "style-loader": "^2.0.0",
-    "ts-loader": "^6.0.4",
-    "typestyle": "^2.1.0",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0"
+    "typestyle": "^2.1.0"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.0",
+    "html-webpack-plugin": "^4.5.0",
     "prettier": "^1.18.2",
+    "style-loader": "^2.0.0",
+    "ts-loader": "^8.0.5",
     "tslint": "^5.19.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.6.2"
+    "copy-webpack-plugin": "^6.2.1",
+    "typescript": "^4.0.3",
+    "webpack": "^5.1.2",
+    "webpack-cli": "^4.0.0",
+    "webpack-dev-server": "^3.8.0"
   }
 }
