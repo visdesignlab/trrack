@@ -11,8 +11,21 @@ import { Meta } from './Nodes';
  */
 export type ActionType = 'Ephemeral' | 'Regular';
 
+/**
+ *
+ * __Complete__ for saving the entire state
+ *
+ * __Diff__ for using diff algorithm
+ *
+ */
 export type ActionSaveStateMode = 'Complete' | 'Diff';
 
+/**
+ * @typeParam T Type of application state
+ * @typeParam Args Represents the types for the arguments
+ *
+ * @param T Application state
+ */
 export type ActionFunction<T, Args extends any[]> = (
   state: T,
   ...args: Args

@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-import {
-  Provenance, ProvenanceNode, StateNode,
-} from '@visdesignlab/trrack';
+import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useRef } from 'react';
 import { Animate } from 'react-move';
-import { Popup } from 'semantic-ui-react';
-import ContentEditable from 'react-contenteditable';
+import {
+  Popup, Input, Button, Icon,
+} from 'semantic-ui-react';
 
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
@@ -67,11 +66,24 @@ function BackboneNode<T, S extends string, A>({
     cursor: 'pointer',
   } as React.CSSProperties;
 
-  const annotateText = useRef('Edit Annotation');
+  const annotateText = useRef(prov.getLatestAnnotation(node.id)?.annotation ? prov.getLatestAnnotation(node.id)?.annotation! : '');
 
-  const handleChange = (evt:any) => {
-    prov.addAnnotation(node.id, evt.target.value);
-    annotateText.current = evt.target.value;
+  const handleCheck = (evt:any, data:any) => {
+    const lastAnnotation = prov.getLatestAnnotation(node.id);
+
+    if (lastAnnotation?.annotation !== annotateText.current.trim()) {
+      prov.addAnnotation(annotateText.current, node.id);
+      setAnnotationOpen(-1);
+    }
+  };
+
+  const handleClose = (evt: any, data: any) => {
+    annotateText.current = prov.getLatestAnnotation(node.id)?.annotation!;
+    setAnnotationOpen(-1);
+  };
+
+  const handleInputChange = (evt: any) => {
+    annotateText.current = (evt.target.value);
   };
 
   // console.log(JSON.parse(JSON.stringify(node)));
@@ -138,7 +150,8 @@ function BackboneNode<T, S extends string, A>({
   }
 
   if (node.artifacts
-    && node.artifacts.annotations.length > 0) {
+    && node.artifacts.annotations.length > 0
+    && annotationOpen !== nodeMap[node.id].depth) {
     annotate = node.artifacts.annotations[0].annotation;
   }
 
@@ -188,9 +201,10 @@ function BackboneNode<T, S extends string, A>({
             <g></g>
           )}
           {editAnnotations ? (
-            <button
-            ><i className="fas fa-undo marginRight"></i>
-               Undo</button>
+            <button>
+              <i className="fas fa-undo marginRight"></i>
+              Undo
+            </button>
           ) : (
             <g></g>
           )}
@@ -227,7 +241,9 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa"
-            opacity={bookmark.includes(node.id) || prov.getBookmark(node.id) ? 1 : 0}
+            opacity={
+              bookmark.includes(node.id) || prov.getBookmark(node.id) ? 1 : 0
+            }
             fill={prov.getBookmark(node.id) ? '#2185d0' : '#cccccc'}
             textAnchor="middle"
             alignmentBaseline="middle"
@@ -236,11 +252,15 @@ function BackboneNode<T, S extends string, A>({
             fontFamily="FontAwesome"
           >
             {'\uf02e'}
-          </text>,
+          </text>
+          ,
           <text
             style={cursorStyle}
             onClick={(e) => {
-              if (annotationOpen === -1 || nodeMap[node.id].depth !== annotationOpen) {
+              if (
+                annotationOpen === -1
+                || nodeMap[node.id].depth !== annotationOpen
+              ) {
                 setAnnotationOpen(nodeMap[node.id].depth);
               } else {
                 setAnnotationOpen(-1);
@@ -248,9 +268,15 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa-edit"
-            opacity={bookmark.includes(node.id)
-              || annotationOpen === nodeMap[node.id].depth ? 1 : 0}
-            fill={annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'}
+            opacity={
+              bookmark.includes(node.id)
+              || annotationOpen === nodeMap[node.id].depth
+                ? 1
+                : 0
+            }
+            fill={
+              annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'
+            }
             textAnchor="middle"
             alignmentBaseline="middle"
             x={210}
@@ -311,15 +337,17 @@ function BackboneNode<T, S extends string, A>({
 
           {annotationOpen !== -1
           && nodeMap[node.id].depth === annotationOpen ? (
-              <g
-                transform="translate(15, 25)"
-              >
-                <foreignObject width="200" height="400">
-                  <ContentEditable
-                    html={annotateText.current} // innerHTML of the editable div
-                    onChange={handleChange}
-                    disabled={false}
-                  />
+              <g transform="translate(15, 25)">
+                <foreignObject width="300" height="400">
+                  <Input size='massive' icon='close' onChange={handleInputChange} defaultValue={annotateText.current} placeholder="Edit Annotation" action>
+                    <input />
+                    <Button color="green" type="submit" onClick={handleCheck}>
+                      <Icon name="world"/>
+                    </Button>
+                    <Button color="red" type="submit" onClick={handleClose}>
+                      <Icon name="close"/>
+                    </Button>
+                  </Input>
                 </foreignObject>
               </g>
             ) : (
