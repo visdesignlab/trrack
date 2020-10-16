@@ -50,4 +50,4 @@ jobs:
               run: find build -mindepth 1 ! -regex '.*dist.*' | xargs rm -rf
 
             - name: See everything
-              run: find ./build -print
+              run: ls -al ./build
