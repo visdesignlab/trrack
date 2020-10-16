@@ -28,7 +28,8 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "docs": "typedoc --out docs --target es6 --mode file src"
   },
   "peerDependencies": {
     "react": ">=16"
