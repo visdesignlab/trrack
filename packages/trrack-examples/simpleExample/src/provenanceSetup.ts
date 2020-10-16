@@ -1,5 +1,5 @@
 import { initProvenance, NodeID, createAction } from '@visdesignlab/trrack';
-
+import '../styles/styles.css';
 import { ProvVisCreator } from '@visdesignlab/trrack-vis';
 
 import Scatterplot from './scatterplot';
