@@ -49,5 +49,13 @@ jobs:
             - name: Remove everything but test
               run: find build -mindepth 1 ! -regex '.*dist.*' | xargs rm -rf
 
-            - name: See everything
-              run: ls -al ./build
+            - name: Build docs
+              run: yarn docs
+
+            - name: Copy docs to build
+              run: |
+                  cp -r ./packages/trrack/docs ./build/trrack-doc
+                  cp -r ./packages/trrack-vis/docs ./build/trrack-vis-doc
+
+            - name: Print all
+              run: ls ./build | xargs echo
