@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const config = {
-  entry: './src/provenanceSetup.ts',
+  entry: './src/ProvenanceSetup.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
