@@ -41,7 +41,8 @@
     "lint": "lerna run lint",
     "commit": "git cz",
     "release": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --no-push",
-    "docs": "lerna run docs --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis"
+    "docs": "lerna run docs --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis",
+    "build:examples": "lerna run build --ignore @visdesignlab/trrack --ignore @visdesignlab/trrack-vis"
   },
   "husky": {
     "hooks": {

@@ -26,7 +26,7 @@ jobs:
               run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
             
             - name: Install Packages
-              run: yarn install
+              run: yarn bootstrap
      
             - name: Build Libraries
               run: yarn build
@@ -36,3 +36,18 @@ jobs:
 
             - name: Try publish
               run: yarn release
+
+            - name: Build examples
+              run: yarn build:examples
+
+            - name: Make build directory
+              run: mkdir build
+
+            - name: Copy examples
+              run: cp -r ./packages/trrack-examples/ ./build
+
+            - name: Remove everything but test
+              run: find build -mindepth 1 ! -regex '.*dist.*' -delete
+
+            - name: See everything
+              run: find ./build -print
