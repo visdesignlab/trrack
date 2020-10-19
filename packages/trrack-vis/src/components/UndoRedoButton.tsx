@@ -3,6 +3,8 @@ import { ProvenanceGraph } from '@visdesignlab/trrack';
 import React from 'react';
 import { style } from 'typestyle';
 
+import { Button } from '@material-ui/core';
+
 export interface UndoRedoConfig<T, S extends string, A> {
   undoCallback: () => void;
   redoCallback: () => void;
@@ -27,25 +29,32 @@ function UndoRedoButton<T, S extends string, A>({
 
   return (
     <div>
-      <button
+      <Button
+        variant="outlined"
         className={undoButtonStyle}
         disabled={isAtRoot}
         onClick={undoCallback}
-      ><i style={margin} className="fas fa-undo marginRight"></i>
-        Undo</button>
+      >
+        <i style={margin} className="fas fa-undo marginRight"></i>
+        Undo
+      </Button>
 
-      <button
+      <Button
+        variant="outlined"
         className={redoButtonStyle}
         disabled={isAtLatest}
         onClick={redoCallback}
-      ><i style={margin} className="fas fa-redo marginRight"></i>
-      Redo</button>
-
+      >
+        <i style={margin} className="fas fa-redo marginRight"></i>
+        Redo
+      </Button>
     </div>
   );
 }
 
 const undoButtonStyle = style({
+  marginTop: '2px',
+
   backgroundColor: '#768d87',
   borderRadius: '2px',
   border: 'none',
@@ -61,11 +70,6 @@ const undoButtonStyle = style({
     '&:hover': {
       backgroundColor: '#6c7c7c',
     },
-
-    '&:disabled': {
-      backgroundColor: '#a8b3b0',
-    },
-
     '&:active': {
       backgroundColor: '#6c7c7c',
     },
@@ -73,6 +77,7 @@ const undoButtonStyle = style({
 });
 
 const redoButtonStyle = style({
+  marginTop: '2px',
   backgroundColor: '#768d87',
   borderRadius: '2px',
   border: 'none',
@@ -86,10 +91,6 @@ const redoButtonStyle = style({
   $nest: {
     '&:hover': {
       backgroundColor: '#6c7c7c',
-    },
-
-    '&:disabled': {
-      backgroundColor: '#a8b3b0',
     },
 
     '&:active': {
