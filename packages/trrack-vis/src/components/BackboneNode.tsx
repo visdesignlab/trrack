@@ -1,10 +1,16 @@
 /* eslint-disable no-unused-vars */
-import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
-import React, { ReactChild, useRef } from 'react';
+import {
+  Provenance, ProvenanceNode, StateNode,
+} from '@visdesignlab/trrack';
+import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
 import {
-  Popup, Input, Button, Icon,
+  Popup,
 } from 'semantic-ui-react';
+
+import {
+  TextField, IconButton, Icon,
+} from '@material-ui/core';
 
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
@@ -22,7 +28,7 @@ interface BackboneNodeProps<T, S extends string, A> {
   strokeWidth: number;
   textSize: number;
   setBookmark: any;
-  bookmark: string[];
+  bookmark: any;
   nodeMap: any;
   annotationOpen: number;
   setAnnotationOpen: any;
@@ -66,24 +72,25 @@ function BackboneNode<T, S extends string, A>({
     cursor: 'pointer',
   } as React.CSSProperties;
 
-  const annotateText = useRef(prov.getLatestAnnotation(node.id)?.annotation ? prov.getLatestAnnotation(node.id)?.annotation! : '');
+  const [annotateText, setAnnotateText] = useState(prov.getLatestAnnotation(node.id)?.annotation ? prov.getLatestAnnotation(node.id)?.annotation! : '');
 
-  const handleCheck = (evt:any, data:any) => {
+  const handleCheck = (evt:any) => {
     const lastAnnotation = prov.getLatestAnnotation(node.id);
 
-    if (lastAnnotation?.annotation !== annotateText.current.trim()) {
-      prov.addAnnotation(annotateText.current, node.id);
+    if (lastAnnotation?.annotation !== annotateText.trim()) {
+      prov.addAnnotation(annotateText, node.id);
       setAnnotationOpen(-1);
     }
   };
 
-  const handleClose = (evt: any, data: any) => {
-    annotateText.current = prov.getLatestAnnotation(node.id)?.annotation!;
+  const handleClose = (evt: any) => {
+    setAnnotateText(prov.getLatestAnnotation(node.id)?.annotation!);
     setAnnotationOpen(-1);
   };
 
   const handleInputChange = (evt: any) => {
-    annotateText.current = (evt.target.value);
+    console.log(evt);
+    setAnnotateText(evt.target.value);
   };
 
   // console.log(JSON.parse(JSON.stringify(node)));
@@ -241,9 +248,7 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa"
-            opacity={
-              bookmark.includes(node.id) || prov.getBookmark(node.id) ? 1 : 0
-            }
+            opacity={bookmark === node.id || prov.getBookmark(node.id) ? 1 : 0}
             fill={prov.getBookmark(node.id) ? '#2185d0' : '#cccccc'}
             textAnchor="middle"
             alignmentBaseline="middle"
@@ -268,15 +273,9 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa-edit"
-            opacity={
-              bookmark.includes(node.id)
-              || annotationOpen === nodeMap[node.id].depth
-                ? 1
-                : 0
-            }
-            fill={
-              annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'
-            }
+            opacity={bookmark === node.id
+              || annotationOpen === nodeMap[node.id].depth ? 1 : 0}
+            fill={annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'}
             textAnchor="middle"
             alignmentBaseline="middle"
             x={210}
@@ -338,8 +337,16 @@ function BackboneNode<T, S extends string, A>({
           {annotationOpen !== -1
           && nodeMap[node.id].depth === annotationOpen ? (
               <g transform="translate(15, 25)">
-                <foreignObject width="300" height="400">
-                  <Input size='massive' icon='close' onChange={handleInputChange} defaultValue={annotateText.current} placeholder="Edit Annotation" action>
+                <foreignObject width="175" height="80" x="0" y="0">
+                  <div>
+                    <textarea style={{ maxWidth: 130, resize: 'none' }} onChange={handleInputChange} value={annotateText} />
+                    <button onClick={handleCheck}>Annotate</button>
+
+                    <button onClick={handleClose}>Close</button>
+                  </div>
+
+                  {/* <Input size='massive' icon='close' onChange={handleInputChange}
+                  defaultValue={annotateText.current} placeholder="Edit Annotation" action>
                     <input />
                     <Button color="green" type="submit" onClick={handleCheck}>
                       <Icon name="world"/>
@@ -347,7 +354,7 @@ function BackboneNode<T, S extends string, A>({
                     <Button color="red" type="submit" onClick={handleClose}>
                       <Icon name="close"/>
                     </Button>
-                  </Input>
+                  </Input> */}
                 </foreignObject>
               </g>
             ) : (

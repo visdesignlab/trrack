@@ -14,9 +14,18 @@ import {
   symbolCross, symbolCircle, symbolTriangle, symbolSquare, symbolDiamond, symbolStar,
 } from 'd3';
 
-import React, { ReactChild, useEffect, useState } from 'react';
+import React, {
+  ReactChild, useEffect, useState, useCallback,
+} from 'react';
 import { NodeGroup } from 'react-move';
 import { Popup } from 'semantic-ui-react';
+
+import {
+  Tabs, Tab, AppBar, Box, Typography, Paper,
+} from '@material-ui/core';
+
+import ShareIcon from '@material-ui/icons/Share';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 import { style } from 'typestyle';
 
 import { BundleMap } from '../Utils/BundleMap';
@@ -81,7 +90,7 @@ function ProvVis<T, S extends string, A>({
   root,
   current,
   changeCurrent,
-  width = 1500,
+  width = 400,
   height = 2000,
   iconOnly = false,
   gutter = 15,
@@ -104,16 +113,17 @@ function ProvVis<T, S extends string, A>({
   popupContent,
   annotationContent,
   editAnnotations = false,
-  bookmarkToggle = true,
-  bookmarkListView = true,
-  undoRedoButtons = true,
   prov,
   ephemeralUndo = false,
 }: ProvVisProps<T, S, A>) {
   const [first, setFirst] = useState(true);
-  const [bookmark, setBookmark] = useState<any[]>([]);
+  const [bookmark, setBookmark] = useState<any>(null);
   const [annotationOpen, setAnnotationOpen] = useState(-1);
-  const [bookmarkView, setBookmarkView] = useState(false);
+  const [tabsValue, setValue] = useState(0);
+
+  if (popupContent) {
+    throw new Error('popups are not supported');
+  }
 
   let list: string[] = [];
   const eventTypes = new Set<string>();
@@ -248,19 +258,7 @@ function ProvVis<T, S extends string, A>({
 
           // eslint-disable-next-line no-constant-condition
           while (true) {
-            // need this to remove linter warning.
             const localCurr = curr;
-            // let bundlePar = findBundleParent(curr.parent, bundleMap);
-            // if(bundlePar.length > 0)
-            // {
-            //   for(let j in bundlePar)
-            //   {
-            //     if(bundlePar[j] != d.id && !expandedClusterList.includes(bundlePar[j]))
-            //     {
-            //       return bundlePar[j];
-            //     }
-            //   }
-            // }
 
             if (
               !bundledNodes.includes(localCurr.parent)
@@ -426,262 +424,326 @@ function ProvVis<T, S extends string, A>({
     overflowY: 'auto',
   } as React.CSSProperties;
 
-  return (
-    <div style={overflowStyle} className={container} id="prov-vis">
-      <div id="bookmarkDiv">
-        <BookmarkToggle
+  const tabsStyle = {
+    backgroundColor: 'lightgrey',
+    width: '270px',
+  } as React.CSSProperties;
+
+  const bookmarkTabView = (
+    <svg
+      style={{ overflow: 'visible' }}
+      height={maxHeight < height ? height : maxHeight}
+      width={svgWidth}
+      id="bookmarkView"
+    >
+      <g id={'globalG'} transform={translate(shiftLeft, topOffset)}>
+        <BookmarkListView
           graph={prov ? prov.graph : undefined}
-          bookmarkView = {bookmarkView}
-          setBookmarkView = {setBookmarkView}
+          eventConfig={eventConfig}
+          currentNode={current}
+        />
+      </g>
+    </svg>
+  );
+
+  const graphTabView = (
+    <div>
+      <div id="undoRedoDiv">
+        <UndoRedoButton
+          graph={prov ? prov.graph : undefined}
+          undoCallback={() => {
+            if (prov) {
+              if (ephemeralUndo) {
+                prov.goBackToNonEphemeral();
+              } else {
+                prov.goBackOneStep();
+              }
+            }
+          }}
+          redoCallback={() => {
+            if (prov) {
+              if (ephemeralUndo) {
+                prov.goForwardToNonEphemeral();
+              } else {
+                prov.goForwardOneStep();
+              }
+            }
+          }}
         />
       </div>
-      {bookmarkView ? (<svg
+
+      <svg
         style={{ overflow: 'visible' }}
-        height={100}
+        id={'topSvg'}
+        height={maxHeight < height ? height : maxHeight}
         width={svgWidth}
-        id="bookmarkView">
+      >
+        <rect height={height} width={width} fill="none" stroke="none" />
         <g id={'globalG'} transform={translate(shiftLeft, topOffset)}>
-          <BookmarkListView
-            graph={prov ? prov.graph : undefined}
-            eventConfig={eventConfig}
-            currentNode={current}
-          />
-        </g>
-      </svg>)
-        : (<div>
-          <div id="undoRedoDiv">
-            <UndoRedoButton
-              graph={prov ? prov.graph : undefined}
-              undoCallback = {() => {
-                if (prov) {
-                  if (ephemeralUndo) {
-                    prov.goBackToNonEphemeral();
-                  } else {
-                    prov.goBackOneStep();
-                  }
-                }
-              }}
-              redoCallback = {() => {
-                if (prov) {
-                  if (ephemeralUndo) {
-                    prov.goForwardToNonEphemeral();
-                  } else {
-                    prov.goForwardOneStep();
-                  }
-                }
-              }}
-            />
-          </div>
-
-          <svg
-            style={{ overflow: 'visible' }}
-            id={'topSvg'}
-            height={maxHeight < height ? height : maxHeight}
-            width={svgWidth}
+          <NodeGroup
+            data={links}
+            keyAccessor={(link) => `${link.source.id}${link.target.id}`}
+            {...linkTransitions(
+              xOffset,
+              yOffset,
+              clusterVerticalSpace,
+              backboneGutter - gutter,
+              duration,
+              annotationOpen,
+              annotationHeight,
+            )}
           >
-            <rect height={height} width={width} fill="none" stroke="none" />
-            <g id={'globalG'} transform={translate(shiftLeft, topOffset)}>
-              <NodeGroup
-                data={links}
-                keyAccessor={(link) => `${link.source.id}${link.target.id}`}
-                {...linkTransitions(
-                  xOffset,
-                  yOffset,
-                  clusterVerticalSpace,
-                  backboneGutter - gutter,
-                  duration,
-                  annotationOpen,
-                  annotationHeight,
-                )}
-              >
-                {(linkArr) => (
-                  <>
-                    {linkArr.map((link) => {
-                      const { key, state } = link;
+            {(linkArr) => (
+              <>
+                {linkArr.map((link) => {
+                  const { key, state } = link;
 
-                      return (
-                        <g key={key}>
-                          <Link
-                            {...state}
-                            fill={'#ccc'}
-                            stroke={'#ccc'}
-                            strokeWidth={linkWidth}
+                  return (
+                    <g key={key}>
+                      <Link
+                        {...state}
+                        fill={'#ccc'}
+                        stroke={'#ccc'}
+                        strokeWidth={linkWidth}
+                      />
+                    </g>
+                  );
+                })}
+              </>
+            )}
+          </NodeGroup>
+          <NodeGroup
+            data={stratifiedList}
+            keyAccessor={(d) => d.id}
+            {...nodeTransitions(
+              xOffset,
+              yOffset,
+              clusterVerticalSpace,
+              backboneGutter - gutter,
+              duration,
+              annotationOpen,
+              annotationHeight,
+            )}
+          >
+            {(nodes) => (
+              <>
+                {nodes.map((node) => {
+                  const { data: d, key, state } = node;
+                  const popupTrigger = (
+                    <g
+                      key={key}
+                      onClick={() => {
+                        if (changeCurrent) {
+                          changeCurrent(d.id);
+                        }
+                      }}
+                      onMouseOver={() => {
+                        setBookmark(d.id);
+                      }}
+                      onMouseOut={() => {
+                        setBookmark(null);
+                      }}
+                      transform={
+                        d.width === 0
+                          ? translate(state.x, state.y)
+                          : translate(state.x, state.y)
+                      }
+                    >
+                      {d.width === 0 && prov ? (
+                        <g>
+                          <rect
+                            width="200"
+                            height="25"
+                            transform="translate(0, -12.5)"
+                            opacity="0"
+                          ></rect>
+                          ,
+                          <BackboneNode
+                            prov={prov}
+                            textSize={textSize}
+                            iconOnly={iconOnly}
+                            radius={backboneCircleRadius}
+                            strokeWidth={backboneCircleStroke}
+                            duration={duration}
+                            first={first}
+                            current={current === d.id}
+                            node={d.data}
+                            setBookmark={setBookmark}
+                            bookmark={bookmark}
+                            bundleMap={bundleMap}
+                            nodeMap={stratifiedMap}
+                            clusterLabels={clusterLabels}
+                            annotationOpen={annotationOpen}
+                            setAnnotationOpen={setAnnotationOpen}
+                            exemptList={expandedClusterList}
+                            editAnnotations={editAnnotations}
+                            setExemptList={setExpandedClusterList}
+                            eventConfig={eventConfig}
+                            annotationContent={annotationContent}
+                            popupContent={popupContent}
+                            expandedClusterList={expandedClusterList}
                           />
                         </g>
-                      );
-                    })}
-                  </>
-                )}
-              </NodeGroup>
-              <NodeGroup
-                data={stratifiedList}
-                keyAccessor={(d) => d.id}
-
-                {...nodeTransitions(
-                  xOffset,
-                  yOffset,
-                  clusterVerticalSpace,
-                  backboneGutter - gutter,
-                  duration,
-                  annotationOpen,
-                  annotationHeight,
-                )}
-              >
-                {(nodes) => (
-                  <>
-                    {nodes.map((node) => {
-                      const { data: d, key, state } = node;
-                      const popupTrigger = (
-                        <g
-                          key={key}
-                          onClick={() => {
-                            if (changeCurrent) {
-                              changeCurrent(d.id);
-                            }
-                          }}
-                          onMouseOver={() => {
-                            setBookmark([d.id]);
-                          }}
-                          onMouseOut={() => {
-                            setBookmark([]);
-                          }}
-                          transform={
-                            d.width === 0
-                              ? translate(state.x, state.y)
-                              : translate(state.x, state.y)
-                          }
-                        >
-
-                          {d.width === 0 && prov ? (
-                            <g>
-                              <rect
-                                width="200"
-                                height="25"
-                                transform="translate(0, -12.5)"
-                                opacity="0"
-                              >
-                              </rect>,
-
-                              <BackboneNode
-                                prov={prov}
-                                textSize={textSize}
-                                iconOnly={iconOnly}
-                                radius={backboneCircleRadius}
-                                strokeWidth={backboneCircleStroke}
-                                duration={duration}
-                                first={first}
-                                current={current === d.id}
-                                node={d.data}
-                                setBookmark={setBookmark}
-                                bookmark={bookmark}
-                                bundleMap={bundleMap}
-                                nodeMap={stratifiedMap}
-                                clusterLabels={clusterLabels}
-                                annotationOpen={annotationOpen}
-                                setAnnotationOpen={setAnnotationOpen}
-                                exemptList={expandedClusterList}
-                                editAnnotations={editAnnotations}
-                                setExemptList={setExpandedClusterList}
-                                eventConfig={eventConfig}
-                                annotationContent={annotationContent}
-                                popupContent={popupContent}
-                                expandedClusterList={expandedClusterList}
-                              />
-                            </g>
-                          ) : popupContent !== undefined ? (
-                            <Popup
-                              content={popupContent(d.data)}
-                              trigger={
-                                <g
-                                  onClick={() => {
-                                    setAnnotationOpen(-1);
-                                  }}
-                                >
-                                  {keys.includes(d.id)
-                                    ? bundleGlyph(d.data)
-                                    : regularGlyph(d.data)}
-                                </g>
-                              }
-                            />
-
-                          ) : (
+                      ) : popupContent !== undefined ? (
+                        <Popup
+                          content={popupContent(d.data)}
+                          trigger={
                             <g
                               onClick={() => {
                                 setAnnotationOpen(-1);
                               }}
                             >
-                              {regularGlyph(d.data)}
+                              {keys.includes(d.id)
+                                ? bundleGlyph(d.data)
+                                : regularGlyph(d.data)}
                             </g>
-                          )}
+                          }
+                        />
+                      ) : (
+                        <g
+                          onClick={() => {
+                            setAnnotationOpen(-1);
+                          }}
+                        >
+                          {regularGlyph(d.data)}
                         </g>
+                      )}
+                    </g>
+                  );
 
-                      );
-
-                      return popupTrigger;
-                    })}
-                  </>
-                )}
-              </NodeGroup>
-              <NodeGroup
-                data={keys}
-                keyAccessor={(key) => `${key}`}
-                {...bundleTransitions(
-                  xOffset,
-                  verticalSpace,
-                  clusterVerticalSpace,
-                  backboneGutter - gutter,
-                  duration,
-                  expandedClusterList,
-                  stratifiedMap,
-                  stratifiedList,
-                  annotationOpen,
-                  annotationHeight,
-                  bundleMap,
-                )}
-              >
-                {(bundle) => (
-                  <>
-                    {bundle.map((b) => {
-                      const { key, state } = b;
-                      if (
-                        bundleMap === undefined
+                  return popupTrigger;
+                })}
+              </>
+            )}
+          </NodeGroup>
+          <NodeGroup
+            data={keys}
+            keyAccessor={(key) => `${key}`}
+            {...bundleTransitions(
+              xOffset,
+              verticalSpace,
+              clusterVerticalSpace,
+              backboneGutter - gutter,
+              duration,
+              expandedClusterList,
+              stratifiedMap,
+              stratifiedList,
+              annotationOpen,
+              annotationHeight,
+              bundleMap,
+            )}
+          >
+            {(bundle) => (
+              <>
+                {bundle.map((b) => {
+                  const { key, state } = b;
+                  if (
+                    bundleMap === undefined
                     || (stratifiedMap[b.key] as any).width !== 0
                     || state.validity === false
-                      ) {
-                        return null;
-                      }
+                  ) {
+                    return null;
+                  }
 
-                      return (
-                        <g
-                          key={key}
-                          transform={translate(
-                            state.x - gutter + 5,
-                            state.y - clusterVerticalSpace / 2,
-                          )}
-                        >
-                          <rect
-                            style={{ opacity: state.opacity }}
-                            width={iconOnly ? 42 : sideOffset - 15}
-                            height={state.height}
-                            rx="10"
-                            ry="10"
-                            fill="none"
-                            strokeWidth="2px"
-                            stroke="rgb(248, 191, 132)"
-                          ></rect>
-                        </g>
-                      );
-                    })}
-                  </>
-                )}
-              </NodeGroup>
-            </g>
-          </svg></div>)}
+                  return (
+                    <g
+                      key={key}
+                      transform={translate(
+                        state.x - gutter + 5,
+                        state.y - clusterVerticalSpace / 2,
+                      )}
+                    >
+                      <rect
+                        style={{ opacity: state.opacity }}
+                        width={iconOnly ? 42 : sideOffset - 15}
+                        height={state.height}
+                        rx="10"
+                        ry="10"
+                        fill="none"
+                        strokeWidth="2px"
+                        stroke="rgb(248, 191, 132)"
+                      ></rect>
+                    </g>
+                  );
+                })}
+              </>
+            )}
+          </NodeGroup>
+        </g>
+      </svg>
+    </div>
+  );
+
+  const handleChange = useCallback((event: any, newValue: number) => {
+    setValue(newValue);
+  }, []);
+
+  return (
+    <div style={overflowStyle} className={container} id="prov-vis">
+      <Paper square style={tabsStyle}>
+        <Tabs
+          value={tabsValue}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          aria-label="full width tabs example"
+          style={tabsStyle}
+        >
+          <Tab
+            style={{ maxWidth: 135, minWidth: 135 }}
+            icon={<ShareIcon />}
+            {...a11yProps(0)}
+          />
+          <Tab
+            style={{ maxWidth: 135, minWidth: 135 }}
+            icon={<BookmarkIcon />}
+            {...a11yProps(1)}
+          />
+        </Tabs>
+      </Paper>
+      <TabPanel value={tabsValue} index={0}>
+        {graphTabView}
+      </TabPanel>
+      <TabPanel value={tabsValue} index={1}>
+        {bookmarkTabView}
+      </TabPanel>
     </div>
   );
 }
 
 export default ProvVis;
+
+function TabPanel(props:any) {
+  const {
+    children, value, index, ...other
+  } = props;
+
+  console.log(children);
+  console.log(value);
+  console.log(index);
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <div>{children}</div>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  };
+}
 
 const container = style({
   alignItems: 'center',

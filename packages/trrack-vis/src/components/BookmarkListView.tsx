@@ -28,20 +28,16 @@ function BookmarkListView<T, S extends string, A>({
   const gutter = 15;
   const verticalSpace = 50;
 
-  let current = graph.nodes[graph.current];
-
   const bookmarks = [];
 
   const xOffset = gutter;
   const yOffset = verticalSpace;
 
-  while (isChildNode(current)) {
-    if (current.bookmarked) {
-      bookmarks.push(current);
-    } else {
-      break;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const j in graph.nodes) {
+    if (graph.nodes[j].bookmarked) {
+      bookmarks.push(graph.nodes[j]);
     }
-    current = graph.nodes[current.parent];
   }
 
   return (
