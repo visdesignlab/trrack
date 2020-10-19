@@ -34,13 +34,14 @@
   "scripts": {
     "bootstrap": "npx lerna bootstrap --use-workspaces",
     "build": "lerna exec --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- yarn build",
-    "start": "lerna exec --parallel --stream --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- yarn start",
+    "start": "lerna run start --parallel --stream --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- --noClean",
     "prestart": "yarn run build",
     "storybook:vis": "lerna exec --scope @visdesignlab/trrack-vis -- yarn storybook",
     "test:core:watch": "lerna exec --scope @visdesignlab/trrack -- yarn test:watch",
     "lint": "lerna run lint",
     "commit": "git cz",
-    "release": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --no-push"
+    "release": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --no-push",
+    "doc": "lerna exec --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- typedoc"
   },
   "husky": {
     "hooks": {

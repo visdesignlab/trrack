@@ -208,9 +208,10 @@ function BackboneNode<T, S extends string, A>({
             <g></g>
           )}
           {editAnnotations ? (
-            <button
-            ><i className="fas fa-undo marginRight"></i>
-               Undo</button>
+            <button>
+              <i className="fas fa-undo marginRight"></i>
+              Undo
+            </button>
           ) : (
             <g></g>
           )}
@@ -256,11 +257,15 @@ function BackboneNode<T, S extends string, A>({
             fontFamily="FontAwesome"
           >
             {'\uf02e'}
-          </text>,
+          </text>
+          ,
           <text
             style={cursorStyle}
             onClick={(e) => {
-              if (annotationOpen === -1 || nodeMap[node.id].depth !== annotationOpen) {
+              if (
+                annotationOpen === -1
+                || nodeMap[node.id].depth !== annotationOpen
+              ) {
                 setAnnotationOpen(nodeMap[node.id].depth);
               } else {
                 setAnnotationOpen(-1);

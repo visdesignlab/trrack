@@ -9,6 +9,13 @@ import {
 } from '../Types/Action';
 import { Meta } from '../Types/Nodes';
 
+/**
+ *
+ * @typeParam T State of the application
+ *
+ * @param func Defines the function which will be executed on provenance apply
+ *
+ */
 export default function createAction<T, Args extends any[] = any[], S = void>(
   func: ActionFunction<T, Args>,
 ): ActionObject<T, S, Args> {
