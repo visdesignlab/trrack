@@ -53,6 +53,9 @@ jobs:
               run: |
                   cp -r ./packages/trrack-core/docs ./build/trrack-doc
                   cp -r ./packages/trrack-vis/docs ./build/trrack-vis-doc
+            
+            - name: Copy index
+              run: cp ./packages/trrack-examples/index.html ./build/
 
             - name: Deploy Website
               uses: peaceiris/actions-gh-pages@v3
