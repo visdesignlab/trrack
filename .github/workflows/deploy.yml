@@ -1,0 +1,64 @@
+name: Publish & Deploy
+on:
+    push:
+    pull_request:
+        branches:
+            - master
+jobs:
+    publish-core:
+        name: Publish trrack-core
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-versions: [12.x]
+            fail-fast: false
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+            
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                node-version: ${{ matrix.node-version }}
+     
+            - name: Fetch all
+              run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+            
+            - name: Install Packages
+              run: yarn bootstrap
+     
+            - name: Build Libraries
+              run: yarn build
+
+            # - name: Create npmrc for publishing
+            #   run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+            # - name: Try publish
+            #   run: yarn release
+
+            - name: Build examples
+              run: yarn build:examples
+
+            - name: Make build directory
+              run: mkdir build
+
+            - name: Copy examples
+              run: for f in `find ./packages/trrack-examples -type d -mindepth 1 -maxdepth 1`; do mkdir -p ./build/${f} && cp -r ${f}/dist ./build/${f}/; done
+
+            - name: Build docs
+              run: yarn docs
+
+            - name: Copy docs to build
+              run: |
+                  cp -r ./packages/trrack-core/docs ./build/trrack-doc
+                  cp -r ./packages/trrack-vis/docs ./build/trrack-vis-doc
+            
+            - name: Copy index
+              run: cp ./packages/trrack-examples/index.html ./build/
+
+            - name: Deploy Website
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./build

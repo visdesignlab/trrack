@@ -1,0 +1,98 @@
+{
+  "name": "@visdesignlab/trrack-vis",
+  "version": "2.0.0-alpha.2",
+  "description": "",
+  "keywords": [],
+  "main": "dist/index.js",
+  "module": "dist/trrack-vis.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:visdesignlab/trrack-vis.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build --format cjs,esm,umd --name trrackvis",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build --format cjs,esm,umd --name trrack",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "docs": "typedoc --out docs --target es6 --mode file src"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "size-limit": [
+    {
+      "path": "dist/trrack-vis.cjs.production.min.js",
+      "limit": "500 KB"
+    },
+    {
+      "path": "dist/trrack-vis.esm.js",
+      "limit": "500 KB"
+    }
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@size-limit/preset-small-lib": "^4.6.0",
+    "@storybook/addon-essentials": "^6.0.26",
+    "@storybook/addon-info": "^5.3.21",
+    "@storybook/addon-links": "^6.0.26",
+    "@storybook/addons": "^6.0.26",
+    "@storybook/react": "^6.0.26",
+    "@types/d3": "^5.7.2",
+    "@types/react": "^16.9.51",
+    "@types/react-dom": "^16.9.8",
+    "babel-loader": "^8.1.0",
+    "husky": "^4.3.0",
+    "lodash.camelcase": "^4.3.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-is": "^16.13.1",
+    "size-limit": "^4.6.0",
+    "tsdx": "^0.14.0",
+    "tslib": "^2.0.2",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.10.0",
+    "@storybook/react": "^6.0.26",
+    "@visdesignlab/trrack": "^2.0.0-alpha.2",
+    "d3": "^5.15.0",
+    "mobx": "^6.0.1",
+    "mobx-react": "^6.1.7",
+    "react": "^16.13.1",
+    "react-contenteditable": "^3.3.5",
+    "react-dom": "^16.13.1",
+    "react-move": "^6.1.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
+    "typedoc": "^0.19.2",
+    "typestyle": "^2.0.4"
+  }
+}

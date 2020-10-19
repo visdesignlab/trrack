@@ -10,6 +10,9 @@ compiled
 .awcache
 .rpt2_cache
 docs
+*.d.ts
+*.js.map
+*.js
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -146,3 +149,7 @@ node_modules/
 
 yarn.lock
 package-lock.json
+jest-stare/
+storybook-static/
+
+!webpack.config.js

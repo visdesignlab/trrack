@@ -1,134 +1,63 @@
 {
-  "name": "@visdesignlab/trrack",
-  "publishConfig": {
-    "access": "public"
-  },
-  "version": "0.0.0-development",
-  "description": "",
-  "keywords": [],
-  "main": "dist/index.umd.js",
-  "module": "dist/index.es5.js",
-  "typings": "dist/types/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "name": "root",
+  "private": true,
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
+  "description": "",
+  "keywords": [
+    "trrack"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/visdesignlab/trrack.git"
   },
-  "license": "MIT",
-  "engines": {
-    "node": ">=6.0.0"
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "commitizen": "^4.2.1",
+    "cross-env": "^7.0.2",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.0.2",
+    "git-cz": "4.7.1",
+    "husky": "^4.3.0",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.4.0",
+    "prettier": "^2.1.2"
   },
+  "workspaces": [
+    "packages/**"
+  ],
   "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
-    "start": "rollup -c rollup.config.ts -w",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
-    "deploy-docs": "ts-node tools/gh-pages-publish",
-    "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "commit": "git-cz",
-    "semantic-release": "semantic-release",
-    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once --pro",
-    "prepush": "npm run test:prod && npm run build",
-    "commitmsg": "commitlint -E HUSKY_GIT_PARAMS"
+    "bootstrap": "npx lerna bootstrap --use-workspaces",
+    "build": "lerna exec --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- yarn build",
+    "start": "lerna run start --parallel --stream --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- --noClean",
+    "prestart": "yarn run build",
+    "storybook:vis": "lerna exec --scope @visdesignlab/trrack-vis -- yarn storybook",
+    "test:core:watch": "lerna exec --scope @visdesignlab/trrack -- yarn test:watch",
+    "lint": "lerna run lint",
+    "commit": "git cz",
+    "release:pre": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --conventional-prerelease --no-private --no-commit-hooks",
+    "docs": "lerna run docs --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis",
+    "build:examples": "lerna run build --ignore @visdesignlab/trrack --ignore @visdesignlab/trrack-vis"
   },
-  "lint-staged": {
-    "{src,test}/**/*.ts": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run lint",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testEnvironment": "jest-environment-jsdom",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    },
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}",
-      "!src/**/index.{js,ts}"
-    ]
-  },
-  "prettier": {
-    "semi": true,
-    "singleQuote": true
   },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
   },
-  "devDependencies": {
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "@types/deep-diff": "^1.0.0",
-    "@types/jest": "^24.0.24",
-    "@types/lz-string": "^1.3.33",
-    "@types/node": "^13.1.0",
-    "colors": "^1.4.0",
-    "commitizen": "^4.0.3",
-    "coveralls": "^3.0.9",
-    "cross-env": "^6.0.3",
-    "cz-conventional-changelog": "^3.0.2",
-    "husky": "^3.1.0",
-    "jest": "^24.9.0",
-    "jest-config": "^24.9.0",
-    "lint-staged": "^9.5.0",
-    "lodash.camelcase": "^4.3.0",
-    "prettier": "^1.19.1",
-    "prompt": "^1.0.0",
-    "replace-in-file": "^5.0.2",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.27.14",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.25.3",
-    "semantic-release": "^15.14.0",
-    "shelljs": "^0.8.3",
-    "travis-deploy-once": "^5.0.11",
-    "ts-jest": "^24.2.0",
-    "ts-node": "^8.5.4",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.17.8",
-    "typescript": "^3.8.3"
-  },
-  "dependencies": {
-    "deep-diff": "^1.0.2",
-    "firebase": "^7.15.5",
-    "immer": "^5.1.0",
-    "lz-string": "^1.4.4"
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/git-cz"
+    }
   }
 }
