@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trrack - A provenance tracking library</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css">
+    <style>
+body {
+        -webkit-font-smoothing: antialiased;
+        -moz-font-smoothing: grayscale;
+      }
+
+      @media only screen and (min-width: 768px) {
+        .ui.container {
+          width: 700px;
+          max-width: 700px;
+        }
+
+        nav.ui.container .ui.header {
+          float: left;
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
+
+        nav.ui.container .ui.inverted.compact.menu {
+          float: right;
+        }
+      }
+
+      .ui.inverted.vertical.center.aligned.segment {
+        padding-top: 36px;
+      }
+
+      nav.ui.container .ui.inverted.compact.menu {
+        background-color: rgb(51, 51, 51);
+      }
+
+      nav.ui.container .ui.inverted.compact.menu .item {
+        padding-bottom: 0;
+      }
+
+      nav.ui.container .ui.inverted.compact.menu .item {
+        font-size: 16px;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-bottom: 14px;
+        margin-left: 16px;
+        margin-right: 16px;
+        border-radius: 0;
+      }
+
+      nav.ui.container .ui.inverted.compact.menu .active.item {
+        background-color: inherit;
+        border-bottom-color: white;
+        border-bottom-style: solid;
+        border-bottom-width: 2px;
+      }
+
+      .ui.inverted.vertical.segment {
+        height: 100vh;
+        background-color: rgb(51, 51, 51);
+        overflow: scroll
+      }
+
+      .ui.content.container {
+        margin: auto;
+      }
+
+      .ui.content.container h1.header {
+        font-size: 36px;
+      }
+
+      .ui.content.container p {
+        font-size: 21px;
+        line-height: 1.6;
+        font-weight: 300;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      .ui.inverted.vertical.segment footer.ui.segment {
+        height: 80px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        color: gray;
+      }
+
+      .ui.inverted.vertical.segment footer.ui.segment a {
+        color: white;
+      }
+    </style>
+</head>
+<body>
+    <div class="ui inverted vertical center aligned segment">
+      <nav class="ui container">
+          <h1 class="ui inverted header"><span class="ui text large inverted">trrack</span> - A library for <span class="ui blue text inverted large">r</span>eproducible <span class="ui blue text large inverted">track</span>ing</h1>
+      </nav>
+      <div class="ui content container">
+          <div class="ui header inverted">Documentation</div>
+          <div class="ui cards inverted two column">
+
+              <div class="ui card">
+                  <div class="content">
+                      <div class="header">Trrack</div>
+                      <div class="description">Core library to enable provenance tracking</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" href="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="/trrack-docs/index.html">
+                         <i class="file code icon"></i>
+                         Documentation
+                      </a> 
+                  </div>
+              </div>
+
+              <div class="ui  card">
+                  <div class="content">
+                      <div class="header">Trrack Vis</div>
+                      <div class="description">Visualization library to visualize the provenance graph</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" src="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="/trrack-vis-docs/index.html">
+                         <i class="file code icon"></i>
+                         Documentation
+                      </a> 
+                  </div>
+              </div>
+
+          </div>
+
+          <!-- Examples -->
+          <div class="ui header inverted">Examples</div>
+          <div class="ui cards inverted equal width centered">
+                <!-- Simple Example -->
+              <div class="ui card">
+                  <div class="content">
+                      <div class="header">Simple Example</div>
+                      <div class="description">Simple example to use Trrack and Trrack-Vis with Typescript</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" src="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="packages/trrack-examples/simpleExample/dist/index.html">
+                         <i class="external link icon"></i>
+                         Go to example
+                      </a> 
+                  </div>
+              </div>
+
+              <!-- Simple Example with annotation -->
+              <div class="ui card">
+                  <div class="content">
+                      <div class="header">Simple Example with annotation</div>
+                      <div class="description">Simple example to use Trrack and Trrack-Vis with Typescript and ability to add annotation</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" src="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="packages/trrack-examples/simpleExampleAddAnnotation/dist/index.html">
+                         <i class="external link icon"></i>
+                         Go to example
+                      </a> 
+                  </div>
+              </div>
+
+              <!-- Simple Example with ephemeral nodes -->
+              <div class="ui card">
+                  <div class="content">
+                      <div class="header">Simple Example with ephemeral nodes</div>
+                      <div class="description">Simple example to use Trrack and Trrack-Vis with Typescript and ability to add ephemeral actions</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" src="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="packages/trrack-examples/simpleExampleEphemeral/dist/index.html">
+                         <i class="external link icon"></i>
+                         Go to example
+                      </a> 
+                  </div>
+              </div>
+
+              <!-- Les Mis - simple -->
+              <div class="ui card">
+                  <div class="content">
+                      <div class="header">Comprehensive example</div>
+                      <div class="description">Comprehensive example with multiple visualizations</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" src="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="packages/trrack-examples/lesMisExample/dist/index.html">
+                         <i class="external link icon"></i>
+                         Go to example
+                      </a> 
+                  </div>
+              </div>
+
+              <!-- Les Mis - firebase -->
+              <div class="ui card">
+                  <div class="content">
+                      <div class="header">Firebase Integration</div>
+                      <div class="description">Comprehensive example with multiple visualizations and firebase integration</div>
+                  </div>
+                  <div class="extra content">
+                      <a class="ui inverted button icon" src="https://github.com/visdesignlab/trrack">
+                         <i class="github icon"></i>
+                         Source
+                      </a> 
+                      <a class="ui inverted button icon" href="packages/trrack-examples/lesMisExampleFirebaseIntegration/dist/index.html">
+                         <i class="external link icon"></i>
+                         Go to example
+                      </a> 
+                  </div>
+              </div>
+
+
+              <!-- Fin. -->
+          </div>
+
+
+      </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+</body>
+</html>
