@@ -32,7 +32,8 @@
     "docs": "typedoc --out docs --target es6 --mode file src"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "react-dom": ">=16.13.1"
   },
   "husky": {
     "hooks": {
@@ -67,10 +68,10 @@
     "@types/react": "^16.9.51",
     "@types/react-dom": "^16.9.8",
     "babel-loader": "^8.1.0",
-    "husky": "^4.3.0",
-    "lodash.camelcase": "^4.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "husky": "^4.3.0",
+    "lodash.camelcase": "^4.3.0",
     "react-is": "^16.13.1",
     "size-limit": "^4.6.0",
     "tsdx": "^0.14.0",
@@ -86,9 +87,7 @@
     "d3": "^5.15.0",
     "mobx": "^6.0.1",
     "mobx-react": "^6.1.7",
-    "react": "^16.13.1",
     "react-contenteditable": "^3.3.5",
-    "react-dom": "^16.13.1",
     "react-move": "^6.1.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
