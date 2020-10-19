@@ -137,7 +137,7 @@ prov.addObserver((state) => state.hoveredNode, () => {
 prov.done();
 
 // Setup ProvVis once initially
-ProvVisCreator(document.getElementById('provDiv')!, prov, visCallback);
+ProvVisCreator(document.getElementById('provDiv')!, prov, visCallback, true, true);
 
 // Undo function which simply goes one step backwards in the graph.
 function undo() {

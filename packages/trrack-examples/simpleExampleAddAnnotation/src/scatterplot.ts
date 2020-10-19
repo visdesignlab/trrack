@@ -82,6 +82,7 @@ export default class Scatterplot {
       .attr('id', (d) => `node_${d.id}`)
       .attr('cx', (d) => this.xScale(+d.x))
       .attr('cy', (d) => this.height - this.yScale(+d.y))
+      .attr('r', 7)
       .on('click', (d) => selectNodeFunc(d.id, d.x, d.y))
       .on('mouseover', (d) => hoverNodeFunc(`node_${d.id}`))
       .on('mouseout', (d) => hoverNodeFunc(''));
@@ -113,10 +114,12 @@ export default class Scatterplot {
 
   selectNode(selectedNode:string) {
     d3.select('.selectedNode')
-      .classed('selectedNode', false);
+      .classed('selectedNode', false)
+      .attr('r', 7);
 
     d3.select(`#${selectedNode}`)
-      .classed('selectedNode', true);
+      .classed('selectedNode', true)
+      .attr('r', 10);
   }
 
   /**

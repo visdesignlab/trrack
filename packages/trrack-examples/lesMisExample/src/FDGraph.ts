@@ -51,6 +51,7 @@ export default class Graph {
       .classed('nodes', true)
       .attr('id', (d:any) => `${d.id}N`)
       .attr('fill', (d:any) => color(d.group))
+      .attr('r', 5)
       .call(d3.drag()
         .on('drag', (d) => this.dragged(d, link, node))
         .on('end', (d) => this.dragEnded(d)))
@@ -87,7 +88,8 @@ export default class Graph {
     this.deselectAllNodes();
 
     d3.select(`circle[id='${id}N']`)
-      .classed('selectedNode', true);
+      .classed('selectedNode', true)
+      .attr('r', 10);
 
     const edges = this.graph.links.filter((d) => d.source.id === id || d.target.id === id);
 
@@ -104,19 +106,27 @@ export default class Graph {
     d3.select('#viz')
       .selectAll('circle')
       .classed('nodeEdges', false)
-      .classed('selectedNode', false);
+      .classed('selectedNode', false)
+      .attr('r', 5);
   }
 
   hoverNode(id) {
     d3.select('#viz')
       .select(`circle[id='${id}N']`)
-      .classed('hoverNode', true);
+      .classed('hoverNode', true)
+      .attr('r', 8);
   }
 
   dehoverNodes() {
-    d3.select('#viz')
+    const s = d3.select('#viz')
       .select('.hoverNode')
       .classed('hoverNode', false);
+
+    if (s.classed('selectedNode')) {
+      s.attr('r', 10);
+    } else {
+      s.attr('r', 5);
+    }
   }
 
   moveNodes(newGraph) {

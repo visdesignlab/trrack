@@ -1,12 +1,10 @@
 .normalNode
 {
   fill: #333333;
-  r: 7;
 }
 
 .selectedNode
 {
-  r: 10;
   fill: blue
 }
 

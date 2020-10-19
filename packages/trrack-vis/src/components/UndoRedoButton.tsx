@@ -54,18 +54,12 @@ function UndoRedoButton<T, S extends string, A>({
 
 const undoButtonStyle = style({
   marginTop: '2px',
-
-  backgroundColor: '#768d87',
   borderRadius: '2px',
-  border: 'none',
   display: 'inline-block',
   cursor: 'pointer',
-  color: '#ffffff',
   fontFamily: 'Lato,Helvetica Neue,Arial,Helvetica,sans-serif',
   fontSize: '14px',
-  padding: '5px 15px',
   marginRight: '1px',
-  marginLeft: '10px',
   $nest: {
     '&:hover': {
       backgroundColor: '#6c7c7c',
@@ -78,15 +72,11 @@ const undoButtonStyle = style({
 
 const redoButtonStyle = style({
   marginTop: '2px',
-  backgroundColor: '#768d87',
   borderRadius: '2px',
-  border: 'none',
   display: 'inline-block',
   cursor: 'pointer',
-  color: '#ffffff',
   fontFamily: 'Lato,Helvetica Neue,Arial,Helvetica,sans-serif',
   fontSize: '14px',
-  padding: '5px 15px',
 
   $nest: {
     '&:hover': {
