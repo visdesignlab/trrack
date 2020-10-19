@@ -31,11 +31,11 @@ jobs:
             - name: Build Libraries
               run: yarn build
 
-            - name: Create npmrc for publishing
-              run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+            # - name: Create npmrc for publishing
+            #   run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-            - name: Try publish
-              run: yarn release
+            # - name: Try publish
+            #   run: yarn release
 
             - name: Build examples
               run: yarn build:examples
@@ -54,5 +54,8 @@ jobs:
                   cp -r ./packages/trrack-core/docs ./build/trrack-doc
                   cp -r ./packages/trrack-vis/docs ./build/trrack-vis-doc
 
-            - name: Print all
-              run: ls ./build | xargs echo
+            - name: Deploy Website
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./build

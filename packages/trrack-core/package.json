@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "tsdx build --format cjs,esm,umd --name trrack",
     "test": "tsdx test --coverage",
     "test:watch": "tsdx test --coverage --verbose --watch",
     "docs": "typedoc --out docs --target es6 --mode file src",
