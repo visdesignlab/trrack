@@ -1,6 +1,6 @@
 {
   "name": "@visdesignlab/trrack-vis",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "",
   "keywords": [],
   "main": "dist/index.js",
@@ -82,7 +82,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.10.0",
     "@storybook/react": "^6.0.26",
-    "@visdesignlab/trrack": "^2.0.0-alpha.1",
+    "@visdesignlab/trrack": "^2.0.0-alpha.2",
     "d3": "^5.15.0",
     "mobx": "^6.0.1",
     "mobx-react": "^6.1.7",
