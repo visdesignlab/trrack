@@ -32,9 +32,13 @@ export type Provenance<T, S = void, A = void> = {
   getLatestArtifact: (id?: NodeID) => Artifact<A> | null;
   getAllAnnotation: (id?: NodeID) => Annotation[];
   getLatestAnnotation: (id?: NodeID) => Annotation | null;
+  undo: () => void;
   goBackOneStep: () => void;
+  redo: (to?: 'latest' | 'oldest') => void;
   goForwardOneStep: (to?: 'latest' | 'oldest') => void;
+  undoNonEphemeral: () => void;
   goBackToNonEphemeral: () => void;
+  redoNonEphemeral: (to?: 'latest' | 'oldest') => void;
   goForwardToNonEphemeral: (to?: 'latest' | 'oldest') => void;
   setBookmark: (id: NodeID, bookmark: boolean) => void;
   getBookmark: (id: NodeID) => boolean;

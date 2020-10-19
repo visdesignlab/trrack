@@ -12,6 +12,10 @@ import {
   ProvenanceNode,
   DiffNode,
   ChildNode,
+  Meta,
+  Artifact,
+  Artifacts,
+  Annotation,
 } from './Types/Nodes';
 import { Provenance } from './Types/Provenance';
 
@@ -32,4 +36,8 @@ export {
   Provenance,
   DiffNode,
   isChildNode,
+  Meta,
+  Artifacts,
+  Artifact,
+  Annotation,
 };

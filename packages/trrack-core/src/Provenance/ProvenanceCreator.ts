@@ -29,13 +29,11 @@ import {
 } from '../Types/Observers';
 import generateTimeStamp from '../Utils/generateTimeStamp';
 import { ProvenanceGraph } from '../Types/ProvenanceGraph';
+import { initializeFirebase, logToFirebase } from './FirebaseFunctions';
 
 type ProvenanceOpts = {
   loadFromUrl: boolean;
-  firebaseOpts: {
-    storeOnFirebase: boolean;
-    config: any;
-  };
+  firebaseConfig: any;
 };
 
 export function deserialize(serialized: string) {
@@ -49,10 +47,10 @@ export default function initProvenance<T, S, A = void>(
   initialState: T,
   opts: Partial<ProvenanceOpts> = {
     loadFromUrl: true,
-    firebaseOpts: { storeOnFirebase: false, config: null },
+    firebaseConfig: null,
   },
 ): Provenance<T, S, A> {
-  const { loadFromUrl, firebaseOpts } = opts;
+  const { loadFromUrl, firebaseConfig } = opts;
 
   let setupFinished: boolean = false;
   const state = observable(initialState);
@@ -60,8 +58,11 @@ export default function initProvenance<T, S, A = void>(
 
   const PROVSTATEKEY = 'provState';
 
-  if (firebaseOpts?.storeOnFirebase) {
-    if (!firebaseOpts?.config) throw new Error('Firebase config is not provided.');
+  // eslint-disable-next-line no-unused-vars
+  let firebaseLogger: (g: ProvenanceGraph<T, S, A>) => void;
+  if (firebaseConfig) {
+    const firebase = initializeFirebase(firebaseConfig);
+    firebaseLogger = logToFirebase(firebase.db);
   }
 
   if (loadFromUrl) {
@@ -96,6 +97,9 @@ export default function initProvenance<T, S, A = void>(
         );
       }
       applyActionFunction(graph, act, state);
+      if (firebaseConfig) {
+        firebaseLogger(toJS(graph));
+      }
     },
     addGlobalObserver(observer: GlobalObserver<T, S, A>) {
       reaction(
@@ -174,16 +178,25 @@ export default function initProvenance<T, S, A = void>(
       }
       return null;
     },
+    undo() {
+      this.goBackOneStep();
+    },
     goBackOneStep() {
       const current = graph.nodes[graph.current];
       if (!isChildNode(current)) throw new Error('Already at root');
       goToNode(graph, state, current.parent);
+    },
+    redo(to: 'latest' | 'oldest' = 'latest') {
+      this.goForwardOneStep(to);
     },
     goForwardOneStep(to: 'latest' | 'oldest' = 'latest') {
       const current = graph.nodes[graph.current];
       if (current.children.length === 0) throw new Error('Already at latest node in this branch');
       if (to === 'oldest') goToNode(graph, state, current.children[0]);
       else goToNode(graph, state, current.children[current.children.length - 1]);
+    },
+    undoNonEphemeral() {
+      this.goBackToNonEphemeral();
     },
     goBackToNonEphemeral() {
       let parent: NodeID | null = null;
@@ -199,6 +212,9 @@ export default function initProvenance<T, S, A = void>(
 
         goToNode(graph, state, parent);
       }
+    },
+    redoNonEphemeral(to: 'latest' | 'oldest' = 'latest') {
+      this.goForwardToNonEphemeral(to);
     },
     goForwardToNonEphemeral(to: 'latest' | 'oldest' = 'latest') {
       let child: NodeID | null = null;
