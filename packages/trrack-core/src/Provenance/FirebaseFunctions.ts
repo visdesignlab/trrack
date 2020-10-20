@@ -39,7 +39,8 @@ export function logToFirebase(rtd: firebase.database.Database) {
         .ref(`${path}/nodes/${node}`)
         .set(actualNode)
         .catch((err) => {
-          console.log(err);
+          // eslint-disable-next-line no-console
+          console.warn(err);
           throw new Error('Something went wrong while logging.');
         });
     });

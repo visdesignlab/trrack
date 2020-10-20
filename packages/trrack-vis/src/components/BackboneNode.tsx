@@ -1,16 +1,8 @@
 /* eslint-disable no-unused-vars */
-import {
-  Provenance, ProvenanceNode, StateNode,
-} from '@visdesignlab/trrack';
+import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
-import {
-  Popup,
-} from 'semantic-ui-react';
-
-import {
-  TextField, IconButton, Icon,
-} from '@material-ui/core';
+import { Popup } from 'semantic-ui-react';
 
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
@@ -72,9 +64,13 @@ function BackboneNode<T, S extends string, A>({
     cursor: 'pointer',
   } as React.CSSProperties;
 
-  const [annotateText, setAnnotateText] = useState(prov.getLatestAnnotation(node.id)?.annotation ? prov.getLatestAnnotation(node.id)?.annotation! : '');
+  const [annotateText, setAnnotateText] = useState(
+    prov.getLatestAnnotation(node.id)?.annotation
+      ? prov.getLatestAnnotation(node.id)?.annotation!
+      : '',
+  );
 
-  const handleCheck = (evt:any) => {
+  const handleCheck = () => {
     const lastAnnotation = prov.getLatestAnnotation(node.id);
 
     if (lastAnnotation?.annotation !== annotateText.trim()) {
@@ -83,15 +79,12 @@ function BackboneNode<T, S extends string, A>({
     }
   };
 
-  const handleClose = (evt: any) => {
+  const handleClose = () => {
     setAnnotateText(prov.getLatestAnnotation(node.id)?.annotation!);
     setAnnotationOpen(-1);
   };
 
-  const handleInputChange = (evt: any) => {
-    console.log(evt);
-    setAnnotateText(evt.target.value);
-  };
+  const handleInputChange = () => {};
 
   // console.log(JSON.parse(JSON.stringify(node)));
   let glyph = (
@@ -143,12 +136,17 @@ function BackboneNode<T, S extends string, A>({
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
-  if (bundleMap
+  if (
+    bundleMap
     && Object.keys(bundleMap).includes(node.id)
-    && node.actionType === 'Ephemeral' && expandedClusterList
-    && !expandedClusterList.includes(node.id)) {
+    && node.actionType === 'Ephemeral'
+    && expandedClusterList
+    && !expandedClusterList.includes(node.id)
+  ) {
     if (node.metadata && node.metadata.eventType) {
-      label = `[${bundleMap[node.id].bunchedNodes.length}] ${node.metadata.eventType}`;
+      label = `[${bundleMap[node.id].bunchedNodes.length}] ${
+        node.metadata.eventType
+      }`;
     } else {
       label = `[${bundleMap[node.id].bunchedNodes.length}]`;
     }
@@ -156,25 +154,13 @@ function BackboneNode<T, S extends string, A>({
     label = node.label;
   }
 
-  if (node.artifacts
+  if (
+    node.artifacts
     && node.artifacts.annotations.length > 0
-    && annotationOpen !== nodeMap[node.id].depth) {
+    && annotationOpen !== nodeMap[node.id].depth
+  ) {
     annotate = node.artifacts.annotations[0].annotation;
   }
-
-  const showHtml = (
-    <text
-      y={7}
-      x={dropDownAdded ? 10 : 0}
-      dominantBaseline="middle"
-      textAnchor="start"
-      fontSize={textSize}
-      fontWeight={'regular'}
-      onClick={() => labelClicked(node)}
-    >
-      hello
-    </text>
-  );
 
   if (!nodeMap[node.id]) {
     return null;
@@ -261,7 +247,7 @@ function BackboneNode<T, S extends string, A>({
           ,
           <text
             style={cursorStyle}
-            onClick={(e) => {
+            onClick={() => {
               if (
                 annotationOpen === -1
                 || nodeMap[node.id].depth !== annotationOpen
@@ -273,9 +259,14 @@ function BackboneNode<T, S extends string, A>({
             }}
             fontSize={17}
             className="fas fa-edit"
-            opacity={bookmark === node.id
-              || annotationOpen === nodeMap[node.id].depth ? 1 : 0}
-            fill={annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'}
+            opacity={
+              bookmark === node.id || annotationOpen === nodeMap[node.id].depth
+                ? 1
+                : 0
+            }
+            fill={
+              annotationOpen === nodeMap[node.id].depth ? '#2185d0' : '#cccccc'
+            }
             textAnchor="middle"
             alignmentBaseline="middle"
             x={210}
@@ -319,7 +310,7 @@ function BackboneNode<T, S extends string, A>({
         timing: { duration: 100, delay: first ? 0 : duration },
       }}
     >
-      {(state) => (
+      {() => (
         <>
           {popupContent !== undefined && nodeMap[node.id].depth > 0 ? (
             <Popup content={popupContent(node)} trigger={glyph} />
@@ -339,7 +330,11 @@ function BackboneNode<T, S extends string, A>({
               <g transform="translate(15, 25)">
                 <foreignObject width="175" height="80" x="0" y="0">
                   <div>
-                    <textarea style={{ maxWidth: 130, resize: 'none' }} onChange={handleInputChange} value={annotateText} />
+                    <textarea
+                      style={{ maxWidth: 130, resize: 'none' }}
+                      onChange={handleInputChange}
+                      value={annotateText}
+                    />
                     <button onClick={handleCheck}>Annotate</button>
 
                     <button onClick={handleClose}>Close</button>

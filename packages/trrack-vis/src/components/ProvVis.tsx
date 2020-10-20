@@ -4,14 +4,25 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-unused-vars */
 import {
-  Provenance, isChildNode, NodeID, Nodes, ProvenanceNode, StateNode, DiffNode,
+  Provenance,
+  isChildNode,
+  NodeID,
+  Nodes,
+  ProvenanceNode,
+  StateNode,
+  DiffNode,
 } from '@visdesignlab/trrack';
 import {
   HierarchyNode,
   stratify,
   symbol,
   symbolWye,
-  symbolCross, symbolCircle, symbolTriangle, symbolSquare, symbolDiamond, symbolStar,
+  symbolCross,
+  symbolCircle,
+  symbolTriangle,
+  symbolSquare,
+  symbolDiamond,
+  symbolStar,
 } from 'd3';
 
 import React, {
@@ -20,9 +31,7 @@ import React, {
 import { NodeGroup } from 'react-move';
 import { Popup } from 'semantic-ui-react';
 
-import {
-  Tabs, Tab, AppBar, Box, Typography, Paper,
-} from '@material-ui/core';
+import { Tabs, Tab, Paper } from '@material-ui/core';
 
 import ShareIcon from '@material-ui/icons/Share';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
@@ -34,7 +43,6 @@ import findBundleParent from '../Utils/findBundleParent';
 import translate from '../Utils/translate';
 
 import UndoRedoButton from './UndoRedoButton';
-import BookmarkToggle from './BookmarkToggle';
 import BookmarkListView from './BookmarkListView';
 import { treeLayout } from '../Utils/TreeLayout';
 import BackboneNode from './BackboneNode';
@@ -73,8 +81,8 @@ interface ProvVisProps<T, S extends string, A> {
   annotationContent?: (nodeId: StateNode<T, S, A>) => ReactChild;
   undoRedoButtons?: boolean;
   bookmarkToggle?: boolean;
-  bookmarkListView?:boolean;
-  editAnnotations?: boolean
+  bookmarkListView?: boolean;
+  editAnnotations?: boolean;
   prov?: Provenance<T, S, A>;
   ephemeralUndo?: boolean;
 }
@@ -134,12 +142,20 @@ function ProvVis<T, S extends string, A>({
         eventTypes.add(child.metadata.eventType);
       }
 
-      if (child.actionType === 'Ephemeral' && child.children.length === 1 && (nodeMap[child.parent].actionType !== 'Ephemeral' || nodeMap[child.parent].children.length > 1)) {
-        const group:string[] = [];
+      if (
+        child.actionType === 'Ephemeral'
+        && child.children.length === 1
+        && (nodeMap[child.parent].actionType !== 'Ephemeral'
+          || nodeMap[child.parent].children.length > 1)
+      ) {
+        const group: string[] = [];
         let curr = child;
         while (curr.actionType === 'Ephemeral') {
           group.push(curr.id);
-          if (curr.children.length === 1 && nodeMap[curr.children[0]].actionType === 'Ephemeral') {
+          if (
+            curr.children.length === 1
+            && nodeMap[curr.children[0]].actionType === 'Ephemeral'
+          ) {
             curr = nodeMap[curr.children[0]] as DiffNode<T, S, A>;
           } else {
             break;
@@ -159,9 +175,13 @@ function ProvVis<T, S extends string, A>({
     list = list.concat(Object.keys(bundleMap));
   }
 
-  function setDefaultConfig<E extends string>(types:Set<string>): EventConfig<E> {
+  function setDefaultConfig<E extends string>(
+    types: Set<string>,
+  ): EventConfig<E> {
     const symbols = [
-      symbol().type(symbolStar).size(50),
+      symbol()
+        .type(symbolStar)
+        .size(50),
       symbol().type(symbolDiamond),
       symbol().type(symbolTriangle),
       symbol().type(symbolCircle),
@@ -214,7 +234,9 @@ function ProvVis<T, S extends string, A>({
     return conf;
   }
 
-  const [expandedClusterList, setExpandedClusterList] = useState<string[]>(Object.keys(bundleMap));
+  const [expandedClusterList, setExpandedClusterList] = useState<string[]>(
+    Object.keys(bundleMap),
+  );
 
   if (!eventConfig && eventTypes.size > 0 && eventTypes.size < 8) {
     eventConfig = setDefaultConfig<S>(eventTypes);
@@ -224,9 +246,7 @@ function ProvVis<T, S extends string, A>({
     setFirst(false);
   }, []);
 
-  const nodeList = Object.values(nodeMap).filter(
-    (d) => true,
-  );
+  const nodeList = Object.values(nodeMap).filter(() => true);
 
   const copyList = Array.from(nodeList);
 
@@ -332,7 +352,9 @@ function ProvVis<T, S extends string, A>({
   const stratifiedList: StratifiedList<T, S, A> = stratifiedTree.descendants();
   const stratifiedMap: StratifiedMap<T, S, A> = {};
 
-  stratifiedList.forEach((c) => { stratifiedMap[c.id!] = c; });
+  stratifiedList.forEach((c) => {
+    stratifiedMap[c.id!] = c;
+  });
   treeLayout(stratifiedMap, current, root);
 
   let maxHeight = 0;
@@ -674,7 +696,7 @@ function ProvVis<T, S extends string, A>({
     </div>
   );
 
-  const handleChange = useCallback((event: any, newValue: number) => {
+  const handleChange = useCallback((_: any, newValue: number) => {
     setValue(newValue);
   }, []);
 
@@ -714,14 +736,10 @@ function ProvVis<T, S extends string, A>({
 
 export default ProvVis;
 
-function TabPanel(props:any) {
+function TabPanel(props: any) {
   const {
     children, value, index, ...other
   } = props;
-
-  console.log(children);
-  console.log(value);
-  console.log(index);
 
   return (
     <div
@@ -731,9 +749,7 @@ function TabPanel(props:any) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <div>{children}</div>
-      )}
+      {value === index && <div>{children}</div>}
     </div>
   );
 }
