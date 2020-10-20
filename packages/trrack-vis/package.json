@@ -23,7 +23,7 @@
     "start": "tsdx watch",
     "build": "tsdx build --format cjs,esm,umd --name trrackvis",
     "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint",
+    "lint": "tsdx lint src",
     "prepare": "tsdx build --format cjs,esm,umd --name trrack",
     "size": "size-limit",
     "analyze": "size-limit --why",

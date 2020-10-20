@@ -28,7 +28,7 @@
     "test": "tsdx test --coverage",
     "test:watch": "tsdx test --coverage --verbose --watch",
     "docs": "typedoc --out docs --target es6 --mode file src",
-    "lint": "tsdx lint",
+    "lint": "tsdx lint src",
     "prepare": "tsdx build --format cjs,esm,umd --name trrack",
     "size": "size-limit",
     "analyze": "size-limit --why"
