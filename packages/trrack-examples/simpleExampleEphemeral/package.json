@@ -11,8 +11,8 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@visdesignlab/trrack": "^1.2.0",
-    "@visdesignlab/trrack-vis": "^1.1.0",
+    "@visdesignlab/trrack": "^2.0.0-alpha.3",
+    "@visdesignlab/trrack-vis": "^2.0.0-alpha.3",
     "d3": "^5.12.0",
     "font-awesome": "^4.7.0",
     "http-server": "^0.12.0",
