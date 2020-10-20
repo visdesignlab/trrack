@@ -28,9 +28,12 @@
     "lint-staged": "^10.4.0",
     "prettier": "^2.1.2"
   },
-  "workspaces": [
+  "workspaces": {
+        "packages": [
     "packages/**"
   ],
+  "nohoist":["**/tsdx", "**/tsdx/**"]
+  },
   "scripts": {
     "bootstrap": "npx lerna bootstrap --use-workspaces",
     "build": "lerna exec --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis -- yarn build",
