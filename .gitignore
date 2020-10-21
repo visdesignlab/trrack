@@ -153,3 +153,4 @@ jest-stare/
 storybook-static/
 
 !webpack.config.js
+!tsdx.config.js
