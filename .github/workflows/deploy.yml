@@ -31,12 +31,6 @@ jobs:
             - name: Build Libraries
               run: yarn build
 
-            # - name: Create npmrc for publishing
-            #   run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
-            # - name: Try publish
-            #   run: yarn release
-
             - name: Build examples
               run: yarn build:examples
 
@@ -51,8 +45,8 @@ jobs:
 
             - name: Copy docs to build
               run: |
-                  cp -r ./packages/trrack-core/docs ./build/trrack-doc
-                  cp -r ./packages/trrack-vis/docs ./build/trrack-vis-doc
+                  cp -r ./packages/trrack-core/docs ./build/trrack-docs
+                  cp -r ./packages/trrack-vis/docs ./build/trrack-vis-docs
             
             - name: Copy index
               run: cp ./packages/trrack-examples/index.html ./build/
