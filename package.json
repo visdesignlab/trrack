@@ -46,7 +46,7 @@
     "release:pre": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --conventional-prerelease --no-commit-hooks",
     "release:graduate": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --conventional-graduate --no-commit-hooks",
     "docs": "lerna run docs --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis",
-    "build:examples": "lerna run build --ignore @visdesignlab/trrack --ignore @visdesignlab/trrack-vis --ignore example-simple-annotation"
+    "build:examples": "lerna run build --ignore @visdesignlab/trrack --ignore @visdesignlab/trrack-vis"
   },
   "husky": {
     "hooks": {
