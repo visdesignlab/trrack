@@ -6,6 +6,6 @@
   "author": "Kiran Gadhave",
   "license": "MIT",
   "scripts": {
-      "build": "rm -rf ./dist && mkdir -p ../dist && cp -r ./* ../dist && mv ../dist ./dist && rm -rf ./dist/package.json"
+      "build": "rm -rf ./dist && mkdir -p ../dist-basic-js && cp -r ./* ../dist-basic-js && mv ../dist-basic-js ./dist && rm -rf ./dist/package.json"
   }
 }
