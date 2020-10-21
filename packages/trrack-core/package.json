@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
   "description": "",
   "keywords": [],
@@ -83,4 +83,5 @@
     "firebase": "^7.15.5",
     "lz-string": "^1.4.4",
     "mobx": "^6.0.1"
-  }}
+  }
+}

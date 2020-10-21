@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.5](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.4...@visdesignlab/trrack@2.0.0-alpha.5) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 Updated bugs with loadFromUrl ([7374e4c](https://github.com/visdesignlab/trrack/commit/7374e4c5f9e55eb3965bc8ba6ada05b0bc256d8d))
+
+
+
+
+
 # [2.0.0-alpha.4](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.3...@visdesignlab/trrack@2.0.0-alpha.4) (2020-10-20)
 
 **Note:** Version bump only for package @visdesignlab/trrack

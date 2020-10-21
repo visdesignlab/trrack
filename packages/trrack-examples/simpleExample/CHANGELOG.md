@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0-alpha.2](https://github.com/visdesignlab/trrack/compare/example-simple@1.1.0-alpha.1...example-simple@1.1.0-alpha.2) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 Updated examples ([db48f8c](https://github.com/visdesignlab/trrack/commit/db48f8c17b9a76ff03d8e6b4c07ba22a3d8da322))
+
+
+
+
+
 # [1.1.0-alpha.1](https://github.com/visdesignlab/trrack/compare/example-simple@1.1.0-alpha.0...example-simple@1.1.0-alpha.1) (2020-10-20)
 
 **Note:** Version bump only for package example-simple
