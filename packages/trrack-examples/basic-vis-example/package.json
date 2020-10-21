@@ -1,0 +1,11 @@
+{
+  "name": "basic-vis-example",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Kiran Gadhave",
+  "license": "MIT",
+  "scripts": {
+      "build": "rm -rf ./dist && mkdir -p ../dist && cp -r ./* ../dist && mv ../dist ./dist && rm -rf ./dist/package.json"
+  }
+}
