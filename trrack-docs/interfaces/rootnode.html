@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DiffNode | @visdesignlab/trrack</title>
+	<title>RootNode | @visdesignlab/trrack</title>
 	<meta name="description" content="Documentation for @visdesignlab/trrack">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="diffnode.html">DiffNode</a>
+					<a href="rootnode.html">RootNode</a>
 				</li>
 			</ul>
-			<h1>Interface DiffNode&lt;T, S, A&gt;</h1>
+			<h1>Interface RootNode&lt;T, S&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -75,19 +75,21 @@
 					<li>
 						<h4>S</h4>
 					</li>
-					<li>
-						<h4>A</h4>
-					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="childnode.html" class="tsd-signature-type">ChildNode</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="basenode.html" class="tsd-signature-type">BaseNode</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">DiffNode</span>
+								<span class="target">RootNode</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="statenode.html" class="tsd-signature-type">StateNode</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -100,16 +102,13 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#actiontype" class="tsd-kind-icon">action<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#artifacts" class="tsd-kind-icon">artifacts</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#bookmarked" class="tsd-kind-icon">bookmarked</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#children" class="tsd-kind-icon">children</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="diffnode.html#diffs" class="tsd-kind-icon">diffs</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#label" class="tsd-kind-icon">label</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="diffnode.html#laststatenode" class="tsd-kind-icon">last<wbr>State<wbr>Node</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#metadata" class="tsd-kind-icon">metadata</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="diffnode.html#parent" class="tsd-kind-icon">parent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="rootnode.html#actiontype" class="tsd-kind-icon">action<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="rootnode.html#bookmarked" class="tsd-kind-icon">bookmarked</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="rootnode.html#children" class="tsd-kind-icon">children</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="rootnode.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="rootnode.html#label" class="tsd-kind-icon">label</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="rootnode.html#metadata" class="tsd-kind-icon">metadata</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rootnode.html#state" class="tsd-kind-icon">state</a></li>
 							</ul>
 						</section>
 					</div>
@@ -124,18 +123,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="basenode.html">BaseNode</a>.<a href="basenode.html#actiontype">actionType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L38">Types/Nodes.ts:38</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="artifacts" class="tsd-anchor"></a>
-					<h3>artifacts</h3>
-					<div class="tsd-signature tsd-kind-icon">artifacts<span class="tsd-signature-symbol">:</span> <a href="../globals.html#artifacts" class="tsd-signature-type">Artifacts</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="childnode.html">ChildNode</a>.<a href="childnode.html#artifacts">artifacts</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L47">Types/Nodes.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L40">Types/Nodes.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -146,7 +134,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="basenode.html">BaseNode</a>.<a href="basenode.html#bookmarked">bookmarked</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L39">Types/Nodes.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L41">Types/Nodes.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -157,17 +145,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="basenode.html">BaseNode</a>.<a href="basenode.html#children">children</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L37">Types/Nodes.ts:37</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="diffs" class="tsd-anchor"></a>
-					<h3>diffs</h3>
-					<div class="tsd-signature tsd-kind-icon">diffs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Diff</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L53">Types/Nodes.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L39">Types/Nodes.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -178,7 +156,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="basenode.html">BaseNode</a>.<a href="basenode.html#id">id</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L34">Types/Nodes.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L36">Types/Nodes.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,17 +167,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="basenode.html">BaseNode</a>.<a href="basenode.html#label">label</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L35">Types/Nodes.ts:35</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="laststatenode" class="tsd-anchor"></a>
-					<h3>last<wbr>State<wbr>Node</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>State<wbr>Node<span class="tsd-signature-symbol">:</span> <a href="../globals.html#nodeid" class="tsd-signature-type">NodeID</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L54">Types/Nodes.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L37">Types/Nodes.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -210,18 +178,17 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="basenode.html">BaseNode</a>.<a href="basenode.html#metadata">metadata</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L36">Types/Nodes.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L38">Types/Nodes.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="parent" class="tsd-anchor"></a>
-					<h3>parent</h3>
-					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="../globals.html#nodeid" class="tsd-signature-type">NodeID</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="state" class="tsd-anchor"></a>
+					<h3>state</h3>
+					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="childnode.html">ChildNode</a>.<a href="childnode.html#parent">parent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/36e027a/packages/trrack-core/src/Types/Nodes.ts#L46">Types/Nodes.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5e25e/packages/trrack-core/src/Types/Nodes.ts#L44">Types/Nodes.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -240,37 +207,28 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-has-type-parameter">
-						<a href="diffnode.html" class="tsd-kind-icon">Diff<wbr>Node</a>
+						<a href="rootnode.html" class="tsd-kind-icon">Root<wbr>Node</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#actiontype" class="tsd-kind-icon">action<wbr>Type</a>
+								<a href="rootnode.html#actiontype" class="tsd-kind-icon">action<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#artifacts" class="tsd-kind-icon">artifacts</a>
+								<a href="rootnode.html#bookmarked" class="tsd-kind-icon">bookmarked</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#bookmarked" class="tsd-kind-icon">bookmarked</a>
+								<a href="rootnode.html#children" class="tsd-kind-icon">children</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#children" class="tsd-kind-icon">children</a>
+								<a href="rootnode.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="rootnode.html#label" class="tsd-kind-icon">label</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="rootnode.html#metadata" class="tsd-kind-icon">metadata</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="diffnode.html#diffs" class="tsd-kind-icon">diffs</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#id" class="tsd-kind-icon">id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#label" class="tsd-kind-icon">label</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="diffnode.html#laststatenode" class="tsd-kind-icon">last<wbr>State<wbr>Node</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#metadata" class="tsd-kind-icon">metadata</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="diffnode.html#parent" class="tsd-kind-icon">parent</a>
+								<a href="rootnode.html#state" class="tsd-kind-icon">state</a>
 							</li>
 						</ul>
 					</li>
