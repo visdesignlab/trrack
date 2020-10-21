@@ -4,6 +4,8 @@ import { ActionType } from './Action';
 import { ProvenanceGraph } from './ProvenanceGraph';
 import deepCopy from '../Utils/DeepCopy';
 
+export type DiffExport<L, R = L> = Diff<L, R>;
+
 export type NodeID = string;
 
 export type Meta = { [key: string]: any };

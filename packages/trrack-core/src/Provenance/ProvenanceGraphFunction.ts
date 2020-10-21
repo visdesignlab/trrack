@@ -13,7 +13,7 @@ import {
 } from '../Types/Nodes';
 import generateUUID from '../Utils/generateUUID';
 import generateTimeStamp from '../Utils/generateTimeStamp';
-import deepDiff from '../Utils/DeepDiff';
+import differ from '../Utils/Differ';
 import { ApplyObject, ActionType } from '../Types/Action';
 
 export function createProvenanceGraph<T, S, A>(
@@ -159,7 +159,7 @@ export const applyActionFunction = action(
 
     const parentId = graph.current;
 
-    const diffs = deepDiff(previousState, state) || [];
+    const diffs = differ(previousState, state) || [];
 
     if (saveDiff && Object.keys(previousState).length / 2 < diffs.length) {
       saveDiff = false;

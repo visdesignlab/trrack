@@ -14,6 +14,11 @@ import {
   ObserverEffect,
 } from './Observers';
 
+export type ProvenanceOpts = {
+  loadFromUrl: boolean;
+  firebaseConfig: any;
+};
+
 export type Provenance<T, S = void, A = void> = {
   state: T;
   graph: ProvenanceGraph<T, S, A>;
@@ -48,5 +53,6 @@ export type Provenance<T, S = void, A = void> = {
   importProvenanceGraph: (graph: string | ProvenanceGraph<T, S, A>) => void;
   exportProvenanceGraph: () => string;
   getState: (node: ProvenanceNode<T, S, A>) => T;
+  config: ProvenanceOpts;
   done: () => void;
 };

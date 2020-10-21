@@ -9,7 +9,7 @@ import { Meta, isChildNode } from '../src/Types/Nodes';
 describe('action object is valid', () => {
   const { action } = setupProvenanceAndAction(initialState);
 
-  it('action object should not be null', () => {
+  it('action object should not be null ', () => {
     expect(action).not.toBeNull();
   });
 });
