@@ -11,9 +11,7 @@ import { observable } from 'mobx';
 import { inject, observer, Provider } from 'mobx-react';
 import React, { FC } from 'react';
 import { Button } from 'semantic-ui-react';
-
 import { ProvVis } from '../src';
-import { BundleMap } from '../src/Utils/BundleMap';
 
 interface Task {
   key: number;
@@ -49,22 +47,12 @@ class DemoStore {
 
 const demoStore = new DemoStore();
 
-let map: BundleMap;
 const idList: string[] = [];
 
 const popup = (node: StateNode<DemoState, Events, DemoAnnotation>) => (
   <p>{node.id}</p>
 );
 
-const annotiation = () => (
-  // console.log(JSON.parse(JSON.stringify(node)))
-
-  <g transform="translate(0, 5)">
-    <text x="10" y="35" fontSize="1em">
-      Sample annotation
-    </text>
-  </g>
-);
 prov.addGlobalObserver(() => {
   const { current } = prov;
 
@@ -79,25 +67,7 @@ prov.addGlobalObserver(() => {
 prov.addObserver(
   (state) => state.tasks,
   (state?: DemoState) => {
-    idList.push(prov.graph.current);
-    if (idList.length > 30) {
-      map = {
-        [idList[12]]: {
-          metadata: idList[12],
-          bundleLabel: 'Clustering Label',
-          bunchedNodes: [idList[10], idList[11]],
-        },
-
-        [idList[24]]: {
-          metadata: idList[24],
-          bundleLabel: 'Clustering Label',
-          bunchedNodes: [idList[22], idList[23], idList[21]],
-        },
-      };
-    }
-    if (state) {
-      demoStore.tasks = [...state.tasks];
-    }
+    idList.push(state);
   },
 );
 
@@ -160,22 +130,13 @@ const BaseComponent: FC<Props> = ({ store }: Props) => {
         }}
       >
         <ProvVis
-          width={500}
-          height={800}
-          sideOffset={200}
-          root={root}
-          current={current}
-          nodeMap={nodes}
+          root={prov.graph.root}
           changeCurrent={goToNode}
-          gutter={20}
-          backboneGutter={40}
-          verticalSpace={50}
-          clusterVerticalSpace={50}
-          bundleMap={map}
-          clusterLabels={false}
-          popupContent={popup}
-          annotationHeight={50}
-          annotationContent={annotiation}
+          current={prov.graph.current}
+          nodeMap={prov.graph.nodes}
+          prov={prov}
+          undoRedoButtons={true}
+          ephemeralUndo={false}
         />
       </div>
       <div

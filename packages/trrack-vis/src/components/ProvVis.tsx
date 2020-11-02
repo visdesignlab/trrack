@@ -129,10 +129,6 @@ function ProvVis<T, S extends string, A>({
   const [annotationOpen, setAnnotationOpen] = useState(-1);
   const [tabsValue, setValue] = useState(0);
 
-  if (popupContent) {
-    throw new Error('popups are not supported');
-  }
-
   let list: string[] = [];
   const eventTypes = new Set<string>();
   for (const j in nodeMap) {
