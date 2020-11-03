@@ -3,7 +3,7 @@ import { ProvenanceGraph } from '@visdesignlab/trrack';
 import React from 'react';
 import { style } from 'typestyle';
 
-import { Button } from '@material-ui/core';
+import { Button } from 'semantic-ui-react';
 
 export interface UndoRedoConfig<T, S extends string, A> {
   undoCallback: () => void;

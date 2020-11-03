@@ -2,7 +2,7 @@
 import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
-import { Popup } from 'semantic-ui-react';
+import { Popup, Icon } from 'semantic-ui-react';
 
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
@@ -184,7 +184,7 @@ function BackboneNode<T, S extends string, A>({
               alignmentBaseline="middle"
               x={1}
               y={0}
-              fontFamily="FontAwesome"
+              fontFamily="Icons"
             >
               {expandedClusterList && expandedClusterList.includes(node.id)
                 ? '\uf0d8'
@@ -240,7 +240,7 @@ function BackboneNode<T, S extends string, A>({
             alignmentBaseline="middle"
             x={175}
             y={0}
-            fontFamily="FontAwesome"
+            fontFamily="Icons"
           >
             {'\uf02e'}
           </text>
@@ -258,7 +258,6 @@ function BackboneNode<T, S extends string, A>({
               }
             }}
             fontSize={17}
-            className="fas fa-edit"
             opacity={
               bookmark === node.id || annotationOpen === nodeMap[node.id].depth
                 ? 1
@@ -271,7 +270,7 @@ function BackboneNode<T, S extends string, A>({
             alignmentBaseline="middle"
             x={210}
             y={0}
-            fontFamily="FontAwesome"
+            fontFamily="Icons"
           >
             {'\uf044'}
           </text>
@@ -288,7 +287,7 @@ function BackboneNode<T, S extends string, A>({
               alignmentBaseline="middle"
               x={1}
               y={0}
-              fontFamily="FontAwesome"
+              fontFamily="Icons"
             >
               {expandedClusterList && expandedClusterList.includes(node.id)
                 ? '\uf0d8'

@@ -29,12 +29,8 @@ import React, {
   ReactChild, useEffect, useState, useCallback,
 } from 'react';
 import { NodeGroup } from 'react-move';
-import { Popup } from 'semantic-ui-react';
+import { Popup, Tab } from 'semantic-ui-react';
 
-import { Tabs, Tab, Paper } from '@material-ui/core';
-
-import ShareIcon from '@material-ui/icons/Share';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
 import { style } from 'typestyle';
 
 import { BundleMap } from '../Utils/BundleMap';
@@ -99,7 +95,7 @@ function ProvVis<T, S extends string, A>({
   current,
   changeCurrent,
   width = 400,
-  height = 2000,
+  height = 800,
   iconOnly = false,
   gutter = 15,
   backboneGutter = 20,
@@ -421,22 +417,6 @@ function ProvVis<T, S extends string, A>({
 
   const svgWidth = width;
 
-  // if (document.getElementById("globalG") !== null) {
-  //   if (
-  //     document
-  //       .getElementById("globalG")!
-  //       .getBoundingClientRect()
-  //       .width.valueOf() > svgWidth
-  //   ) {
-  //     console.log("in here");
-  //     svgWidth =
-  //       document
-  //         .getElementById("globalG")!
-  //         .getBoundingClientRect()
-  //         .width.valueOf() + 10;
-  //   }
-  // }
-
   const overflowStyle = {
     overflowX: 'auto',
     overflowY: 'auto',
@@ -692,70 +672,25 @@ function ProvVis<T, S extends string, A>({
     </div>
   );
 
-  const handleChange = useCallback((_: any, newValue: number) => {
-    setValue(newValue);
-  }, []);
+  const panes = [
+    {
+      menuItem: { key: 'Graph', icon: 'share alternate', content: 'Graph' },
+      render: () => <Tab.Pane attached={false}>{graphTabView}</Tab.Pane>,
+    },
+    {
+      menuItem: { key: 'Bookmarks/Annotations', icon: 'bookmark', content: 'Bookmarks/Annotations' },
+      render: () => <Tab.Pane attached={false}>{bookmarkTabView}</Tab.Pane>,
+    },
+  ];
 
   return (
     <div style={overflowStyle} className={container} id="prov-vis">
-      <Paper square style={tabsStyle}>
-        <Tabs
-          value={tabsValue}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
-          style={tabsStyle}
-        >
-          <Tab
-            style={{ maxWidth: 135, minWidth: 135 }}
-            icon={<ShareIcon />}
-            {...a11yProps(0)}
-          />
-          <Tab
-            style={{ maxWidth: 135, minWidth: 135 }}
-            icon={<BookmarkIcon />}
-            {...a11yProps(1)}
-          />
-        </Tabs>
-      </Paper>
-      <TabPanel value={tabsValue} index={0}>
-        {graphTabView}
-      </TabPanel>
-      <TabPanel value={tabsValue} index={1}>
-        {bookmarkTabView}
-      </TabPanel>
+      <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
     </div>
   );
 }
 
 export default ProvVis;
-
-function TabPanel(props: any) {
-  const {
-    children, value, index, ...other
-  } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <div>{children}</div>}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
 
 const container = style({
   alignItems: 'center',
