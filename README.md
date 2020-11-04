@@ -6,7 +6,7 @@ Trrack is a library to create and track provenance (history) in web-based apps. 
 
 Trrack also allows for easy sharing of a visualization's current state through URL sharing. To share entire session history, Trrack allows for the import and exporting of provenance graphs, as well as has built in integration with firebase to store the graphs.
 
-For full documentation, see http://vdl.sci.utah.edu/trrack-examples/api/trrack
+For full documentation, see https://github.com/visdesignlab/trrack/tree/master/packages/trrack-examples
 
 ## Features
 
@@ -24,12 +24,12 @@ Also check out [the paper](https://doi.org/10.31219/osf.io/wnctb) to learn about
 If you're using Trrack in an academic project, please cite:
 
 ```
-Z. T. Cutler, K. Gadhaveand A. Lex, “Trrack: A Library for Provenance Tracking in Web-Based Visualizations”, osf.io preprint. https://doi.org/10.31219/osf.io/wnctb.
+Z. T. Cutler, K. Gadhave and A. Lex, “Trrack: A Library for Provenance Tracking in Web-Based Visualizations”, osf.io preprint. https://doi.org/10.31219/osf.io/wnctb.
 ```
 
 ## Companion Library
 
-Trrack does back-end history management only. If you want to use the history/provenance visualization as well, check out the [trrack-vis library](https://github.com/visdesignlab/trrack-vis), which is designed to provide a customizable front-end for the Trrack library.
+Trrack does back-end history management only. If you want to use the history/provenance visualization as well, check out the [trrack-vis library](https://github.com/visdesignlab/trrack/tree/master/packages/trrack-vis), which is designed to provide a customizable front-end for the Trrack library.
 
 
 ## Examples
@@ -60,6 +60,17 @@ npm install --save-dev @visdesignlab/trrack
 
 ```bash
 yarn add @visdesignlab/trrack
+```
+
+- CDN
+To use the libraries directly from CDN
+
+```html
+    <!-- Trrack -->
+    <script src="//cdn.jsdelivr.net/combine/npm/firebase@7/firebase-app.min.js,npm/firebase@7/firebase-database.min.js,npm/mobx@6/dist/mobx.umd.production.min.js,npm/lz-string@1/libs/lz-string.min.js,npm/deep-diff@1/dist/deep-diff.min.js,npm/@visdesignlab/trrack/dist/trrack.umd.production.min.js"></script>
+
+    <!-- Trrack Vis -->
+    <script src="//cdn.jsdelivr.net/combine/npm/react@17/umd/react.production.min.js,npm/react-dom@17/umd/react-dom.production.min.js,npm/react-move@6/dist/react-move.min.js,npm/typestyle@2/umd/typestyle.min.js,npm/semantic-ui-react@2/dist/umd/semantic-ui-react.min.js,npm/d3@6.2.0/dist/d3.min.js,npm/@visdesignlab/trrack-vis/dist/trrackvis.umd.development.min.js"></script>
 ```
 
 ## Usage
