@@ -21,5 +21,6 @@ module.exports = {
     'no-param-reassign': 0,
     'import/no-cycle': 0,
     'no-use-before-define': 'off',
+    'prettier/prettier': 'off',
   },
 };

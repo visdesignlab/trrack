@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.5",
   "author": "Kiran Gadhave <kirangadhave2@gmail.com>",
   "description": "",
   "keywords": [],
@@ -28,7 +28,7 @@
     "test": "tsdx test --coverage",
     "test:watch": "tsdx test --coverage --verbose --watch",
     "docs": "typedoc --out docs --target es6 --mode file src",
-    "lint": "tsdx lint",
+    "lint": "tsdx lint src",
     "prepare": "tsdx build --format cjs,esm,umd --name trrack",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -81,10 +81,7 @@
   "dependencies": {
     "deep-diff": "^1.0.2",
     "firebase": "^7.15.5",
-    "immer": "^7.0.9",
     "lz-string": "^1.4.4",
-    "mobx": "^6.0.1",
-    "serialize-javascript": "^5.0.1",
-    "typedoc": "^0.19.2"
+    "mobx": "^6.0.1"
   }
 }

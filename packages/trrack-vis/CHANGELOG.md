@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.7](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.6...@visdesignlab/trrack-vis@2.0.0-alpha.7) (2020-11-04)
+
+**Note:** Version bump only for package @visdesignlab/trrack-vis
+
+
+
+
+
+# [2.0.0-alpha.6](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.5...@visdesignlab/trrack-vis@2.0.0-alpha.6) (2020-11-04)
+
+**Note:** Version bump only for package @visdesignlab/trrack-vis
+
+
+
+
+
+# [2.0.0-alpha.5](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.4...@visdesignlab/trrack-vis@2.0.0-alpha.5) (2020-10-21)
+
+**Note:** Version bump only for package @visdesignlab/trrack-vis
+
+
+
+
+
+# [2.0.0-alpha.4](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.3...@visdesignlab/trrack-vis@2.0.0-alpha.4) (2020-10-20)
+
+**Note:** Version bump only for package @visdesignlab/trrack-vis
+
+
+
+
+
+# [2.0.0-alpha.3](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.2...@visdesignlab/trrack-vis@2.0.0-alpha.3) (2020-10-20)
+
+
+### Bug Fixes
+
+* 🐛 Fixed lint errors ([7858b5b](https://github.com/visdesignlab/trrack-vis/commit/7858b5b9ec9754391ff68741056cf6992fe37e07))
+* 🐛 Made react and react-dom peer dependencies ([da0b24d](https://github.com/visdesignlab/trrack-vis/commit/da0b24d3d953a8f31ae4ac97644409c5b00129ca))
+
+
+
+
+
 # [2.0.0-alpha.2](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.1...@visdesignlab/trrack-vis@2.0.0-alpha.2) (2020-10-19)
 
 **Note:** Version bump only for package @visdesignlab/trrack-vis

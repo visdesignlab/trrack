@@ -1,6 +1,4 @@
-import {
-  isChildNode, NodeID, ProvenanceGraph,
-} from '@visdesignlab/trrack';
+import { NodeID, ProvenanceGraph } from '@visdesignlab/trrack';
 
 import { NodeGroup } from 'react-move';
 import React from 'react';
@@ -19,8 +17,7 @@ function BookmarkListView<T, S extends string, A>({
   graph,
   eventConfig,
   currentNode,
-
-} : BookmarkListViewConfig<T, S, A>) {
+}: BookmarkListViewConfig<T, S, A>) {
   if (graph === undefined) {
     return null;
   }

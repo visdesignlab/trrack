@@ -38,7 +38,7 @@ function BookmarkNode<T, S extends string, A>({
   );
 
   const dropDownAdded = false;
-  const eventType = node.metadata.type;
+  const { eventType } = node.metadata;
 
   if (eventConfig) {
     const { currentGlyph, backboneGlyph } = eventConfig[eventType];

@@ -5,7 +5,6 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent,
 } from 'lz-string';
-import serialize from 'serialize-javascript';
 import {
   applyActionFunction,
   createProvenanceGraph,
@@ -20,7 +19,7 @@ import {
   ProvenanceNode,
   getState,
 } from '../Types/Nodes';
-import { Provenance } from '../Types/Provenance';
+import { Provenance, ProvenanceOpts } from '../Types/Provenance';
 import { ApplyObject } from '../Types/Action';
 import {
   GlobalObserver,
@@ -31,25 +30,47 @@ import generateTimeStamp from '../Utils/generateTimeStamp';
 import { ProvenanceGraph } from '../Types/ProvenanceGraph';
 import { initializeFirebase, logToFirebase } from './FirebaseFunctions';
 
-type ProvenanceOpts = {
-  loadFromUrl: boolean;
-  firebaseConfig: any;
-};
-
-export function deserialize(serialized: string) {
-  // eslint-disable-next-line no-eval
-  return eval(`(${serialized})`);
-}
-
 configure({ enforceActions: 'observed', isolateGlobalState: true });
+
+function setupSerializer() {
+  const serialize = (obj: any): string => {
+    const str = JSON.stringify(obj, (_, val) => {
+      if (val instanceof Set) {
+        return {
+          type: 'Set',
+          arr: Array.from(val),
+        };
+      }
+      return val;
+    });
+    return str;
+  };
+  const deserialize = (str: string): any => {
+    const obj: any = JSON.parse(str, (_, val) => {
+      if (val.type && val.type === 'Set') {
+        return new Set(val.arr);
+      }
+      return val;
+    });
+
+    return obj;
+  };
+
+  return { serialize, deserialize };
+}
 
 export default function initProvenance<T, S, A = void>(
   initialState: T,
-  opts: Partial<ProvenanceOpts> = {
+  _opts: Partial<ProvenanceOpts> = {
     loadFromUrl: true,
     firebaseConfig: null,
   },
 ): Provenance<T, S, A> {
+  const opts: ProvenanceOpts = {
+    loadFromUrl: true,
+    firebaseConfig: null,
+    ..._opts,
+  };
   const { loadFromUrl, firebaseConfig } = opts;
 
   let setupFinished: boolean = false;
@@ -57,6 +78,8 @@ export default function initProvenance<T, S, A = void>(
   const graph = observable(createProvenanceGraph<T, S, A>(toJS(state)));
 
   const PROVSTATEKEY = 'provState';
+
+  const { serialize, deserialize } = setupSerializer();
 
   // eslint-disable-next-line no-unused-vars
   let firebaseLogger: (g: ProvenanceGraph<T, S, A>) => void;
@@ -73,6 +96,7 @@ export default function initProvenance<T, S, A = void>(
         const params = new URLSearchParams(url.search);
         const stateEncodedString = compressToEncodedURIComponent(serialize(st));
         params.set(PROVSTATEKEY, stateEncodedString);
+        window.history.replaceState({}, '', `${url.pathname}?${params}`);
       },
     );
   }
@@ -80,6 +104,9 @@ export default function initProvenance<T, S, A = void>(
   return {
     get state() {
       return toJS(state);
+    },
+    get config() {
+      return opts;
     },
     get graph() {
       return toJS(graph);

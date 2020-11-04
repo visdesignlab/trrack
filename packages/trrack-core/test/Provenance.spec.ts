@@ -1,5 +1,4 @@
 import { compressToEncodedURIComponent } from 'lz-string';
-import serializeJavascript from 'serialize-javascript';
 import {
   setupTodoManager,
   TodoManager,
@@ -10,6 +9,19 @@ import {
   State,
 } from './helper';
 import { isChildNode, StateNode, DiffNode } from '../src/Types/Nodes';
+
+function serializeJavascript(obj: any) {
+  const str = JSON.stringify(obj, (_, val) => {
+    if (val instanceof Set) {
+      return {
+        type: 'Set',
+        arr: Array.from(val),
+      };
+    }
+    return val;
+  });
+  return str;
+}
 
 describe('Testing provenance functions', () => {
   // Testing state

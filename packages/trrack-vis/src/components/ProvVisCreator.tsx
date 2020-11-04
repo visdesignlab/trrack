@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provenance, ProvenanceGraph, NodeID } from '@visdesignlab/trrack';
 import { configure } from 'mobx';

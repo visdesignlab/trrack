@@ -7,8 +7,6 @@ export default function BookmarkTransitions(
   xOffset = -xOffset;
 
   const start = (data: any) => {
-    console.log(nodeList);
-    console.log(data);
     const index = nodeList.findIndex((d) => d.id === data.id);
 
     const x = 0;
@@ -44,6 +42,9 @@ export default function BookmarkTransitions(
   };
 
   return {
-    enter, leave: start, update, start,
+    enter,
+    leave: start,
+    update,
+    start,
   };
 }

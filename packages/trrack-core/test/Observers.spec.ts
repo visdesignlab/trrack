@@ -49,7 +49,9 @@ function resetCounters() {
 
 function setup() {
   resetCounters();
-  const provenance = initProvenance<State, Events>(initialState);
+  const provenance = initProvenance<State, Events>(initialState, {
+    loadFromUrl: false,
+  });
 
   const changeName = createAction<State, [string], Events>(
     (state, name: string) => {
@@ -160,8 +162,8 @@ describe('addGlobalObserver & addObserver', () => {
     provenance.apply(changeEmail('123@abc.com'));
 
     expect(emailChanged).toEqual(1);
-    expect(globalChanged).toEqual(1);
     expect(userDetailsChanged).toEqual(1);
+    expect(globalChanged).toEqual(1);
   });
 
   it('global observer, userDetails change, email change observer works correctly when changing email', () => {

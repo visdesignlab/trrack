@@ -1,6 +1,6 @@
 {
   "name": "example-simple",
-  "version": "1.0.0",
+  "version": "1.1.0-alpha.4",
   "private": true,
   "description": "Examples for using provenance library",
   "scripts": {
@@ -9,25 +9,25 @@
     "start": "webpack-dev-server --mode development"
   },
   "dependencies": {
-    "@visdesignlab/trrack": "^1.2.0",
-    "@visdesignlab/trrack-vis": "^1.1.0",
+    "@visdesignlab/trrack": "^2.0.0-alpha.5",
+    "@visdesignlab/trrack-vis": "^2.0.0-alpha.7",
     "d3": "^5.12.0",
     "font-awesome": "^4.7.0",
     "typestyle": "^2.1.0"
   },
   "devDependencies": {
-    "prettier": "^1.18.2",
     "@types/d3": "^5.7.2",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.0",
+    "html-webpack-plugin": "^4.5.0",
+    "prettier": "^1.18.2",
+    "style-loader": "^2.0.0",
+    "ts-loader": "^8.0.5",
     "tslint": "^5.19.0",
     "tslint-config-prettier": "^1.18.0",
-    "webpack": "^5.1.2",
-    "webpack-cli": "^4.0.0",
     "typescript": "^4.0.3",
-    "ts-loader": "^8.0.5",
-    "css-loader": "^5.0.0",
-    "style-loader": "^2.0.0",
-    "html-webpack-plugin": "^4.5.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "awesome-typescript-loader": "^5.2.1"
+    "webpack": "^4.0.0",
+    "webpack-cli": "^4.0.0"
   }
 }
