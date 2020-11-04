@@ -1,6 +1,8 @@
 name: Publish & Deploy
 on:
-    push
+    push:
+        branches:
+            - master
 jobs:
     publish-core:
         name: Publish trrack-core
