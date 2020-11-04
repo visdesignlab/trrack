@@ -6,7 +6,6 @@ module.exports = {
       config.output.globals.d3 = 'd3';
       config.output.globals['react-move'] = 'ReactMove';
       config.output.globals['semantic-ui-react'] = 'semanticUIReact';
-      config.output.globals['@material-ui/core'] = 'MaterialUI';
     }
     return config; // always return a config.
   },
