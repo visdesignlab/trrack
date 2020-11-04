@@ -24,7 +24,7 @@
     "build": "tsdx build --format cjs,esm,umd --name trrackvis",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint src",
-    "prepare": "tsdx build --format cjs,esm,umd --name trrack",
+    "prepare": "tsdx build --format cjs,esm,umd --name trrackvis",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -p 6006",
