@@ -91,6 +91,6 @@ The graph which Trrack creates and utilizes may be visualized using [Trrack-Vis]
 
 ### Integrating with FireBase and Other Servers
 
-To integrate FireBase with Trrack, you first need to set up a [Firebase](https://firebase.google.com/docs/database) project. Once you've done so, navigate to Settings -> Project settings -> general, and you should find a "firebaseConfig" object on that page. That exact object will be passed into [initProvenance](http://vdl.sci.utah.edu/trrack-examples/api/trrack/globals.html#initprovenance). Once done, Trrack will automatically store all created nodes to your Firebase project.
+To integrate FireBase with Trrack, you first need to set up a [Firebase](https://firebase.google.com/docs/database) project. Once you've done so, navigate to Settings -> Project settings -> general, and you should find a "firebaseConfig" object on that page. That exact object will be passed into [initProvenance](http://vdl.sci.utah.edu/trrack/trrack-docs/globals.html#initprovenance). Once done, Trrack will automatically store all created nodes to your Firebase project.
 
 To utilize Trrack with other servers, you will use `exportProvenanceGraph` to export the entire graph json and `importProvenanceGraph` to import the same json file.

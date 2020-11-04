@@ -20,3 +20,8 @@ npm install --save-dev @visdesignlab/trrack-vis
 ```bash
 yarn add @visdesignlab/trrack-vis
 ```
+
+```html
+<!-- Trrack Vis -->
+<script src="//cdn.jsdelivr.net/combine/npm/react@17/umd/react.production.min.js,npm/react-dom@17/umd/react-dom.production.min.js,npm/react-move@6/dist/react-move.min.js,npm/typestyle@2/umd/typestyle.min.js,npm/semantic-ui-react@2/dist/umd/semantic-ui-react.min.js,npm/d3@6.2.0/dist/d3.min.js,npm/@visdesignlab/trrack-vis/dist/trrackvis.umd.development.min.js"></script>
+```
