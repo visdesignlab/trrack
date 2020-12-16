@@ -1,6 +1,6 @@
 {
   "name": "@visdesignlab/trrack-vis",
-  "version": "2.0.0-alpha.7",
+  "version": "2.0.0-alpha.8",
   "description": "",
   "keywords": [],
   "main": "dist/index.js",
@@ -80,7 +80,7 @@
   },
   "dependencies": {
     "@storybook/react": "^6.0.26",
-    "@visdesignlab/trrack": "^2.0.0-alpha.5",
+    "@visdesignlab/trrack": "^2.0.0-alpha.6",
     "d3": "^5.15.0",
     "mobx": "^6.0.1",
     "mobx-react": "^6.1.7",
