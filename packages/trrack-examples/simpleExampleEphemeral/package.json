@@ -1,7 +1,7 @@
 {
   "name": "example-simple-ephemeral",
   "private": true,
-  "version": "1.1.0-alpha.4",
+  "version": "1.1.0-alpha.6",
   "description": "Examples for using provenance library",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@visdesignlab/trrack": "^2.0.0-alpha.5",
-    "@visdesignlab/trrack-vis": "^2.0.0-alpha.7",
+    "@visdesignlab/trrack": "^2.0.0-alpha.7",
+    "@visdesignlab/trrack-vis": "^2.0.0-alpha.9",
     "d3": "^5.12.0",
     "font-awesome": "^4.7.0",
     "http-server": "^0.12.0",

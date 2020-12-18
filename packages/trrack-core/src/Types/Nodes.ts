@@ -40,6 +40,7 @@ export interface BaseNode<S> {
   actionType: ActionType;
   bookmarked: boolean;
 }
+
 export interface RootNode<T, S> extends BaseNode<S> {
   state: T;
 }
@@ -65,30 +66,76 @@ export type Nodes<T, S, A> = { [key: string]: ProvenanceNode<T, S, A> };
 
 export type CurrentNode<T, S, A> = ProvenanceNode<T, S, A>;
 
+/**
+ * Function for checking if a node is a state node.
+ * @template T Represents the given state of an application as defined in initProvenance.
+ * @template S Represents the given event types in your application.
+ * Event types are used to differentiate between different actions that create nodes.
+ * @template A Represents the given "extra" type for storing metadata.
+ * Extra is a way to store customized metadata.
+ * @param _opts: Given node to check if it is a state node.
+ */
 export function isStateNode<T, S, A>(
   node: ProvenanceNode<T, S, A>,
 ): node is StateNode<T, S, A> {
   return 'parent' in node && 'state' in node;
 }
 
+/**
+ * Function for checking if a node is a diff node.
+ * @template T Represents the given state of an application as defined in initProvenance.
+ * @template S Represents the given event types in your application.
+ * Event types are used to differentiate between different actions that create nodes.
+ * @template A Represents the given "extra" type for storing metadata.
+ * Extra is a way to store customized metadata.
+ * @param _opts: Given node to check if it is a diff node.
+ */
 export function isDiffNode<T, S, A>(
   node: ProvenanceNode<T, S, A>,
 ): node is DiffNode<T, S, A> {
   return 'diffs' in node;
 }
 
+/**
+ * Function for checking if a node is a child node.
+ * @template T Represents the given state of an application as defined in initProvenance.
+ * @template S Represents the given event types in your application.
+ * Event types are used to differentiate between different actions that create nodes.
+ * @template A Represents the given "extra" type for storing metadata.
+ *  Extra is a way to store customized metadata.
+ * @param _opts: Given node to check if it is a child node.
+ */
 export function isChildNode<T, S, A>(
   node: ProvenanceNode<T, S, A>,
 ): node is DiffNode<T, S, A> | StateNode<T, S, A> {
   return 'parent' in node;
 }
 
+/**
+ * Function for checking if a node is the root node.
+ * @template T Represents the given state of an application as defined in initProvenance.
+ * @template S Represents the given event types in your application.
+ * Event types are used to differentiate between different actions that create nodes.
+ * @template A Represents the given "extra" type for storing metadata.
+ * Extra is a way to store customized metadata.
+ * @param _opts: Given node to check if it is root.
+ */
 export function isRootNode<T, S, A>(
   node: ProvenanceNode<T, S, A>,
 ): node is RootNode<T, S> {
   return node.label === 'Root';
 }
 
+/**
+`* Retrieve the state of a node. `
+ * @template T Represents the given state of an application as defined in initProvenance.
+ * @template S Represents the given event types in your application.
+ * Event types are used to differentiate between different actions that create nodes.
+ * @template A Represents the given "extra" type for storing metadata.
+ * Extra is a way to store customized metadata.
+ * @param graph: Provenance Graph which we are searching for node in
+ * @param _opts: Node which we want the state of
+ */
 export function getState<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   node: ProvenanceNode<T, S, A>,

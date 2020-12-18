@@ -11,11 +11,15 @@ import { Meta } from '../Types/Nodes';
 
 /**
  *
- * @typeParam T State of the application
+ * @template T State of the application
+ * @template S Represents the given event types in your application.
+ * Event types are used to differentiate between different actions that create nodes.
  *
  * @param func Defines the function which will be executed on provenance apply
  *
  */
+
+// TODO:: Switch Args and S here.
 export default function createAction<T, Args extends any[] = any[], S = void>(
   func: ActionFunction<T, Args>,
 ): ActionObject<T, S, Args> {
