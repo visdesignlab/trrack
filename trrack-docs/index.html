@@ -96,14 +96,14 @@
 				</a>
 				<p>Here are some examples showing you how to get started:</p>
 				<ul>
-					<li><a href="https://github.com/visdesignlab/trrack-examples">Basic Usage</a> using provenance with typescript and d3.</li>
-					<li><a href="https://github.com/visdesignlab/provenance-lib-core-demo">A slightly more advanced example</a> application using provenance. Also demonstrates how to import and export the current state of an application.</li>
+					<li><a href="https://github.com/visdesignlab/trrack/tree/master/packages/trrack-examples/simpleExample">Basic Usage</a> using provenance with typescript and d3.</li>
+					<li><a href="http://vdl.sci.utah.edu/trrack/">More Examples</a> of applications using provenance. Also demonstrates how to import and export the current state of an application, use firebase, and share URLs.</li>
 				</ul>
-				<p>Here are example of a few complex system susing Trrack:</p>
+				<p>Here are examples of some systems which use Trrack</p>
 				<ul>
-					<li>The <a href="https://github.com/visdesignlab/intent-system">Intent System</a> is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.</li>
+					<li>The <a href="http://3.136.64.162:5000/index.html#/">Intent System</a> (<a href="https://github.com/visdesignlab/intent-system">Code</a>) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.</li>
 					<li><a href="https://github.com/visdesignlab/bloodvis">BloodVis</a> visualizes blood product usage and outcomes in surgical procedures.</li>
-					<li>The <a href="http://vdl.sci.utah.edu/workforce-frontend/">Workforce Project</a> (<a href="https://github.com/visdesignlab/workforce-frontend">Code</a>) visualizes a model for predicting workforce needs in the medical sector in Utah.</li>
+					<li>The <a href="https://teamcare.utah.gov/">Workforce Project</a> (<a href="https://github.com/visdesignlab/workforce-frontend">Code</a>) visualizes a model for predicting workforce needs in the medical sector in Utah.</li>
 				</ul>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
@@ -111,11 +111,14 @@
 				<ul>
 					<li>NPM</li>
 				</ul>
-				<pre><code class="language-bash">npm install --save-dev @visdesignlab/trrack</code></pre>
+				<pre><code class="language-bash">npm install --save-dev @visdesignlab/trrack
+npm install --save-dev @visdesignlab/trrack-vis</code></pre>
 				<ul>
 					<li>Yarn</li>
 				</ul>
-				<pre><code class="language-bash">yarn add @visdesignlab/trrack</code></pre>
+				<pre><code class="language-bash">yarn add @visdesignlab/trrack
+yarn add @visdesignlab/trrack-vis
+</code></pre>
 				<ul>
 					<li>CDN
 					To use the libraries directly from CDN</li>
@@ -137,7 +140,7 @@
 				<a href="#integrating-with-trrack-vis-for-provenance-visualization" id="integrating-with-trrack-vis-for-provenance-visualization" style="color: inherit; text-decoration: none;">
 					<h3>Integrating with Trrack-VIS for provenance visualization</h3>
 				</a>
-				<p>The graph which Trrack creates and utilizes may be visualized using <a href="https://github.com/visdesignlab/trrack-vis">Trrack-Vis</a>. Trrack-Vis has default icons associated with the event type object. TrrackVis exports a React component. To use Trrack-Vis in a javascript environment, you will need to import and use the ProvVisCreator function. See [this simple example] (<a href="https://github.com/visdesignlab/trrack/blob/dev/packages/trrack-examples/simpleExample/src/provenanceSetup.ts">https://github.com/visdesignlab/trrack/blob/dev/packages/trrack-examples/simpleExample/src/provenanceSetup.ts</a>) for how to set up Trrack-Vis with default functionality. For further documentation and a list of customizable parameters that can be passed to Trrack-Vis, see <a href="http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html">http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html</a></p>
+				<p>The graph which Trrack creates and utilizes may be visualized using <a href="https://github.com/visdesignlab/trrack/tree/master/packages/trrack-vis">Trrack-Vis</a>. Trrack-Vis has default icons associated with the event type object. TrrackVis exports a React component. To use Trrack-Vis in a javascript environment, you will need to import and use the ProvVisCreator function. See <a href="https://github.com/visdesignlab/trrack/blob/dev/packages/trrack-examples/simpleExample/src/provenanceSetup.ts">this simple example</a> for how to set up Trrack-Vis with default functionality. For further documentation and a list of customizable parameters that can be passed to Trrack-Vis, see <a href="http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html">http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html</a></p>
 				<a href="#integrating-with-firebase-and-other-servers" id="integrating-with-firebase-and-other-servers" style="color: inherit; text-decoration: none;">
 					<h3>Integrating with FireBase and Other Servers</h3>
 				</a>
