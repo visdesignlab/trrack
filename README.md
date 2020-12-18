@@ -36,16 +36,14 @@ Trrack does back-end history management only. If you want to use the history/pro
 
 Here are some examples showing you how to get started:
 
- * [Basic Usage](https://github.com/visdesignlab/trrack-examples) using provenance with typescript and d3.
- * [A slightly more advanced example](https://github.com/visdesignlab/provenance-lib-core-demo) application using provenance. Also demonstrates how to import and export the current state of an application.
+ * [Basic Usage](https://github.com/visdesignlab/trrack/tree/master/packages/trrack-examples/simpleExample) using provenance with typescript and d3.
+ * [More Examples](http://vdl.sci.utah.edu/trrack/) of applications using provenance. Also demonstrates how to import and export the current state of an application, use firebase, and share URLs.
 
+Here are examples of some systems which use Trrack
 
-
-Here are example of a few complex system susing Trrack:
-
- * The [Intent System](https://github.com/visdesignlab/intent-system) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.
+ * The [Intent System](http://3.136.64.162:5000/index.html#/) ([Code](https://github.com/visdesignlab/intent-system)) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.
  * [BloodVis](https://github.com/visdesignlab/bloodvis) visualizes blood product usage and outcomes in surgical procedures.
- * The [Workforce Project](http://vdl.sci.utah.edu/workforce-frontend/) ([Code](https://github.com/visdesignlab/workforce-frontend)) visualizes a model for predicting workforce needs in the medical sector in Utah.
+ * The [Workforce Project](https://teamcare.utah.gov/) ([Code](https://github.com/visdesignlab/workforce-frontend)) visualizes a model for predicting workforce needs in the medical sector in Utah.
 
 
 ## Installation
@@ -54,12 +52,15 @@ Here are example of a few complex system susing Trrack:
 
 ```bash
 npm install --save-dev @visdesignlab/trrack
+npm install --save-dev @visdesignlab/trrack-vis
 ```
 
 - Yarn
 
 ```bash
 yarn add @visdesignlab/trrack
+yarn add @visdesignlab/trrack-vis
+
 ```
 
 - CDN
@@ -87,7 +88,7 @@ Trrack allows instant sharing of state via URL parameter. State sharing is turne
 
 ### Integrating with Trrack-VIS for provenance visualization
 
-The graph which Trrack creates and utilizes may be visualized using [Trrack-Vis](https://github.com/visdesignlab/trrack-vis). Trrack-Vis has default icons associated with the event type object. TrrackVis exports a React component. To use Trrack-Vis in a javascript environment, you will need to import and use the ProvVisCreator function. See [this simple example] (https://github.com/visdesignlab/trrack/blob/dev/packages/trrack-examples/simpleExample/src/provenanceSetup.ts) for how to set up Trrack-Vis with default functionality. For further documentation and a list of customizable parameters that can be passed to Trrack-Vis, see http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html
+The graph which Trrack creates and utilizes may be visualized using [Trrack-Vis](https://github.com/visdesignlab/trrack/tree/master/packages/trrack-vis). Trrack-Vis has default icons associated with the event type object. TrrackVis exports a React component. To use Trrack-Vis in a javascript environment, you will need to import and use the ProvVisCreator function. See [this simple example](https://github.com/visdesignlab/trrack/blob/dev/packages/trrack-examples/simpleExample/src/provenanceSetup.ts) for how to set up Trrack-Vis with default functionality. For further documentation and a list of customizable parameters that can be passed to Trrack-Vis, see http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html
 
 ### Integrating with FireBase and Other Servers
 
