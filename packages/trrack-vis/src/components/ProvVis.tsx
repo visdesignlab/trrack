@@ -40,6 +40,7 @@ import translate from '../Utils/translate';
 
 import UndoRedoButton from './UndoRedoButton';
 import BookmarkListView from './BookmarkListView';
+import NodeLegend from './NodeLegend';
 import { treeLayout } from '../Utils/TreeLayout';
 import BackboneNode from './BackboneNode';
 import bundleTransitions from './BundleTransitions';
@@ -123,6 +124,7 @@ function ProvVis<T, S extends string, A>({
   const [first, setFirst] = useState(true);
   const [bookmark, setBookmark] = useState<any>(null);
   const [annotationOpen, setAnnotationOpen] = useState(-1);
+  const [legendButton, setLegendButton] = useState<any>(null);
   const [tabsValue, setValue] = useState(0);
 
   let list: string[] = [];
@@ -337,8 +339,23 @@ function ProvVis<T, S extends string, A>({
     }
   }
 
-  const stratifiedTree = strat(nodeList);
+  // if(legendButton){
+  //   const filteredNodes = [];
+  //   for (const j in nodeList) {
+  //     if (nodeList[j].metadata.eventType == legendButton) {
+  //       filteredNodes.push(nodeList[j]);
+  //     }
+  //   }
+  //   let stratifiedTree = strat(filteredNodes);
+  // }
+  // else{
+  //   let stratifiedTree = strat(nodeList);
+  // }
 
+  const stratifiedTree = strat(nodeList);
+  // const stratifiedTree = strat(filteredNodes);
+
+  // console.log(nodeList);
   // //console.log(JSON.parse(JSON.stringify(stratifiedTree)));
 
   const stratifiedList: StratifiedList<T, S, A> = stratifiedTree.descendants();
@@ -446,6 +463,14 @@ function ProvVis<T, S extends string, A>({
 
   const graphTabView = (
     <div>
+      <div >
+        <NodeLegend
+          graph={prov ? prov.graph : undefined}
+          eventTypes={eventTypes}
+          legendButton={legendButton}
+          setLegendButton={setLegendButton}
+        />
+      </div>
       <div id="undoRedoDiv">
         <UndoRedoButton
           graph={prov ? prov.graph : undefined}

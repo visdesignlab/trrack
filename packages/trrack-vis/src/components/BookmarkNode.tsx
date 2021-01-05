@@ -38,11 +38,13 @@ function BookmarkNode<T, S extends string, A>({
   );
 
   const dropDownAdded = false;
-  const { eventType } = node.metadata;
-
+  
   if (eventConfig) {
-    const { currentGlyph, backboneGlyph } = eventConfig[eventType];
-
+    const { eventType } = node.metadata;
+    const { currentGlyph, backboneGlyph } = eventConfig[
+      eventType
+    ];
+   
     if (current) {
       glyph = (
         <g style={cursorStyle} fontWeight={'none'}>
@@ -57,6 +59,7 @@ function BookmarkNode<T, S extends string, A>({
       );
     }
   }
+
 
   let label: string = '';
   let annotate: string = '';
