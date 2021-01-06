@@ -75,8 +75,10 @@
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/bookmarknodeprops.html" class="tsd-kind-icon">Bookmark<wbr>Node<wbr>Props</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/bookmarktoggleconfig.html" class="tsd-kind-icon">Bookmark<wbr>Toggle<wbr>Config</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/extendedhierarchynode.html" class="tsd-kind-icon">Extended<wbr>Hierarchy<wbr>Node</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/nodelegendconfig.html" class="tsd-kind-icon">Node<wbr>Legend<wbr>Config</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/provvisconfig.html" class="tsd-kind-icon">Prov<wbr>Vis<wbr>Config</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/provvisprops.html" class="tsd-kind-icon">Prov<wbr>Vis<wbr>Props</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/stipplenodeconfig.html" class="tsd-kind-icon">Stipple<wbr>Node<wbr>Config</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/undoredoconfig.html" class="tsd-kind-icon">Undo<wbr>Redo<wbr>Config</a></li>
 							</ul>
 						</section>
@@ -112,8 +114,10 @@
 								<li class="tsd-kind-function"><a href="globals.html#bookmarktransitions" class="tsd-kind-icon">Bookmark<wbr>Transitions</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#dfs" class="tsd-kind-icon">DFS</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#link" class="tsd-kind-icon">Link</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#nodelegend" class="tsd-kind-icon">Node<wbr>Legend</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#provvis" class="tsd-kind-icon">Prov<wbr>Vis</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#provviscreator" class="tsd-kind-icon">Prov<wbr>Vis<wbr>Creator</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#stipplenode" class="tsd-kind-icon">Stipple<wbr>Node</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#undoredobutton" class="tsd-kind-icon">Undo<wbr>Redo<wbr>Button</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#undoredobuttoncreator" class="tsd-kind-icon">Undo<wbr>Redo<wbr>Button<wbr>Creator</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#bundletransitions" class="tsd-kind-icon">bundle<wbr>Transitions</a></li>
@@ -140,7 +144,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bundle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>bunchedNodes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>bundleLabel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>metadata<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/BundleMap.ts#L1">packages/trrack-vis/src/Utils/BundleMap.ts:1</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/BundleMap.ts#L1">packages/trrack-vis/src/Utils/BundleMap.ts:1</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -164,7 +168,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bundle<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/BundleMap.ts#L7">packages/trrack-vis/src/Utils/BundleMap.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/BundleMap.ts#L7">packages/trrack-vis/src/Utils/BundleMap.ts:7</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -182,7 +186,7 @@
 					<div class="tsd-signature tsd-kind-icon">Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>backboneGlyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactChild</span><span class="tsd-signature-symbol">; </span>bundleGlyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactChild</span><span class="tsd-signature-symbol">; </span>currentGlyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactChild</span><span class="tsd-signature-symbol">; </span>regularGlyph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactChild</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/EventConfig.ts#L4">packages/trrack-vis/src/Utils/EventConfig.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/EventConfig.ts#L4">packages/trrack-vis/src/Utils/EventConfig.ts:4</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -209,7 +213,7 @@
 					<div class="tsd-signature tsd-kind-icon">Event<wbr>Config&lt;E&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/EventConfig.ts#L11">packages/trrack-vis/src/Utils/EventConfig.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/EventConfig.ts#L11">packages/trrack-vis/src/Utils/EventConfig.ts:11</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -233,7 +237,7 @@
 					<div class="tsd-signature tsd-kind-icon">Extended<wbr>Stratified<wbr>Map&lt;T, S, A&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/TreeLayout.ts#L11">packages/trrack-vis/src/Utils/TreeLayout.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/TreeLayout.ts#L11">packages/trrack-vis/src/Utils/TreeLayout.ts:11</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -263,7 +267,8 @@
 					<div class="tsd-signature tsd-kind-icon">Link<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">SVGProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SVGLineElement</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/Link.tsx#L3">packages/trrack-vis/src/components/Link.tsx:3</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/StippleNode.tsx#L4">packages/trrack-vis/src/components/StippleNode.tsx:4</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/Link.tsx#L3">packages/trrack-vis/src/components/Link.tsx:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -273,7 +278,7 @@
 					<div class="tsd-signature tsd-kind-icon">Stratified<wbr>List&lt;T, S, A&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HierarchyNode</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ProvenanceNode</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/ProvVis.tsx#L90">packages/trrack-vis/src/components/ProvVis.tsx:90</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/ProvVis.tsx#L92">packages/trrack-vis/src/components/ProvVis.tsx:92</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -295,7 +300,7 @@
 					<div class="tsd-signature tsd-kind-icon">Stratified<wbr>Map&lt;T, S, A&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/ProvVis.tsx#L86">packages/trrack-vis/src/components/ProvVis.tsx:86</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/ProvVis.tsx#L88">packages/trrack-vis/src/components/ProvVis.tsx:88</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -325,7 +330,7 @@
 					<div class="tsd-signature tsd-kind-icon">Tree<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HierarchyNode</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/TreeLayout.ts#L5">packages/trrack-vis/src/Utils/TreeLayout.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/TreeLayout.ts#L5">packages/trrack-vis/src/Utils/TreeLayout.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -338,7 +343,7 @@
 					<div class="tsd-signature tsd-kind-icon">container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = style({alignItems: &#x27;center&#x27;,justifyContent: &#x27;center&#x27;,overflow: &#x27;auto&#x27;,})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/ProvVis.tsx#L695">packages/trrack-vis/src/components/ProvVis.tsx:695</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/ProvVis.tsx#L790">packages/trrack-vis/src/components/ProvVis.tsx:790</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -348,17 +353,18 @@
 					<div class="tsd-signature tsd-kind-icon">redo<wbr>Button<wbr>Style<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = style({marginTop: &#x27;2px&#x27;,borderRadius: &#x27;2px&#x27;,display: &#x27;inline-block&#x27;,cursor: &#x27;pointer&#x27;,fontFamily: &#x27;Lato,Helvetica Neue,Arial,Helvetica,sans-serif&#x27;,fontSize: &#x27;14px&#x27;,$nest: {&#x27;&amp;:hover&#x27;: {backgroundColor: &#x27;#6c7c7c&#x27;,},&#x27;&amp;:active&#x27;: {backgroundColor: &#x27;#6c7c7c&#x27;,},},})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/UndoRedoButton.tsx#L73">packages/trrack-vis/src/components/UndoRedoButton.tsx:73</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/UndoRedoButton.tsx#L73">packages/trrack-vis/src/components/UndoRedoButton.tsx:73</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable">
 					<a name="undobuttonstyle" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> undo<wbr>Button<wbr>Style</h3>
-					<div class="tsd-signature tsd-kind-icon">undo<wbr>Button<wbr>Style<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = style({marginTop: &#x27;2px&#x27;,borderRadius: &#x27;2px&#x27;,display: &#x27;inline-block&#x27;,cursor: &#x27;pointer&#x27;,fontFamily: &#x27;Lato,Helvetica Neue,Arial,Helvetica,sans-serif&#x27;,fontSize: &#x27;14px&#x27;,marginRight: &#x27;1px&#x27;,$nest: {&#x27;&amp;:hover&#x27;: {backgroundColor: &#x27;#6c7c7c&#x27;,},&#x27;&amp;:active&#x27;: {backgroundColor: &#x27;#6c7c7c&#x27;,},},})</span></div>
+					<div class="tsd-signature tsd-kind-icon">undo<wbr>Button<wbr>Style<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = style({display: &#x27;inline-block&#x27;,cursor: &#x27;pointer&#x27;,fontFamily: &#x27;Lato,Helvetica Neue,Arial,Helvetica,sans-serif&#x27;,fontSize: &#x27;14px&#x27;,$nest: {&#x27;&amp;:hover&#x27;: {backgroundColor: &#x27;#6c7c7c&#x27;,},&#x27;&amp;:active&#x27;: {backgroundColor: &#x27;#6c7c7c&#x27;,},},})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/UndoRedoButton.tsx#L55">packages/trrack-vis/src/components/UndoRedoButton.tsx:55</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/UndoRedoButton.tsx#L55">packages/trrack-vis/src/components/UndoRedoButton.tsx:55</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L126">packages/trrack-vis/src/components/NodeLegend.tsx:126</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -375,7 +381,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/BackboneNode.tsx#L38">packages/trrack-vis/src/components/BackboneNode.tsx:38</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/BackboneNode.tsx#L38">packages/trrack-vis/src/components/BackboneNode.tsx:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -475,7 +481,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/BookmarkListView.tsx#L16">packages/trrack-vis/src/components/BookmarkListView.tsx:16</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/BookmarkListView.tsx#L16">packages/trrack-vis/src/components/BookmarkListView.tsx:16</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -521,7 +527,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/BookmarkNode.tsx#L18">packages/trrack-vis/src/components/BookmarkNode.tsx:18</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/BookmarkNode.tsx#L18">packages/trrack-vis/src/components/BookmarkNode.tsx:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -567,7 +573,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/BookmarkToggle.tsx#L12">packages/trrack-vis/src/components/BookmarkToggle.tsx:12</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/BookmarkToggle.tsx#L12">packages/trrack-vis/src/components/BookmarkToggle.tsx:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -631,7 +637,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/BookmarkTransitions.tsx#L2">packages/trrack-vis/src/components/BookmarkTransitions.tsx:2</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/BookmarkTransitions.tsx#L2">packages/trrack-vis/src/components/BookmarkTransitions.tsx:2</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -674,7 +680,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/TreeLayout.ts#L25">packages/trrack-vis/src/Utils/TreeLayout.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/TreeLayout.ts#L25">packages/trrack-vis/src/Utils/TreeLayout.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -718,7 +724,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/Link.tsx#L5">packages/trrack-vis/src/components/Link.tsx:5</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/Link.tsx#L5">packages/trrack-vis/src/components/Link.tsx:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -732,6 +738,76 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="nodelegend" class="tsd-anchor"></a>
+					<h3>Node<wbr>Legend</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">Node<wbr>Legend&lt;T, S, A&gt;<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>eventConfig<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#eventconfig" class="tsd-signature-type">EventConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>eventTypes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>graph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ProvenanceGraph</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>legendVals<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>setLegendVals<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Element</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L22">packages/trrack-vis/src/components/NodeLegend.tsx:22</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+								<li>
+									<h4>S<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+								</li>
+								<li>
+									<h4>A</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>eventConfig<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#eventconfig" class="tsd-signature-type">EventConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>eventTypes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>graph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ProvenanceGraph</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>legendVals<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>setLegendVals<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> }</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>event<wbr>Config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#eventconfig" class="tsd-signature-type">EventConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>event<wbr>Types<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>graph<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ProvenanceGraph</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>legend<wbr>Vals<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>set<wbr>Legend<wbr>Vals<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
+											<ul class="tsd-parameters">
+												<li class="tsd-parameter-signature">
+													<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-variable">
+														<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+													</ul>
+													<ul class="tsd-descriptions">
+														<li class="tsd-description">
+															<h4 class="tsd-parameters-title">Parameters</h4>
+															<ul class="tsd-parameters">
+																<li>
+																	<h5>b: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+																</li>
+															</ul>
+															<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Element</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
 					<a name="provvis" class="tsd-anchor"></a>
 					<h3>Prov<wbr>Vis</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
@@ -741,7 +817,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/ProvVis.tsx#L92">packages/trrack-vis/src/components/ProvVis.tsx:92</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/ProvVis.tsx#L94">packages/trrack-vis/src/components/ProvVis.tsx:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -865,7 +941,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/ProvVisCreator.tsx#L33">packages/trrack-vis/src/components/ProvVisCreator.tsx:33</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/ProvVisCreator.tsx#L33">packages/trrack-vis/src/components/ProvVisCreator.tsx:33</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -909,6 +985,58 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="stipplenode" class="tsd-anchor"></a>
+					<h3>Stipple<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">Stipple<wbr>Node&lt;T, S, A&gt;<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>fill<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>numHidden<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SVGLineElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>stroke<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Element</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/StippleNode.tsx#L13">packages/trrack-vis/src/components/StippleNode.tsx:13</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+								<li>
+									<h4>S<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+								</li>
+								<li>
+									<h4>A</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>fill<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>numHidden<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SVGLineElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>stroke<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>fill<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>num<wbr>Hidden<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SVGLineElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>stroke<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>stroke<wbr>Width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Element</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
 					<a name="undoredobutton" class="tsd-anchor"></a>
 					<h3>Undo<wbr>Redo<wbr>Button</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
@@ -918,7 +1046,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/UndoRedoButton.tsx#L14">packages/trrack-vis/src/components/UndoRedoButton.tsx:14</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/UndoRedoButton.tsx#L14">packages/trrack-vis/src/components/UndoRedoButton.tsx:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -988,7 +1116,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/ProvVisCreator.tsx#L73">packages/trrack-vis/src/components/ProvVisCreator.tsx:73</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/ProvVisCreator.tsx#L73">packages/trrack-vis/src/components/ProvVisCreator.tsx:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1056,7 +1184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/BundleTransitions.tsx#L5">packages/trrack-vis/src/components/BundleTransitions.tsx:5</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/BundleTransitions.tsx#L5">packages/trrack-vis/src/components/BundleTransitions.tsx:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1123,7 +1251,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/findBackboneBundleNodes.ts#L6">packages/trrack-vis/src/Utils/findBackboneBundleNodes.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/findBackboneBundleNodes.ts#L6">packages/trrack-vis/src/Utils/findBackboneBundleNodes.ts:6</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1149,7 +1277,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/findBundleParent.ts#L3">packages/trrack-vis/src/Utils/findBundleParent.ts:3</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/findBundleParent.ts#L3">packages/trrack-vis/src/Utils/findBundleParent.ts:3</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1175,7 +1303,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/TreeLayout.ts#L64">packages/trrack-vis/src/Utils/TreeLayout.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/TreeLayout.ts#L64">packages/trrack-vis/src/Utils/TreeLayout.ts:64</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1216,7 +1344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/LinkTransitions.ts#L78">packages/trrack-vis/src/components/LinkTransitions.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/LinkTransitions.ts#L78">packages/trrack-vis/src/components/LinkTransitions.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1245,7 +1373,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/LinkTransitions.ts#L1">packages/trrack-vis/src/components/LinkTransitions.ts:1</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/LinkTransitions.ts#L1">packages/trrack-vis/src/components/LinkTransitions.ts:1</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1300,7 +1428,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/NodeTransitions.ts#L3">packages/trrack-vis/src/components/NodeTransitions.ts:3</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeTransitions.ts#L3">packages/trrack-vis/src/components/NodeTransitions.ts:3</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1355,7 +1483,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/TreeLayout.ts#L76">packages/trrack-vis/src/Utils/TreeLayout.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/TreeLayout.ts#L76">packages/trrack-vis/src/Utils/TreeLayout.ts:76</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1399,7 +1527,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/translate.ts#L1">packages/trrack-vis/src/Utils/translate.ts:1</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/translate.ts#L1">packages/trrack-vis/src/Utils/translate.ts:1</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1425,7 +1553,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/components/Styles.ts#L4">packages/trrack-vis/src/components/Styles.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/Styles.ts#L4">packages/trrack-vis/src/components/Styles.ts:4</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1448,7 +1576,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/fb5f034/packages/trrack-vis/src/Utils/TreeLayout.ts#L15">packages/trrack-vis/src/Utils/TreeLayout.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/Utils/TreeLayout.ts#L15">packages/trrack-vis/src/Utils/TreeLayout.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1506,11 +1634,17 @@
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/extendedhierarchynode.html" class="tsd-kind-icon">Extended<wbr>Hierarchy<wbr>Node</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/nodelegendconfig.html" class="tsd-kind-icon">Node<wbr>Legend<wbr>Config</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/provvisconfig.html" class="tsd-kind-icon">Prov<wbr>Vis<wbr>Config</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/provvisprops.html" class="tsd-kind-icon">Prov<wbr>Vis<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/stipplenodeconfig.html" class="tsd-kind-icon">Stipple<wbr>Node<wbr>Config</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/undoredoconfig.html" class="tsd-kind-icon">Undo<wbr>Redo<wbr>Config</a>
@@ -1573,10 +1707,16 @@
 						<a href="globals.html#link" class="tsd-kind-icon">Link</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#nodelegend" class="tsd-kind-icon">Node<wbr>Legend</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#provvis" class="tsd-kind-icon">Prov<wbr>Vis</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#provviscreator" class="tsd-kind-icon">Prov<wbr>Vis<wbr>Creator</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#stipplenode" class="tsd-kind-icon">Stipple<wbr>Node</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#undoredobutton" class="tsd-kind-icon">Undo<wbr>Redo<wbr>Button</a>

@@ -70,7 +70,7 @@
 				<p>Trrack is a library to create and track provenance (history) in web-based apps. Trrack allows you to create and maintain a non-linear provenance graph representing the history of the state of your visualization. Through this graph, you can easily implement complete action recovery, as well as store custom metadata and annotations.</p>
 				<p><img src="trrack_overview.png" alt="Overview of applications implementing the trrack library, and the trrack provenance visualization"></p>
 				<p>Trrack also allows for easy sharing of a visualization&#39;s current state through URL sharing. To share entire session history, Trrack allows for the import and exporting of provenance graphs, as well as has built in integration with firebase to store the graphs.</p>
-				<p>For full documentation, see <a href="http://vdl.sci.utah.edu/trrack/trrack-docs/index.html">http://vdl.sci.utah.edu/trrack/trrack-docs/index.html</a></p>
+				<p>For full documentation, see <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack">http://vdl.sci.utah.edu/trrack-examples/api/trrack</a></p>
 				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
 					<h2>Features</h2>
 				</a>
@@ -86,24 +86,24 @@
 				</ul>
 				<p>Also check out <a href="https://doi.org/10.31219/osf.io/wnctb">the paper</a> to learn about the design philosophy.</p>
 				<p>If you&#39;re using Trrack in an academic project, please cite:</p>
-				<pre><code>Z. T. Cutler, K. Gadhave and A. Lex, “Trrack: A Library <span class="hljs-keyword">for</span> Provenance Tracking <span class="hljs-keyword">in</span> Web-Based Visualizations”, osf.io preprint. https:<span class="hljs-regexp">//</span>doi.org<span class="hljs-regexp">/10.31219/</span>osf.io/wnctb.</code></pre>
+				<pre><code>Z. T. Cutler, K. Gadhaveand A. Lex, “Trrack: A Library <span class="hljs-keyword">for</span> Provenance Tracking <span class="hljs-keyword">in</span> Web-Based Visualizations”, osf.io preprint. https:<span class="hljs-regexp">//</span>doi.org<span class="hljs-regexp">/10.31219/</span>osf.io/wnctb.</code></pre>
 				<a href="#companion-library" id="companion-library" style="color: inherit; text-decoration: none;">
 					<h2>Companion Library</h2>
 				</a>
-				<p>Trrack does back-end history management only. If you want to use the history/provenance visualization as well, check out the <a href="https://github.com/visdesignlab/trrack/tree/master/packages/trrack-vis">trrack-vis library</a>, which is designed to provide a customizable front-end for the Trrack library.</p>
+				<p>Trrack does back-end history management only. If you want to use the history/provenance visualization as well, check out the <a href="https://github.com/visdesignlab/trrack-vis">trrack-vis library</a>, which is designed to provide a customizable front-end for the Trrack library.</p>
 				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
 					<h2>Examples</h2>
 				</a>
 				<p>Here are some examples showing you how to get started:</p>
 				<ul>
-					<li><a href="https://github.com/visdesignlab/trrack/tree/master/packages/trrack-examples/simpleExample">Basic Usage</a> using provenance with typescript and d3.</li>
-					<li><a href="http://vdl.sci.utah.edu/trrack/">More Examples</a> of applications using provenance. Also demonstrates how to import and export the current state of an application, use firebase, and share URLs.</li>
+					<li><a href="https://github.com/visdesignlab/trrack-examples">Basic Usage</a> using provenance with typescript and d3.</li>
+					<li><a href="https://github.com/visdesignlab/provenance-lib-core-demo">A slightly more advanced example</a> application using provenance. Also demonstrates how to import and export the current state of an application.</li>
 				</ul>
-				<p>Here are examples of some systems which use Trrack</p>
+				<p>Here are example of a few complex system susing Trrack:</p>
 				<ul>
-					<li>The <a href="http://3.136.64.162:5000/index.html#/">Intent System</a> (<a href="https://github.com/visdesignlab/intent-system">Code</a>) is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.</li>
+					<li>The <a href="https://github.com/visdesignlab/intent-system">Intent System</a> is a tool for predicting user intent patterns when brushing in scatterplots. The intent system utilizes the provenance library to control all interaction, as well as the ProvVis library to visualize the resulting provenance graph.</li>
 					<li><a href="https://github.com/visdesignlab/bloodvis">BloodVis</a> visualizes blood product usage and outcomes in surgical procedures.</li>
-					<li>The <a href="https://teamcare.utah.gov/">Workforce Project</a> (<a href="https://github.com/visdesignlab/workforce-frontend">Code</a>) visualizes a model for predicting workforce needs in the medical sector in Utah.</li>
+					<li>The <a href="http://vdl.sci.utah.edu/workforce-frontend/">Workforce Project</a> (<a href="https://github.com/visdesignlab/workforce-frontend">Code</a>) visualizes a model for predicting workforce needs in the medical sector in Utah.</li>
 				</ul>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
@@ -111,23 +111,11 @@
 				<ul>
 					<li>NPM</li>
 				</ul>
-				<pre><code class="language-bash">npm install --save-dev @visdesignlab/trrack
-npm install --save-dev @visdesignlab/trrack-vis</code></pre>
+				<pre><code class="language-bash">npm install --save-dev @visdesignlab/trrack</code></pre>
 				<ul>
 					<li>Yarn</li>
 				</ul>
-				<pre><code class="language-bash">yarn add @visdesignlab/trrack
-yarn add @visdesignlab/trrack-vis
-</code></pre>
-				<ul>
-					<li>CDN
-					To use the libraries directly from CDN</li>
-				</ul>
-				<pre><code class="language-html"><span class="hljs-comment">&lt;!-- Trrack --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;//cdn.jsdelivr.net/combine/npm/firebase@7/firebase-app.min.js,npm/firebase@7/firebase-database.min.js,npm/mobx@6/dist/mobx.umd.production.min.js,npm/lz-string@1/libs/lz-string.min.js,npm/deep-diff@1/dist/deep-diff.min.js,npm/@visdesignlab/trrack/dist/trrack.umd.production.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-
-<span class="hljs-comment">&lt;!-- Trrack Vis --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;//cdn.jsdelivr.net/combine/npm/react@17/umd/react.production.min.js,npm/react-dom@17/umd/react-dom.production.min.js,npm/react-move@6/dist/react-move.min.js,npm/typestyle@2/umd/typestyle.min.js,npm/semantic-ui-react@2/dist/umd/semantic-ui-react.min.js,npm/d3@6.2.0/dist/d3.min.js,npm/@visdesignlab/trrack-vis/dist/trrackvis.umd.development.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<pre><code class="language-bash">yarn add @visdesignlab/trrack</code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
@@ -136,16 +124,16 @@ yarn add @visdesignlab/trrack-vis
 				<a href="#sharing-a-state-through-a-url-parameter" id="sharing-a-state-through-a-url-parameter" style="color: inherit; text-decoration: none;">
 					<h3>Sharing a State Through a URL Parameter</h3>
 				</a>
-				<p>Trrack allows instant sharing of state via URL parameter. State sharing is turned on by default. Changing the state of your application will automatically update the URL parameter. Pasting the entire URL into a different web browser will import the state automatically.</p>
+				<p>Trrack allows instant sharing of state via URL parameter. State sharing is turned on by default, and the only setup required is to call <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack/interfaces/provenance.html#done">done</a> after you have finished creating observers and loading data, telling trrack it can import the URL state. When turned on, changing the state of your application will automatically update the URL parameter. Pasting the entire URL into a different web browser will import the state automatically.</p>
 				<a href="#integrating-with-trrack-vis-for-provenance-visualization" id="integrating-with-trrack-vis-for-provenance-visualization" style="color: inherit; text-decoration: none;">
 					<h3>Integrating with Trrack-VIS for provenance visualization</h3>
 				</a>
-				<p>The graph which Trrack creates and utilizes may be visualized using <a href="https://github.com/visdesignlab/trrack/tree/master/packages/trrack-vis">Trrack-Vis</a>. Trrack-Vis has default icons associated with the event type object. TrrackVis exports a React component. To use Trrack-Vis in a javascript environment, you will need to import and use the ProvVisCreator function. See <a href="https://github.com/visdesignlab/trrack/blob/dev/packages/trrack-examples/simpleExample/src/provenanceSetup.ts">this simple example</a> for how to set up Trrack-Vis with default functionality. For further documentation and a list of customizable parameters that can be passed to Trrack-Vis, see <a href="http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html">http://vdl.sci.utah.edu/trrack/trrack-vis-docs/interfaces/provvisconfig.html</a></p>
+				<p>The graph which Trrack creates and utilizes may be visualized using <a href="https://github.com/visdesignlab/trrack-vis">Trrack-Vis</a>. Trrack-Vis has default icons associated with the event type object, the <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack/interfaces/provenance.html">second</a> generic parameter (S) passed to Trrack. To use Trrack-Vis in a javascript environment, you will need to import and use the ProvVisCreator function. See [this simple example] (<a href="https://github.com/visdesignlab/trrack-examples/blob/master/examples/simpleExample/src/provenanceSetup.ts">https://github.com/visdesignlab/trrack-examples/blob/master/examples/simpleExample/src/provenanceSetup.ts</a>) for how to set up Trrack-Vis with default functionality. For further documentation and a list of customizable parameters that can be passed to Trrack-Vis, see <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack-vis/interfaces/provvisconfig.html">http://vdl.sci.utah.edu/trrack-examples/api/trrack-vis/interfaces/provvisconfig.html</a></p>
 				<a href="#integrating-with-firebase-and-other-servers" id="integrating-with-firebase-and-other-servers" style="color: inherit; text-decoration: none;">
 					<h3>Integrating with FireBase and Other Servers</h3>
 				</a>
-				<p>To integrate FireBase with Trrack, you first need to set up a <a href="https://firebase.google.com/docs/database">Firebase</a> project. Once you&#39;ve done so, navigate to Settings -&gt; Project settings -&gt; general, and you should find a &quot;firebaseConfig&quot; object on that page. That exact object will be passed into <a href="http://vdl.sci.utah.edu/trrack/trrack-docs/globals.html#initprovenance">initProvenance</a>. Once done, Trrack will automatically store all created nodes to your Firebase project.</p>
-				<p>To utilize Trrack with other servers, you will use <code>exportProvenanceGraph</code> to export the entire graph json and <code>importProvenanceGraph</code> to import the same json file.</p>
+				<p>To integrate FireBase with Trrack, you first need to set up a <a href="https://firebase.google.com/docs/database">Firebase</a> project. Once you&#39;ve done so, navigate to Settings -&gt; Project settings -&gt; general, and you should find a &quot;firebaseConfig&quot; object on that page. That exact object will be passed into <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack/globals.html#initprovenance">initProvenance</a>. Once done, Trrack will automatically store all created nodes to your Firebase project.</p>
+				<p>To utilize Trrack with other servers, you will use <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack/interfaces/provenance.html#exportprovenancegraph">exportProvenanceGraph</a> to export the entire graph json and <a href="http://vdl.sci.utah.edu/trrack-examples/api/trrack/interfaces/provenance.html#importprovenancegraph">importProvenanceGraph</a> to import the same json file.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

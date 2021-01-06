@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>UndoRedoConfig | @visdesignlab/trrack-vis</title>
+	<title>NodeLegendConfig | @visdesignlab/trrack-vis</title>
 	<meta name="description" content="Documentation for @visdesignlab/trrack-vis">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="undoredoconfig.html">UndoRedoConfig</a>
+					<a href="nodelegendconfig.html">NodeLegendConfig</a>
 				</li>
 			</ul>
-			<h1>Interface UndoRedoConfig&lt;T, S, A&gt;</h1>
+			<h1>Interface NodeLegendConfig&lt;T, S, A&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -84,7 +84,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">UndoRedoConfig</span>
+						<span class="target">NodeLegendConfig</span>
 					</li>
 				</ul>
 			</section>
@@ -95,9 +95,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="undoredoconfig.html#graph" class="tsd-kind-icon">graph</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="undoredoconfig.html#redocallback" class="tsd-kind-icon">redo<wbr>Callback</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="undoredoconfig.html#undocallback" class="tsd-kind-icon">undo<wbr>Callback</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nodelegendconfig.html#eventconfig" class="tsd-kind-icon">event<wbr>Config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nodelegendconfig.html#eventtypes" class="tsd-kind-icon">event<wbr>Types</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nodelegendconfig.html#graph" class="tsd-kind-icon">graph</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nodelegendconfig.html#legendvals" class="tsd-kind-icon">legend<wbr>Vals</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nodelegendconfig.html#setlegendvals" class="tsd-kind-icon">set<wbr>Legend<wbr>Vals</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,22 +108,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="eventconfig" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Config</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="../globals.html#eventconfig" class="tsd-signature-type">EventConfig</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L19">packages/trrack-vis/src/components/NodeLegend.tsx:19</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="eventtypes" class="tsd-anchor"></a>
+					<h3>event<wbr>Types</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L16">packages/trrack-vis/src/components/NodeLegend.tsx:16</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="graph" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> graph</h3>
 					<div class="tsd-signature tsd-kind-icon">graph<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ProvenanceGraph</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/UndoRedoButton.tsx#L11">packages/trrack-vis/src/components/UndoRedoButton.tsx:11</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L15">packages/trrack-vis/src/components/NodeLegend.tsx:15</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="redocallback" class="tsd-anchor"></a>
-					<h3>redo<wbr>Callback</h3>
-					<div class="tsd-signature tsd-kind-icon">redo<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<a name="legendvals" class="tsd-anchor"></a>
+					<h3>legend<wbr>Vals</h3>
+					<div class="tsd-signature tsd-kind-icon">legend<wbr>Vals<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/UndoRedoButton.tsx#L10">packages/trrack-vis/src/components/UndoRedoButton.tsx:10</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L17">packages/trrack-vis/src/components/NodeLegend.tsx:17</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="setlegendvals" class="tsd-anchor"></a>
+					<h3>set<wbr>Legend<wbr>Vals</h3>
+					<div class="tsd-signature tsd-kind-icon">set<wbr>Legend<wbr>Vals<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/NodeLegend.tsx#L18">packages/trrack-vis/src/components/NodeLegend.tsx:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -129,35 +161,16 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="undocallback" class="tsd-anchor"></a>
-					<h3>undo<wbr>Callback</h3>
-					<div class="tsd-signature tsd-kind-icon">undo<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-vis/src/components/UndoRedoButton.tsx#L9">packages/trrack-vis/src/components/UndoRedoButton.tsx:9</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>b: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+											</li>
+										</ul>
 										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 									</li>
 								</ul>
@@ -180,16 +193,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-has-type-parameter">
-						<a href="undoredoconfig.html" class="tsd-kind-icon">Undo<wbr>Redo<wbr>Config</a>
+						<a href="nodelegendconfig.html" class="tsd-kind-icon">Node<wbr>Legend<wbr>Config</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="undoredoconfig.html#graph" class="tsd-kind-icon">graph</a>
+								<a href="nodelegendconfig.html#eventconfig" class="tsd-kind-icon">event<wbr>Config</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="undoredoconfig.html#redocallback" class="tsd-kind-icon">redo<wbr>Callback</a>
+								<a href="nodelegendconfig.html#eventtypes" class="tsd-kind-icon">event<wbr>Types</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="undoredoconfig.html#undocallback" class="tsd-kind-icon">undo<wbr>Callback</a>
+								<a href="nodelegendconfig.html#graph" class="tsd-kind-icon">graph</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="nodelegendconfig.html#legendvals" class="tsd-kind-icon">legend<wbr>Vals</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="nodelegendconfig.html#setlegendvals" class="tsd-kind-icon">set<wbr>Legend<wbr>Vals</a>
 							</li>
 						</ul>
 					</li>
