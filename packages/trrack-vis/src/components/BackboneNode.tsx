@@ -2,7 +2,7 @@
 import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
-import { Popup, Icon } from 'semantic-ui-react';
+import { Popup } from 'semantic-ui-react';
 
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';

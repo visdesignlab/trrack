@@ -41,6 +41,7 @@ import translate from '../Utils/translate';
 import UndoRedoButton from './UndoRedoButton';
 import BookmarkListView from './BookmarkListView';
 import NodeLegend from './NodeLegend';
+import StippleNode from './StippleNode';
 import { treeLayout } from '../Utils/TreeLayout';
 import BackboneNode from './BackboneNode';
 import bundleTransitions from './BundleTransitions';
@@ -124,7 +125,7 @@ function ProvVis<T, S extends string, A>({
   const [first, setFirst] = useState(true);
   const [bookmark, setBookmark] = useState<any>(null);
   const [annotationOpen, setAnnotationOpen] = useState(-1);
-  const [legendButton, setLegendButton] = useState<any>(null);
+  const [legendVals, setLegendVals] = useState<string[]>([]);
   const [tabsValue, setValue] = useState(0);
 
   let list: string[] = [];
@@ -173,9 +174,7 @@ function ProvVis<T, S extends string, A>({
     types: Set<string>,
   ): EventConfig<E> {
     const symbols = [
-      symbol()
-        .type(symbolStar)
-        .size(50),
+      symbol().type(symbolStar).size(50),
       symbol().type(symbolDiamond),
       symbol().type(symbolTriangle),
       symbol().type(symbolCircle),
@@ -261,6 +260,34 @@ function ProvVis<T, S extends string, A>({
     .parentId((d) => {
       if (d.id === root) return null;
 
+      const legendSet = new Set(legendVals);
+
+      if (legendSet.size > 0) {
+        if (isChildNode(d) && d.parent) {
+          // eslint-disable-next-line no-constant-condition
+          while (true) {
+            if (isChildNode(d) && d.parent) {
+              if (
+                legendSet.has(nodeMap[d.parent].metadata.eventType)
+                || nodeMap[d.parent].label === 'Root'
+                || nodeMap[d.parent].label === 'Import'
+              ) {
+                return d.parent;
+              }
+            } else {
+              break;
+            }
+            if (isChildNode(d) && d.parent) {
+              d = nodeMap[d.parent];
+            } else {
+              break;
+            }
+          }
+        }
+
+        return null;
+      }
+
       if (isChildNode(d)) {
         // If you are a unexpanded bundle, find your parent by going straight up.
         if (
@@ -339,24 +366,45 @@ function ProvVis<T, S extends string, A>({
     }
   }
 
-  // if(legendButton){
-  //   const filteredNodes = [];
-  //   for (const j in nodeList) {
-  //     if (nodeList[j].metadata.eventType == legendButton) {
-  //       filteredNodes.push(nodeList[j]);
-  //     }
-  //   }
-  //   let stratifiedTree = strat(filteredNodes);
-  // }
-  // else{
-  //   let stratifiedTree = strat(nodeList);
-  // }
+  const stipple: any[] = [];
+  const nodesHidden: number[] = [];
+  let flag = false;
+  let id = '';
+  let count = 0;
+
+  const legendSet = new Set(legendVals);
+  if (legendSet.size > 0) {
+    for (let i = 0; i < nodeList.length; i++) {
+      if (
+        !legendSet.has(nodeList[i].metadata.eventType)
+        && nodeList[i].label !== 'Root'
+        && nodeList[i].label !== 'Import'
+      ) {
+        const d = nodeList[i];
+        if (!flag) {
+          if (isChildNode(d) && d.parent) {
+            id = d.parent;
+            flag = true;
+          }
+        }
+        count += 1;
+        nodeList.splice(i, 1);
+        i--;
+      } else if (flag) {
+        id += nodeList[i].id;
+        stipple.push(id);
+        nodesHidden.push(count);
+        id = '';
+        flag = false;
+        count = 0;
+      }
+    }
+  }
+  if (id !== '') {
+    stipple.push(id);
+  }
 
   const stratifiedTree = strat(nodeList);
-  // const stratifiedTree = strat(filteredNodes);
-
-  // console.log(nodeList);
-  // //console.log(JSON.parse(JSON.stringify(stratifiedTree)));
 
   const stratifiedList: StratifiedList<T, S, A> = stratifiedTree.descendants();
   const stratifiedMap: StratifiedMap<T, S, A> = {};
@@ -364,6 +412,7 @@ function ProvVis<T, S extends string, A>({
   stratifiedList.forEach((c) => {
     stratifiedMap[c.id!] = c;
   });
+
   treeLayout(stratifiedMap, current, root);
 
   let maxHeight = 0;
@@ -463,12 +512,13 @@ function ProvVis<T, S extends string, A>({
 
   const graphTabView = (
     <div>
-      <div >
+      <div>
         <NodeLegend
           graph={prov ? prov.graph : undefined}
           eventTypes={eventTypes}
-          legendButton={legendButton}
-          setLegendButton={setLegendButton}
+          legendVals={legendVals}
+          setLegendVals={setLegendVals}
+          eventConfig={eventConfig}
         />
       </div>
       <div id="undoRedoDiv">
@@ -520,15 +570,31 @@ function ProvVis<T, S extends string, A>({
               <>
                 {linkArr.map((link) => {
                   const { key, state } = link;
+                  let showIcon = false;
+                  let numHidden = 0;
 
+                  if (stipple.includes(key)) {
+                    showIcon = true;
+                    numHidden = nodesHidden[stipple.indexOf(key)];
+                  }
                   return (
                     <g key={key}>
-                      <Link
-                        {...state}
-                        fill={'#ccc'}
-                        stroke={'#ccc'}
-                        strokeWidth={linkWidth}
-                      />
+                      {showIcon ? (
+                        <StippleNode
+                          numHidden={numHidden}
+                          state={state}
+                          fill={'#ccc'}
+                          stroke={'#ccc'}
+                          strokeWidth={linkWidth}
+                        />
+                      ) : (
+                        <Link
+                          {...state}
+                          fill={'#ccc'}
+                          stroke={'#ccc'}
+                          strokeWidth={linkWidth}
+                        />
+                      )}
                     </g>
                   );
                 })}
@@ -703,7 +769,11 @@ function ProvVis<T, S extends string, A>({
       render: () => <Tab.Pane attached={false}>{graphTabView}</Tab.Pane>,
     },
     {
-      menuItem: { key: 'Bookmarks/Annotations', icon: 'bookmark', content: 'Bookmarks/Annotations' },
+      menuItem: {
+        key: 'Bookmarks/Annotations',
+        icon: 'bookmark',
+        content: 'Bookmarks/Annotations',
+      },
       render: () => <Tab.Pane attached={false}>{bookmarkTabView}</Tab.Pane>,
     },
   ];

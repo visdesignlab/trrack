@@ -29,7 +29,7 @@ const defaultState: DemoState = {
   tasks: [],
 };
 
-type Events = 'Add Task' | 'Change Task';
+type Events = 'Add Task' | 'Change Task' | 'Show Task';
 
 const prov = initProvenance<DemoState, Events, DemoAnnotation>(defaultState);
 
@@ -41,8 +41,16 @@ const addTask = (desc: string = 'Random Task') => {
   const action = createAction<DemoState, Events>((state) => {
     state.tasks.push({ key: taskNo, desc });
   })
-    .setLabel(`Adding task #: ${taskNo}`)
-    .setEventType('Add Task');
+    .setLabel(
+      taskNo % 2 === 0
+        ? `Adding task #: ${taskNo}`
+        : `Showing task #: ${taskNo}`,
+    )
+    .setEventType(
+      taskNo % 2 === 0
+        ? 'Add Task'
+        : 'Show Task',
+    );
 
   prov.apply(action);
 
