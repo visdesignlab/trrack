@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { Diff, applyChange } from 'deep-diff';
 import { toJS } from 'mobx';
 import { ActionType } from './Action';
@@ -139,6 +140,8 @@ export function isRootNode<T, S, A>(
 export function getState<T, S, A>(
   graph: ProvenanceGraph<T, S, A>,
   node: ProvenanceNode<T, S, A>,
+  // eslint-disable-next-line no-unused-vars
+  deserializer: (t: any) => T,
 ): T {
   if (isRootNode(node) || isStateNode(node)) {
     return toJS(node.state);
@@ -149,8 +152,9 @@ export function getState<T, S, A>(
     (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state,
   );
 
-  const state = deepCopy(_state);
+  const state = deepCopy(_state, deserializer);
 
+  // what is this for?
   node.diffs.forEach((diff) => {
     applyChange(state, null, diff);
   });

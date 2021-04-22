@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { action, observable } from 'mobx';
 import { Diff } from 'deep-diff';
 import { ProvenanceGraph } from '../Types/ProvenanceGraph';
@@ -115,11 +116,16 @@ export const updateMobxObservable = action(<T>(oldObject: T, newObject: T) => {
 });
 
 export const goToNode = action(
-  <T, S, A>(graph: ProvenanceGraph<T, S, A>, state: T, id: NodeID) => {
+  <T, S, A>(
+    graph: ProvenanceGraph<T, S, A>,
+    state: T,
+    id: NodeID,
+    // eslint-disable-next-line no-unused-vars
+    deserializer: (t: any) => T) => {
     const newCurrentNode = graph.nodes[id];
     if (!newCurrentNode) throw new Error(`Node with id: ${id} does not exist`);
     graph.current = newCurrentNode.id;
-    const currentState = getState(graph, graph.nodes[graph.current]);
+    const currentState = getState(graph, graph.nodes[graph.current], deserializer);
 
     updateMobxObservable(state, currentState);
   },
@@ -130,6 +136,10 @@ export const applyActionFunction = action(
     _graph: ProvenanceGraph<T, S, A>,
     actionFn: ApplyObject<T, S>,
     currentState: T,
+    // eslint-disable-next-line no-unused-vars
+    serialize: (target: T) => any,
+    // eslint-disable-next-line no-unused-vars
+    deserialize: (target: T) => any,
   ) => {
     const graph = _graph;
 
@@ -139,10 +149,14 @@ export const applyActionFunction = action(
     let previousStateID: NodeID | null = null;
 
     if (isDiffNode(currentNode)) {
-      previousState = getState(graph, graph.nodes[currentNode.lastStateNode]);
+      previousState = serialize(getState(
+        graph,
+        graph.nodes[currentNode.lastStateNode],
+        deserialize,
+      ));
       previousStateID = currentNode.lastStateNode;
     } else {
-      previousState = getState(graph, currentNode);
+      previousState = serialize(getState(graph, currentNode, deserialize));
       previousStateID = currentNode.id;
     }
 
@@ -159,9 +173,11 @@ export const applyActionFunction = action(
 
     const parentId = graph.current;
 
-    const diffs = differ(previousState, state) || [];
+    const serializedState = serialize(state);
 
-    if (saveDiff && Object.keys(previousState).length / 2 < diffs.length) {
+    const diffs = differ(previousState, serializedState) || [];
+
+    if (saveDiff && Object.keys(previousState as T).length / 2 < diffs.length) {
       saveDiff = false;
     }
 
@@ -179,7 +195,7 @@ export const applyActionFunction = action(
       )
       : createNewStateNode<T, S, A>(
         parentId,
-        state,
+        serializedState,
         label,
         actionType,
         eventType,

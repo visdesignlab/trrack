@@ -29,35 +29,11 @@ import {
 import generateTimeStamp from '../Utils/generateTimeStamp';
 import { ProvenanceGraph } from '../Types/ProvenanceGraph';
 import { initializeFirebase, logToFirebase } from './FirebaseFunctions';
+import {
+  givenSerialize, givenDeserialize,
+} from '../Utils/DeepCopy';
 
 configure({ enforceActions: 'observed', isolateGlobalState: true });
-
-function setupSerializer() {
-  const serialize = (obj: any): string => {
-    const str = JSON.stringify(obj, (_, val) => {
-      if (val instanceof Set) {
-        return {
-          type: 'Set',
-          arr: Array.from(val),
-        };
-      }
-      return val;
-    });
-    return str;
-  };
-  const deserialize = (str: string): any => {
-    const obj: any = JSON.parse(str, (_, val) => {
-      if (val.type && val.type === 'Set') {
-        return new Set(val.arr);
-      }
-      return val;
-    });
-
-    return obj;
-  };
-
-  return { serialize, deserialize };
-}
 
 /**
  * @template T Represents the given state of an application as defined in initProvenance.
@@ -71,25 +47,29 @@ function setupSerializer() {
  */
 export default function initProvenance<T, S, A = void>(
   initialState: T,
-  _opts: Partial<ProvenanceOpts> = {
+  _opts: Partial<ProvenanceOpts<T>> = {
     loadFromUrl: true,
     firebaseConfig: null,
+    serializer: undefined,
+    deserializer: undefined,
   },
 ): Provenance<T, S, A> {
-  const opts: ProvenanceOpts = {
+  const opts: ProvenanceOpts<T> = {
     loadFromUrl: true,
     firebaseConfig: null,
+    serializer: undefined,
+    deserializer: undefined,
     ..._opts,
   };
-  const { loadFromUrl, firebaseConfig } = opts;
+  const {
+    loadFromUrl, firebaseConfig, serializer, deserializer,
+  } = opts;
 
   let setupFinished: boolean = false;
   const state = observable(initialState);
   const graph = observable(createProvenanceGraph<T, S, A>(toJS(state)));
 
   const PROVSTATEKEY = 'provState';
-
-  const { serialize, deserialize } = setupSerializer();
 
   // eslint-disable-next-line no-unused-vars
   let firebaseLogger: (g: ProvenanceGraph<T, S, A>) => void;
@@ -104,7 +84,9 @@ export default function initProvenance<T, S, A = void>(
       (st) => {
         const url = new URL(window.location.href);
         const params = new URLSearchParams(url.search);
-        const stateEncodedString = compressToEncodedURIComponent(serialize(st));
+        const stateEncodedString = compressToEncodedURIComponent(
+          serializer ? serializer(st) : givenSerialize(st),
+        );
         params.set(PROVSTATEKEY, stateEncodedString);
         window.history.replaceState({}, '', `${url.pathname}?${params}`);
       },
@@ -133,7 +115,13 @@ export default function initProvenance<T, S, A = void>(
           'Provenance setup not finished. Please call done function on provenance object after setting up any observers.)',
         );
       }
-      applyActionFunction(graph, act, state);
+      applyActionFunction(
+        graph,
+        act,
+        state,
+        serializer || givenSerialize,
+        deserializer || givenDeserialize,
+      );
       if (firebaseConfig) {
         firebaseLogger(toJS(graph));
       }
@@ -153,7 +141,7 @@ export default function initProvenance<T, S, A = void>(
       );
     },
     goToNode(id: NodeID) {
-      goToNode(graph, state, id);
+      goToNode(graph, state, id, deserializer || givenDeserialize);
     },
     addArtifact: action((artifact: A, id?: NodeID) => {
       if (!id) id = graph.current;
@@ -221,7 +209,7 @@ export default function initProvenance<T, S, A = void>(
     goBackOneStep() {
       const current = graph.nodes[graph.current];
       if (!isChildNode(current)) throw new Error('Already at root');
-      goToNode(graph, state, current.parent);
+      goToNode(graph, state, current.parent, deserializer || givenDeserialize);
     },
     redo(to: 'latest' | 'oldest' = 'latest') {
       this.goForwardOneStep(to);
@@ -229,8 +217,21 @@ export default function initProvenance<T, S, A = void>(
     goForwardOneStep(to: 'latest' | 'oldest' = 'latest') {
       const current = graph.nodes[graph.current];
       if (current.children.length === 0) throw new Error('Already at latest node in this branch');
-      if (to === 'oldest') goToNode(graph, state, current.children[0]);
-      else goToNode(graph, state, current.children[current.children.length - 1]);
+      if (to === 'oldest') {
+        goToNode(
+          graph,
+          state,
+          current.children[0],
+          deserializer || givenDeserialize,
+        );
+      } else {
+        goToNode(
+          graph,
+          state,
+          current.children[current.children.length - 1],
+          deserializer || givenDeserialize,
+        );
+      }
     },
     undoNonEphemeral() {
       this.goBackToNonEphemeral();
@@ -247,7 +248,7 @@ export default function initProvenance<T, S, A = void>(
           parent = parentNode.parent;
         }
 
-        goToNode(graph, state, parent);
+        goToNode(graph, state, parent, deserializer || givenDeserialize);
       }
     },
     redoNonEphemeral(to: 'latest' | 'oldest' = 'latest') {
@@ -268,10 +269,10 @@ export default function initProvenance<T, S, A = void>(
         ];
       }
 
-      goToNode(graph, state, child);
+      goToNode(graph, state, child, deserializer || givenDeserialize);
     },
     reset() {
-      goToNode(graph, state, graph.root);
+      goToNode(graph, state, graph.root, deserializer || givenDeserialize);
     },
     setBookmark: action((id: NodeID, bookmark: boolean) => {
       graph.nodes[id].bookmarked = bookmark;
@@ -281,7 +282,11 @@ export default function initProvenance<T, S, A = void>(
     },
     exportState(partial: boolean = false) {
       let exportedState: Partial<T> = {};
-      const currentState = getState(graph, graph.nodes[graph.current]);
+      const currentState: any = getState(
+        graph,
+        graph.nodes[graph.current],
+        deserializer || givenDeserialize,
+      );
 
       if (partial) {
         Object.keys(initialState).forEach((k) => {
@@ -297,15 +302,20 @@ export default function initProvenance<T, S, A = void>(
       }
 
       const compressedString = compressToEncodedURIComponent(
-        serialize(exportedState),
+        serializer ? serializer(exportedState as T) : givenSerialize(exportedState),
       );
 
       return compressedString;
     },
     importState(s: string | Partial<T>) {
       let st: T;
-      if (typeof s === 'string') st = deserialize(decompressFromEncodedURIComponent(s) || '') as any;
-      else st = { ...toJS(state), ...s };
+      if (typeof s === 'string') {
+        st = deserializer
+          ? (deserializer(decompressFromEncodedURIComponent(s) || '') as any)
+          : givenDeserialize(decompressFromEncodedURIComponent(s) || '');
+      } else st = { ...toJS(state), ...s };
+
+      st = serializer ? serializer(st) : givenSerialize(st);
 
       updateMobxObservable(state, st);
       importState(graph, st);
@@ -313,17 +323,17 @@ export default function initProvenance<T, S, A = void>(
     importProvenanceGraph(g: string | ProvenanceGraph<T, S, A>) {
       let gg: ProvenanceGraph<T, S, A>;
       if (typeof g === 'string') {
-        gg = deserialize(g) as ProvenanceGraph<T, S, A>;
+        gg = g as any;
       } else {
         gg = g;
       }
       updateMobxObservable(graph, gg);
     },
     exportProvenanceGraph() {
-      return serialize(toJS(graph));
+      return toJS(graph) as any;
     },
     getState(node: ProvenanceNode<T, S, A>) {
-      return getState(graph, node);
+      return getState(graph, node, deserializer || givenDeserialize) as T;
     },
     done() {
       setupFinished = true;
@@ -338,9 +348,11 @@ export default function initProvenance<T, S, A = void>(
         const params = new URLSearchParams(url.search);
         const importString = params.get(PROVSTATEKEY);
         if (!importString) return;
-        let importedState: T = deserialize(
+        let importedState: T = givenDeserialize(
           decompressFromEncodedURIComponent(importString) || '',
         ) as any;
+
+        importedState = givenSerialize(importedState);
 
         importedState = { ...toJS(state), ...importedState };
 

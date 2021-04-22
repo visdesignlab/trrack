@@ -14,9 +14,11 @@ import {
   ObserverEffect,
 } from './Observers';
 
-export type ProvenanceOpts = {
+export type ProvenanceOpts<T> = {
   loadFromUrl: boolean;
   firebaseConfig: any;
+  serializer: ((target: T) => any) | undefined;
+  deserializer: ((target: any) => T) | undefined;
 };
 
 export type Provenance<T, S = void, A = void> = {
@@ -237,7 +239,7 @@ export type Provenance<T, S = void, A = void> = {
    * @param node: ProvenanceNode object for which we are retrieving the state
    */
   getState: (node: ProvenanceNode<T, S, A>) => T;
-  config: ProvenanceOpts;
+  config: ProvenanceOpts<T>;
 
   /**
    * Function to call when finished setting up observers. Allows for url state sharing easily.
