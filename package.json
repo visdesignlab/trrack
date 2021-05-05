@@ -29,10 +29,13 @@
     "prettier": "^2.1.2"
   },
   "workspaces": {
-        "packages": [
-    "packages/**"
-  ],
-  "nohoist":["**/tsdx", "**/tsdx/**"]
+    "packages": [
+      "packages/**"
+    ],
+    "nohoist": [
+      "**/tsdx",
+      "**/tsdx/**"
+    ]
   },
   "scripts": {
     "bootstrap": "npx lerna bootstrap --use-workspaces",
@@ -63,5 +66,8 @@
     "commitizen": {
       "path": "./node_modules/git-cz"
     }
-  }
+  },
+  "eslintIgnore": [
+    "*.spec.ts"
+  ]
 }
