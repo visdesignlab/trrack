@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0-alpha.9](https://github.com/visdesignlab/trrack/compare/example-simple-ephemeral@1.1.0-alpha.8...example-simple-ephemeral@1.1.0-alpha.9) (2021-05-07)
+
+**Note:** Version bump only for package example-simple-ephemeral
+
+
+
+
+
+# [1.1.0-alpha.8](https://github.com/visdesignlab/trrack/compare/example-simple-ephemeral@1.1.0-alpha.7...example-simple-ephemeral@1.1.0-alpha.8) (2021-05-07)
+
+**Note:** Version bump only for package example-simple-ephemeral
+
+
+
+
+
+# [1.1.0-alpha.7](https://github.com/visdesignlab/trrack/compare/example-simple-ephemeral@1.1.0-alpha.6...example-simple-ephemeral@1.1.0-alpha.7) (2021-05-07)
+
+**Note:** Version bump only for package example-simple-ephemeral
+
+
+
+
+
 # [1.1.0-alpha.6](https://github.com/visdesignlab/trrack/compare/example-simple-ephemeral@1.1.0-alpha.5...example-simple-ephemeral@1.1.0-alpha.6) (2020-12-16)
 
 **Note:** Version bump only for package example-simple-ephemeral

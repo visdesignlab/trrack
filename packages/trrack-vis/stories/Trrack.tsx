@@ -1,5 +1,3 @@
-import 'semantic-ui-css/semantic.min.css';
-
 import {
   createAction,
   initProvenance,
@@ -10,6 +8,7 @@ import {
 import { observable } from 'mobx';
 import { inject, observer, Provider } from 'mobx-react';
 import React, { FC } from 'react';
+import 'semantic-ui-css/semantic.min.css';
 import { Button } from 'semantic-ui-react';
 import { ProvVis } from '../src';
 
@@ -68,7 +67,7 @@ prov.addObserver(
   (state) => state.tasks,
   (state?: DemoState) => {
     idList.push(state);
-  },
+  }
 );
 
 prov.done();
@@ -79,7 +78,7 @@ const addTask = (desc: string = 'Random Task') => {
   const action = createAction<DemoState, [string], Events>(
     (state, dsc: string) => {
       state.tasks.push({ key: taskNo, desc: dsc });
-    },
+    }
   )
     .setLabel(`Adding task #: ${taskNo}`)
     .setEventType('Add Task');
@@ -115,9 +114,7 @@ interface Props {
 }
 
 const BaseComponent: FC<Props> = ({ store }: Props) => {
-  const {
-    graph, isRoot, isLatest, tasks,
-  } = store!;
+  const { graph, isRoot, isLatest, tasks } = store!;
   const { root, nodes, current } = graph;
 
   return (

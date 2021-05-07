@@ -1,0 +1,3 @@
+packages/trrack-vis/**/*.ts
+packages/trrack-vis/**/*.tsx
+*.spec.ts

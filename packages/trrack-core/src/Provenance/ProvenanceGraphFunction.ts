@@ -1,25 +1,25 @@
-import { action, observable } from 'mobx';
+/* eslint-disable no-shadow */
 import { Diff } from 'deep-diff';
-import { ProvenanceGraph } from '../Types/ProvenanceGraph';
+import { action } from 'mobx';
+import { ActionType, ApplyObject } from '../Types/Action';
 import {
-  RootNode,
-  NodeID,
-  StateNode,
-  isChildNode,
   DiffNode,
   getState,
+  isChildNode,
   isDiffNode,
   Meta,
+  NodeID,
+  RootNode,
+  StateNode,
 } from '../Types/Nodes';
-import generateUUID from '../Utils/generateUUID';
-import generateTimeStamp from '../Utils/generateTimeStamp';
+import { ProvenanceGraph } from '../Types/ProvenanceGraph';
+import { JsonValue, Serializer } from '../Types/Serializers';
 import differ from '../Utils/Differ';
-import { ApplyObject, ActionType } from '../Types/Action';
+import generateTimeStamp from '../Utils/generateTimeStamp';
+import generateUUID from '../Utils/generateUUID';
 
-export function createProvenanceGraph<T, S, A>(
-  state: T,
-): ProvenanceGraph<T, S, A> {
-  const root: RootNode<T, S> = {
+export function createProvenanceGraph<S, A>(state: JsonValue): ProvenanceGraph<S, A> {
+  const root: RootNode<S> = {
     id: generateUUID(),
     label: 'Root',
     metadata: {
@@ -32,7 +32,7 @@ export function createProvenanceGraph<T, S, A>(
     bookmarked: false,
   };
 
-  const graph: ProvenanceGraph<T, S, A> = {
+  const graph: ProvenanceGraph<S, A> = {
     nodes: {
       [root.id]: root,
     },
@@ -43,14 +43,14 @@ export function createProvenanceGraph<T, S, A>(
   return graph;
 }
 
-function createNewStateNode<T, S, A>(
+function createNewStateNode<S, A>(
   parent: NodeID,
-  state: T,
+  state: JsonValue,
   label: string,
   actionType: ActionType,
   eventType: S,
   meta: Meta,
-): StateNode<T, S, A> {
+): StateNode<S, A> {
   return {
     id: generateUUID(),
     label,
@@ -71,15 +71,15 @@ function createNewStateNode<T, S, A>(
   };
 }
 
-function createNewDiffNode<T, S, A>(
+function createNewDiffNode<S, A>(
   parent: NodeID,
   label: string,
-  diffs: Diff<T>[],
+  diffs: Diff<JsonValue>[],
   actionType: ActionType,
   previousStateId: NodeID,
   eventType: S,
   meta: Meta,
-): DiffNode<T, S, A> {
+): DiffNode<S, A> {
   return {
     id: generateUUID(),
     label,
@@ -101,41 +101,39 @@ function createNewDiffNode<T, S, A>(
   };
 }
 
-export const updateMobxObservable = action(<T>(oldObject: T, newObject: T) => {
-  Object.keys(oldObject).forEach((k) => {
-    const key: Extract<keyof T, string> = k as any;
-    const oldValue = oldObject[key];
-    const newValue = newObject[key];
-    if (newValue !== oldValue) {
-      let val = newObject[key];
-      val = (typeof val).toString() === 'object' ? observable(val) : val;
-      oldObject[key] = val;
-    }
-  });
+// export const updateMobxObservable = action(<T>(oldObject: T, newObject: T) => {
+//   Object.keys(oldObject).forEach((k) => {
+//     const key: Extract<keyof T, string> = k as any;
+//     const oldValue = oldObject[key];
+//     const newValue = newObject[key];
+//     if (newValue !== oldValue) {
+//       let val = newObject[key];
+//       val = (typeof val).toString() === 'object' ? observable(val) : val;
+//       oldObject[key] = val;
+//     }
+//   });
+// });
+
+export const goToNode = action(<S, A>(graph: ProvenanceGraph<S, A>, id: NodeID) => {
+  const newCurrentNode = graph.nodes[id];
+  if (!newCurrentNode) throw new Error(`Node with id: ${id} does not exist`);
+  graph.current = newCurrentNode.id;
 });
-
-export const goToNode = action(
-  <T, S, A>(graph: ProvenanceGraph<T, S, A>, state: T, id: NodeID) => {
-    const newCurrentNode = graph.nodes[id];
-    if (!newCurrentNode) throw new Error(`Node with id: ${id} does not exist`);
-    graph.current = newCurrentNode.id;
-    const currentState = getState(graph, graph.nodes[graph.current]);
-
-    updateMobxObservable(state, currentState);
-  },
-);
 
 export const applyActionFunction = action(
   <T, S, A>(
-    _graph: ProvenanceGraph<T, S, A>,
+    _graph: ProvenanceGraph<S, A>,
     actionFn: ApplyObject<T, S>,
     currentState: T,
+    // eslint-disable-next-line no-unused-vars
+    serialize: Serializer<T>,
+    customLabel?: string,
   ) => {
     const graph = _graph;
 
     const { current: currentId } = graph;
     const currentNode = graph.nodes[currentId];
-    let previousState: T | null = null;
+    let previousState: JsonValue | null = null;
     let previousStateID: NodeID | null = null;
 
     if (isDiffNode(currentNode)) {
@@ -148,18 +146,16 @@ export const applyActionFunction = action(
 
     let saveDiff = isChildNode(currentNode);
 
-    const {
-      state,
-      stateSaveMode,
-      actionType,
-      label,
-      eventType,
-      meta,
-    } = actionFn.apply(currentState);
+    const { state, stateSaveMode, actionType, label, eventType, meta } = actionFn.apply(
+      currentState,
+      customLabel,
+    );
 
     const parentId = graph.current;
 
-    const diffs = differ(previousState, state) || [];
+    const serializedState = serialize(state);
+
+    const diffs = differ(previousState, serializedState) || [];
 
     if (saveDiff && Object.keys(previousState).length / 2 < diffs.length) {
       saveDiff = false;
@@ -168,40 +164,34 @@ export const applyActionFunction = action(
     saveDiff = saveDiff && stateSaveMode === 'Diff';
 
     const newNode = saveDiff
-      ? createNewDiffNode<T, S, A>(
-        parentId,
-        label,
-        diffs,
-        actionType,
-        previousStateID,
-        eventType,
-        meta,
-      )
-      : createNewStateNode<T, S, A>(
-        parentId,
-        state,
-        label,
-        actionType,
-        eventType,
-        meta,
-      );
+      ? createNewDiffNode<S, A>(
+          parentId,
+          label,
+          diffs,
+          actionType,
+          previousStateID,
+          eventType,
+          meta,
+        )
+      : createNewStateNode<S, A>(parentId, serializedState, label, actionType, eventType, meta);
 
     graph.nodes[newNode.id] = newNode;
     graph.nodes[currentId].children.push(newNode.id);
     graph.current = newNode.id;
+
     return graph.nodes[graph.current];
     // End
   },
 );
 
 export const importState = action(
-  <T, S, A>(graph: ProvenanceGraph<T, S, A>, importedState: T) => {
+  <S, A>(graph: ProvenanceGraph<S, A>, importedState: JsonValue) => {
     const newNode = createNewStateNode(
       graph.current,
       importedState,
       'Import',
       'Regular',
-      null as any,
+      (null as unknown) as S,
       {},
     );
 

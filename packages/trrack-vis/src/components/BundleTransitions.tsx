@@ -7,13 +7,13 @@ export default function bundleTransitions(
   yOffset: number,
   clusterOffset: number,
   backboneOffset: number,
-  duration: number = 500,
+  duration = 500,
   expandedClusterList: string[],
   stratifiedMap: any,
   nodeList: any[],
   annotationOpen: number,
   annotationHeight: number,
-  bundleMap?: BundleMap,
+  bundleMap?: BundleMap
 ) {
   xOffset = -xOffset;
   backboneOffset = -backboneOffset;
@@ -36,15 +36,15 @@ export default function bundleTransitions(
         //   validity = false;
         // }
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]]
-          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]] &&
+          stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
         ) {
           highestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
 
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]]
-          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]] &&
+          stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
         ) {
           lowestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
@@ -73,9 +73,9 @@ export default function bundleTransitions(
     }
 
     if (
-      annotationOpen !== -1
-      && annotationOpen >= highestDepth
-      && annotationOpen <= lowestDepth
+      annotationOpen !== -1 &&
+      annotationOpen >= highestDepth &&
+      annotationOpen <= lowestDepth
     ) {
       height += annotationHeight;
     }
@@ -107,15 +107,15 @@ export default function bundleTransitions(
         //   validity = false;
         // }
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]]
-          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]] &&
+          stratifiedMap[bundleMap[data].bunchedNodes[i]].depth < highestDepth
         ) {
           highestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
 
         if (
-          stratifiedMap[bundleMap[data].bunchedNodes[i]]
-          && stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
+          stratifiedMap[bundleMap[data].bunchedNodes[i]] &&
+          stratifiedMap[bundleMap[data].bunchedNodes[i]].depth > lowestDepth
         ) {
           lowestDepth = stratifiedMap[bundleMap[data].bunchedNodes[i]].depth;
         }
@@ -143,9 +143,9 @@ export default function bundleTransitions(
     }
 
     if (
-      annotationOpen !== -1
-      && annotationOpen >= highestDepth
-      && annotationOpen <= lowestDepth
+      annotationOpen !== -1 &&
+      annotationOpen >= highestDepth &&
+      annotationOpen <= lowestDepth
     ) {
       height += annotationHeight;
     }
@@ -160,6 +160,9 @@ export default function bundleTransitions(
     };
   };
   return {
-    enter, leave: start, update, start,
+    enter,
+    leave: start,
+    update,
+    start,
   };
 }

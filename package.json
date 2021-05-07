@@ -13,26 +13,30 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "@typescript-eslint/parser": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
     "commitizen": "^4.2.1",
     "cross-env": "^7.0.2",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "^7.10.0",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-prettier": "^3.4.0",
     "git-cz": "4.7.1",
-    "husky": "^4.3.0",
+    "husky": "^6.0.0",
     "lerna": "^3.22.1",
     "lint-staged": "^10.4.0",
-    "prettier": "^2.1.2"
+    "prettier": "^2.2.1"
   },
   "workspaces": {
-        "packages": [
-    "packages/**"
-  ],
-  "nohoist":["**/tsdx", "**/tsdx/**"]
+    "packages": [
+      "packages/**"
+    ],
+    "nohoist": [
+      "**/tsdx",
+      "**/tsdx/**"
+    ]
   },
   "scripts": {
     "bootstrap": "npx lerna bootstrap --use-workspaces",
@@ -41,18 +45,13 @@
     "prestart": "yarn run build",
     "storybook:vis": "lerna exec --scope @visdesignlab/trrack-vis -- yarn storybook",
     "test:core:watch": "lerna exec --scope @visdesignlab/trrack -- yarn test:watch",
-    "lint": "lerna run lint",
+    "lint": "lerna run lint -- --fix",
     "commit": "git cz",
     "release:pre": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --conventional-prerelease --no-commit-hooks",
     "release:graduate": "CI=true cross-env HUSKY_BYPASS=true lerna version --conventional-commits --conventional-graduate --no-commit-hooks",
     "docs": "lerna run docs --scope @visdesignlab/trrack --scope @visdesignlab/trrack-vis",
-    "build:examples": "lerna run build --ignore @visdesignlab/trrack --ignore @visdesignlab/trrack-vis"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "build:examples": "lerna run build --ignore @visdesignlab/trrack --ignore @visdesignlab/trrack-vis",
+    "prepare": "husky install"
   },
   "commitlint": {
     "extends": [

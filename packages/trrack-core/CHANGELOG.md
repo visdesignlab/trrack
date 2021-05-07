@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.10](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.9...@visdesignlab/trrack@2.0.0-alpha.10) (2021-05-07)
+
+
+### Bug Fixes
+
+* defaultDeserialzer ([48cead8](https://github.com/visdesignlab/trrack/commit/48cead87e58e5ff7aec198cf569cc50cc0a9ef6f))
+
+
+
+
+
+# [2.0.0-alpha.9](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.8...@visdesignlab/trrack@2.0.0-alpha.9) (2021-05-07)
+
+
+### Bug Fixes
+
+* Trrackvis style fixes ([b78db15](https://github.com/visdesignlab/trrack/commit/b78db155373a7b667ce45a801a0c55b05aea5617))
+
+
+
+
+
+# [2.0.0-alpha.8](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.7...@visdesignlab/trrack@2.0.0-alpha.8) (2021-05-07)
+
+
+### Features
+
+* Serializing support ([27a7f0f](https://github.com/visdesignlab/trrack/commit/27a7f0fada3b68a045d6a8b6dcfe5ece0b49ac8a))
+
+
+
+
+
 # [2.0.0-alpha.7](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.6...@visdesignlab/trrack@2.0.0-alpha.7) (2020-12-16)
 
 **Note:** Version bump only for package @visdesignlab/trrack

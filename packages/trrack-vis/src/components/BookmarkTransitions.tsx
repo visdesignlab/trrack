@@ -2,12 +2,12 @@
 export default function BookmarkTransitions(
   xOffset: number,
   yOffset: number,
-  nodeList: any[],
+  nodeList: any[]
 ) {
   xOffset = -xOffset;
 
   const start = (data: any) => {
-    const index = nodeList.findIndex((d) => d.id === data.id);
+    const index = nodeList.findIndex(d => d.id === data.id);
 
     const x = 0;
     const y = 40 * index;
@@ -16,7 +16,7 @@ export default function BookmarkTransitions(
   };
 
   const enter = (data: any) => {
-    const index = nodeList.findIndex((d) => d.id === data.id);
+    const index = nodeList.findIndex(d => d.id === data.id);
 
     const x = 0;
     const y = 40 * index;
@@ -29,7 +29,7 @@ export default function BookmarkTransitions(
   };
 
   const update = (data: any) => {
-    const index = nodeList.findIndex((d) => d.id === data.id);
+    const index = nodeList.findIndex(d => d.id === data.id);
 
     const x = 0;
     const y = 40 * index;

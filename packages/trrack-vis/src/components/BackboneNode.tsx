@@ -2,8 +2,7 @@
 import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
-import { Popup, Icon } from 'semantic-ui-react';
-
+import { Popup } from 'semantic-ui-react';
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
 import translate from '../Utils/translate';
@@ -15,7 +14,7 @@ interface BackboneNodeProps<T, S extends string, A> {
   iconOnly: boolean;
   current: boolean;
   duration: number;
-  node: StateNode<T, S, A>;
+  node: StateNode<S, A>;
   radius: number;
   strokeWidth: number;
   textSize: number;
@@ -30,8 +29,8 @@ interface BackboneNodeProps<T, S extends string, A> {
   clusterLabels: boolean;
   editAnnotations: boolean;
   eventConfig?: EventConfig<S>;
-  popupContent?: (nodeId: StateNode<T, S, A>) => ReactChild;
-  annotationContent?: (nodeId: StateNode<T, S, A>) => ReactChild;
+  popupContent?: (nodeId: StateNode<S, A>) => ReactChild;
+  annotationContent?: (nodeId: StateNode<S, A>) => ReactChild;
   expandedClusterList?: string[];
 }
 
@@ -67,7 +66,7 @@ function BackboneNode<T, S extends string, A>({
   const [annotateText, setAnnotateText] = useState(
     prov.getLatestAnnotation(node.id)?.annotation
       ? prov.getLatestAnnotation(node.id)?.annotation!
-      : '',
+      : ''
   );
 
   const handleCheck = () => {
@@ -130,18 +129,18 @@ function BackboneNode<T, S extends string, A>({
     }
   }
 
-  let label: string = '';
-  let annotate: string = '';
+  let label = '';
+  let annotate = '';
 
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
   if (
-    bundleMap
-    && Object.keys(bundleMap).includes(node.id)
-    && node.actionType === 'Ephemeral'
-    && expandedClusterList
-    && !expandedClusterList.includes(node.id)
+    bundleMap &&
+    Object.keys(bundleMap).includes(node.id) &&
+    node.actionType === 'Ephemeral' &&
+    expandedClusterList &&
+    !expandedClusterList.includes(node.id)
   ) {
     if (node.metadata && node.metadata.eventType) {
       label = `[${bundleMap[node.id].bunchedNodes.length}] ${
@@ -155,9 +154,9 @@ function BackboneNode<T, S extends string, A>({
   }
 
   if (
-    node.artifacts
-    && node.artifacts.annotations.length > 0
-    && annotationOpen !== nodeMap[node.id].depth
+    node.artifacts &&
+    node.artifacts.annotations.length > 0 &&
+    annotationOpen !== nodeMap[node.id].depth
   ) {
     annotate = node.artifacts.annotations[0].annotation;
   }
@@ -249,8 +248,8 @@ function BackboneNode<T, S extends string, A>({
             style={cursorStyle}
             onClick={() => {
               if (
-                annotationOpen === -1
-                || nodeMap[node.id].depth !== annotationOpen
+                annotationOpen === -1 ||
+                nodeMap[node.id].depth !== annotationOpen
               ) {
                 setAnnotationOpen(nodeMap[node.id].depth);
               } else {
@@ -324,22 +323,22 @@ function BackboneNode<T, S extends string, A>({
             labelG
           )}
 
-          {annotationOpen !== -1
-          && nodeMap[node.id].depth === annotationOpen ? (
-              <g transform="translate(15, 25)">
-                <foreignObject width="175" height="80" x="0" y="0">
-                  <div>
-                    <textarea
-                      style={{ maxWidth: 130, resize: 'none' }}
-                      onChange={handleInputChange}
-                      value={annotateText}
-                    />
-                    <button onClick={handleCheck}>Annotate</button>
+          {annotationOpen !== -1 &&
+          nodeMap[node.id].depth === annotationOpen ? (
+            <g transform="translate(15, 25)">
+              <foreignObject width="175" height="80" x="0" y="0">
+                <div>
+                  <textarea
+                    style={{ maxWidth: 130, resize: 'none' }}
+                    onChange={handleInputChange}
+                    value={annotateText}
+                  />
+                  <button onClick={handleCheck}>Annotate</button>
 
-                    <button onClick={handleClose}>Close</button>
-                  </div>
+                  <button onClick={handleClose}>Close</button>
+                </div>
 
-                  {/* <Input size='massive' icon='close' onChange={handleInputChange}
+                {/* <Input size='massive' icon='close' onChange={handleInputChange}
                   defaultValue={annotateText.current} placeholder="Edit Annotation" action>
                     <input />
                     <Button color="green" type="submit" onClick={handleCheck}>
@@ -349,17 +348,17 @@ function BackboneNode<T, S extends string, A>({
                       <Icon name="close"/>
                     </Button>
                   </Input> */}
-                </foreignObject>
-              </g>
-            ) : (
-              <g></g>
-            )}
+              </foreignObject>
+            </g>
+          ) : (
+            <g></g>
+          )}
         </>
       )}
     </Animate>
   );
 
-  function labelClicked(innerNode: ProvenanceNode<T, S, A>) {
+  function labelClicked(innerNode: ProvenanceNode<S, A>) {
     if (annotationOpen === nodeMap[innerNode.id].depth && annotationContent) {
       setAnnotationOpen(-1);
     } else if (annotationContent) {
@@ -367,14 +366,14 @@ function BackboneNode<T, S extends string, A>({
     }
   }
 
-  function nodeClicked(innerNode: ProvenanceNode<T, S, A>, event: any) {
+  function nodeClicked(innerNode: ProvenanceNode<S, A>, event: any) {
     if (bundleMap && Object.keys(bundleMap).includes(innerNode.id)) {
       const exemptCopy: string[] = Array.from(exemptList);
 
       if (exemptCopy.includes(innerNode.id)) {
         exemptCopy.splice(
           exemptCopy.findIndex((d) => d === innerNode.id),
-          1,
+          1
         );
       } else {
         exemptCopy.push(innerNode.id);

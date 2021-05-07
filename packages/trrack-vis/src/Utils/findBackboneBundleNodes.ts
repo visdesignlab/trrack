@@ -3,7 +3,10 @@
 
 import { BundleMap } from './BundleMap';
 
-export default function findBackboneBundleNodes(nodeMap: any, bundleMap?: BundleMap): string[] {
+export default function findBackboneBundleNodes(
+  nodeMap: any,
+  bundleMap?: BundleMap
+): string[] {
   const backboneBundleNodes = [];
 
   for (const bundle in bundleMap) {

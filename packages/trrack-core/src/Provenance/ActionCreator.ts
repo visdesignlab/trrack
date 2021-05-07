@@ -1,12 +1,7 @@
 /* eslint-disable func-names */
 /* eslint-disable no-underscore-dangle */
 import { action, toJS } from 'mobx';
-import {
-  ActionFunction,
-  ActionObject,
-  ActionType,
-  ActionSaveStateMode,
-} from '../Types/Action';
+import { ActionFunction, ActionObject, ActionSaveStateMode, ActionType } from '../Types/Action';
 import { Meta } from '../Types/Nodes';
 
 /**
@@ -20,7 +15,7 @@ import { Meta } from '../Types/Nodes';
  */
 
 // TODO:: Switch Args and S here.
-export default function createAction<T, Args extends any[] = any[], S = void>(
+export default function createAction<T, Args extends unknown[] = unknown[], S = void>(
   func: ActionFunction<T, Args>,
 ): ActionObject<T, S, Args> {
   let _label: string | undefined;
@@ -29,14 +24,17 @@ export default function createAction<T, Args extends any[] = any[], S = void>(
   let _eventType: S;
   let _meta: Meta = {};
 
-  const actionObject: ActionObject<T, S, Args> = function (...args: Args) {
+  const actionObject: ActionObject<T, S, Args> = (...args: Args) => {
     return {
-      apply: action((state: T) => {
-        if (!_label) throw new Error('Please specify a label for the action');
+      apply: action((state: T, label?: string) => {
+        if (!_label) throw new Error('Please specify a default label when you create the action');
+
+        if (!label) label = _label;
+
         func(state, ...args);
         return {
           state: toJS(state),
-          label: _label,
+          label: label,
           stateSaveMode: _stateSaveMode,
           actionType: _actionType,
           eventType: _eventType,
@@ -44,7 +42,7 @@ export default function createAction<T, Args extends any[] = any[], S = void>(
         };
       }),
     };
-  } as any;
+  };
 
   actionObject.setLabel = function (label: string) {
     _label = label;

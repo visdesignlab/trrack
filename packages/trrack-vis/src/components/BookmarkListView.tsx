@@ -1,14 +1,13 @@
 import { NodeID, ProvenanceGraph } from '@visdesignlab/trrack';
-
-import { NodeGroup } from 'react-move';
 import React from 'react';
-import BookmarkTransitions from './BookmarkTransitions';
-import BookmarkNode from './BookmarkNode';
+import { NodeGroup } from 'react-move';
 import { EventConfig } from '../Utils/EventConfig';
 import translate from '../Utils/translate';
+import BookmarkNode from './BookmarkNode';
+import BookmarkTransitions from './BookmarkTransitions';
 
 export interface BookmarkListViewConfig<T, S extends string, A> {
-  graph?: ProvenanceGraph<T, S, A>;
+  graph?: ProvenanceGraph<S, A>;
   eventConfig?: EventConfig<S>;
   currentNode: NodeID;
 }

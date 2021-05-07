@@ -26,10 +26,7 @@ export type ActionSaveStateMode = 'Complete' | 'Diff';
  *
  * @param T Application state
  */
-export type ActionFunction<T, Args extends any[]> = (
-  state: T,
-  ...args: Args
-) => void;
+export type ActionFunction<T, Args extends any[]> = (state: T, ...args: Args) => void;
 
 export type ActionReturnType<T, S> = {
   state: T;
@@ -41,7 +38,7 @@ export type ActionReturnType<T, S> = {
 };
 
 export type ApplyObject<T, S> = {
-  apply: (state: T) => ActionReturnType<T, S>;
+  apply: (state: T, label?: string) => ActionReturnType<T, S>;
 };
 
 export type ActionObject<T, S, Args extends any[]> = {

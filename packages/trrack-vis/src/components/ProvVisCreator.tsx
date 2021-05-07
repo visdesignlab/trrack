@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
+import { NodeID, Provenance, ProvenanceGraph } from '@visdesignlab/trrack';
+import { configure } from 'mobx';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provenance, ProvenanceGraph, NodeID } from '@visdesignlab/trrack';
-import { configure } from 'mobx';
+import { BundleMap } from '../Utils/BundleMap';
+import { EventConfig } from '../Utils/EventConfig';
 import ProvVis from './ProvVis';
 import UndoRedoButton from './UndoRedoButton';
-import { EventConfig } from '../Utils/EventConfig';
-import { BundleMap } from '../Utils/BundleMap';
 
 export interface ProvVisConfig {
   eventConfig: EventConfig<any>;
@@ -34,10 +34,10 @@ export function ProvVisCreator<T, S extends string, A>(
   node: Element,
   prov: Provenance<T, S, A>,
   callback?: (id: NodeID) => void,
-  buttons: boolean = true,
-  ephemeralUndo: boolean = false,
+  buttons = true,
+  ephemeralUndo = false,
   fauxRoot: NodeID = prov.graph.root,
-  config: Partial<ProvVisConfig> = {},
+  config: Partial<ProvVisConfig> = {}
 ) {
   prov.addGlobalObserver(() => {
     ReactDOM.render(
@@ -51,7 +51,7 @@ export function ProvVisCreator<T, S extends string, A>(
         undoRedoButtons={true}
         ephemeralUndo={ephemeralUndo}
       />,
-      node,
+      node
     );
   });
 
@@ -66,15 +66,15 @@ export function ProvVisCreator<T, S extends string, A>(
       undoRedoButtons={true}
       ephemeralUndo={ephemeralUndo}
     />,
-    node,
+    node
   );
 }
 
 export function UndoRedoButtonCreator<T, S extends string, A>(
   node: Element,
-  graph: ProvenanceGraph<T, S, A>,
+  graph: ProvenanceGraph<S, A>,
   undoCallback: () => void,
-  redoCallback: () => void,
+  redoCallback: () => void
 ) {
   ReactDOM.render(
     <UndoRedoButton
@@ -82,6 +82,6 @@ export function UndoRedoButtonCreator<T, S extends string, A>(
       undoCallback={undoCallback}
       redoCallback={redoCallback}
     />,
-    node,
+    node
   );
 }
