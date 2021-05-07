@@ -1,6 +1,4 @@
-import {
-  StateNode,
-} from '@visdesignlab/trrack';
+import { StateNode } from '@visdesignlab/trrack';
 import React from 'react';
 import { Animate } from 'react-move';
 
@@ -58,12 +56,14 @@ function BookmarkNode<T, S extends string, A>({
     }
   }
 
-  let label: string = '';
-  let annotate: string = '';
+  let label = '';
+  let annotate = '';
 
-  if (node.artifacts
-    && node.artifacts.annotations.length > 0
-    && node.artifacts.annotations[0].annotation.length > 0) {
+  if (
+    node.artifacts &&
+    node.artifacts.annotations.length > 0 &&
+    node.artifacts.annotations[0].annotation.length > 0
+  ) {
     annotate = node.artifacts.annotations[0].annotation;
   }
 
@@ -82,12 +82,11 @@ function BookmarkNode<T, S extends string, A>({
     >
       {() => (
         <>
-          <g style={{ opacity: 1 }} >
-
+          <g style={{ opacity: 1 }}>
             {glyph}
 
             <text
-              y ={0}
+              y={0}
               x={20}
               dominantBaseline="middle"
               textAnchor="start"

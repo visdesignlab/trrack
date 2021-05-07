@@ -27,6 +27,5 @@ module.exports = {
     'import/no-cycle': 0,
     'no-use-before-define': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    'arrow-parens': ['error', 'always'],
   },
 };

@@ -15,7 +15,7 @@ function UndoRedoButton<T, S extends string, A>({
   graph,
   undoCallback,
   redoCallback,
-} : UndoRedoConfig<T, S, A>) {
+}: UndoRedoConfig<T, S, A>) {
   if (graph === undefined) {
     return null;
   }
@@ -86,9 +86,7 @@ const redoButtonStyle = style({
     '&:active': {
       backgroundColor: '#6c7c7c',
     },
-
   },
-
 });
 
 export default UndoRedoButton;

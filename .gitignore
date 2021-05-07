@@ -154,3 +154,5 @@ storybook-static/
 
 !webpack.config.js
 !tsdx.config.js
+!.prettierrc.js
+!.eslintrc.js

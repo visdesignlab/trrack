@@ -1,6 +1,9 @@
 import { BundleMap } from './BundleMap';
 
-export default function findBundleParent(nodeId: string, bundleMap?: BundleMap): string[] {
+export default function findBundleParent(
+  nodeId: string,
+  bundleMap?: BundleMap
+): string[] {
   const parentList = [];
   // eslint-disable-next-line no-restricted-syntax
   for (const bundle in bundleMap) {

@@ -5,9 +5,9 @@ export default function nodeTransitions(
   yOffset: number,
   clusterOffset: number,
   backboneOffset: number,
-  duration: number = 500,
+  duration = 500,
   annotationOpen: number,
-  annotationHeight: number,
+  annotationHeight: number
 ) {
   xOffset = -xOffset;
   backboneOffset = -backboneOffset;
@@ -16,11 +16,19 @@ export default function nodeTransitions(
 
     const x = getX(data.width, xOffset, backboneOffset);
     // eslint-disable-next-line max-len
-    clusteredNodesInFront = clusteredNodesInFront === 0 ? clusteredNodesInFront : clusteredNodesInFront - 1;
+    clusteredNodesInFront =
+      clusteredNodesInFront === 0
+        ? clusteredNodesInFront
+        : clusteredNodesInFront - 1;
 
-    let y = yOffset * data.depth - (yOffset - clusterOffset) * clusteredNodesInFront;
+    let y =
+      yOffset * data.depth - (yOffset - clusterOffset) * clusteredNodesInFront;
 
-    if (annotationOpen !== -1 && data.depth > annotationOpen && data.width === 0) {
+    if (
+      annotationOpen !== -1 &&
+      data.depth > annotationOpen &&
+      data.width === 0
+    ) {
       y += annotationHeight;
     }
 
@@ -33,11 +41,19 @@ export default function nodeTransitions(
     const x = getX(data.width, xOffset, backboneOffset);
 
     // eslint-disable-next-line max-len
-    clusteredNodesInFront = clusteredNodesInFront === 0 ? clusteredNodesInFront : clusteredNodesInFront - 1;
+    clusteredNodesInFront =
+      clusteredNodesInFront === 0
+        ? clusteredNodesInFront
+        : clusteredNodesInFront - 1;
 
-    let y = yOffset * data.depth - (yOffset - clusterOffset) * clusteredNodesInFront;
+    let y =
+      yOffset * data.depth - (yOffset - clusterOffset) * clusteredNodesInFront;
 
-    if (annotationOpen !== -1 && data.depth > annotationOpen && data.width === 0) {
+    if (
+      annotationOpen !== -1 &&
+      data.depth > annotationOpen &&
+      data.width === 0
+    ) {
       y += annotationHeight;
     }
 
@@ -55,11 +71,19 @@ export default function nodeTransitions(
     const x = getX(data.width, xOffset, backboneOffset);
 
     // eslint-disable-next-line max-len
-    clusteredNodesInFront = clusteredNodesInFront === 0 ? clusteredNodesInFront : clusteredNodesInFront - 1;
+    clusteredNodesInFront =
+      clusteredNodesInFront === 0
+        ? clusteredNodesInFront
+        : clusteredNodesInFront - 1;
 
-    let y = yOffset * data.depth - (yOffset - clusterOffset) * clusteredNodesInFront;
+    let y =
+      yOffset * data.depth - (yOffset - clusterOffset) * clusteredNodesInFront;
 
-    if (annotationOpen !== -1 && data.depth > annotationOpen && data.width === 0) {
+    if (
+      annotationOpen !== -1 &&
+      data.depth > annotationOpen &&
+      data.width === 0
+    ) {
       y += annotationHeight;
     }
 
@@ -72,6 +96,9 @@ export default function nodeTransitions(
   };
 
   return {
-    enter, leave: start, update, start,
+    enter,
+    leave: start,
+    update,
+    start,
   };
 }

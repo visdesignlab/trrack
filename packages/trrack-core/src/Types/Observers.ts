@@ -2,10 +2,10 @@
 
 import { ProvenanceGraph } from './ProvenanceGraph';
 
-export type GlobalObserver<T, S, A> = (
-  graph?: ProvenanceGraph<T, S, A>
-) => void;
+export type ChangeType = 'CurrentChanged' | 'NodeAdded' | 'Any';
 
-export type ObserverExpression<T> = (state: T) => any;
+export type GlobalObserver<S, A> = (graph?: ProvenanceGraph<S, A>, changeType?: ChangeType) => void;
 
-export type ObserverEffect<T> = (data?: T) => void;
+export type ObserverExpression<T, P> = (state: T) => P;
+
+export type ObserverEffect<P> = (state?: P, previousState?: P) => void;

@@ -1,4 +1,4 @@
-import { initProvenance, createAction } from '../src';
+import { createAction, initProvenance } from '../src';
 
 type State = {
   userName: string;
@@ -36,6 +36,7 @@ let emailChanged: number = 0;
 let addressChanged: number = 0;
 let stateChanged: number = 0;
 let countryChanged: number = 0;
+let currentChanged: number = 0;
 
 function resetCounters() {
   nameChanged = 0;
@@ -45,6 +46,7 @@ function resetCounters() {
   addressChanged = 0;
   stateChanged = 0;
   countryChanged = 0;
+  currentChanged = 0;
 }
 
 function setup() {
@@ -56,14 +58,14 @@ function setup() {
   const changeName = createAction<State, [string], Events>(
     (state, name: string) => {
       state.userName = name;
-    },
+    }
   )
     .setLabel('Changing Name')
     .setLabel('ChangeName');
   const changeEmail = createAction<State, [string], Events>(
     (state, email: string) => {
       state.userDetails.email = email;
-    },
+    }
   )
     .setLabel('Changing Email')
     .setEventType('ChangeEmail');
@@ -71,26 +73,29 @@ function setup() {
     (state, st: string, country: string) => {
       state.userDetails.address.state = st;
       state.userDetails.address.country = country;
-    },
+    }
   )
     .setLabel('Changing Address')
     .setEventType('ChangeAddress');
   const changeStateName = createAction<State, [string], Events>(
     (state, stateName: string) => {
       state.userDetails.address.state = stateName;
-    },
+    }
   )
     .setLabel('Changing State')
     .setEventType('ChangeState');
   const changeCountry = createAction<State, [string], Events>(
     (state, country: string) => {
       state.userDetails.address.country = country;
-    },
+    }
   )
     .setLabel('Changing Country')
     .setEventType('ChangeCountry');
 
-  provenance.addGlobalObserver(() => {
+  provenance.addGlobalObserver((_, type) => {
+    if (type === 'CurrentChanged') {
+      currentChanged += 1;
+    }
     globalChanged += 1;
   });
 
@@ -98,40 +103,42 @@ function setup() {
     (state) => state.userName,
     () => {
       nameChanged += 1;
-    },
+    }
   );
 
   provenance.addObserver(
     (state) => state.userDetails,
     () => {
       userDetailsChanged += 1;
-    },
+    }
   );
 
   provenance.addObserver(
-    (state) => state.userDetails.email,
+    (state) => {
+      return state.userDetails.email;
+    },
     () => {
       emailChanged += 1;
-    },
+    }
   );
 
   provenance.addObserver(
     (state) => state.userDetails.address,
     () => {
       addressChanged += 1;
-    },
+    }
   );
   provenance.addObserver(
     (state) => state.userDetails.address.state,
     () => {
       stateChanged += 1;
-    },
+    }
   );
   provenance.addObserver(
     (state) => state.userDetails.address.country,
     () => {
       countryChanged += 1;
-    },
+    }
   );
 
   provenance.done();
@@ -154,6 +161,16 @@ describe('addGlobalObserver & addObserver', () => {
 
     expect(nameChanged).toEqual(1);
     expect(globalChanged).toEqual(1);
+  });
+
+  it('global observer on current change work correctly', () => {
+    const { provenance, changeName } = setup();
+
+    provenance.apply(changeName('Test'));
+
+    provenance.undo();
+
+    expect(currentChanged).toEqual(1);
   });
 
   it('global observer, email change change observer works correctly', () => {

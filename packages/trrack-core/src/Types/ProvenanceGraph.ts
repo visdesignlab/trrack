@@ -1,4 +1,4 @@
-import { Nodes, NodeID } from './Nodes';
+import { NodeID, Nodes } from './Nodes';
 
 /**
  * @template T Represents the given state of an application as defined in initProvenance.
@@ -7,8 +7,9 @@ import { Nodes, NodeID } from './Nodes';
  * @template A Represents the given "extra" type for storing metadata.
  * Extra is a way to store customized metadata.
  */
-export interface ProvenanceGraph<T, S, A> {
-  nodes: Nodes<T, S, A>;
+export interface ProvenanceGraph<S, A> {
+  nodes: Nodes<S, A>;
   current: NodeID;
   root: NodeID;
+  name?: string;
 }

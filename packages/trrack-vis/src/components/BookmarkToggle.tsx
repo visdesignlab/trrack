@@ -13,27 +13,27 @@ function BookmarkToggle<T, S extends string, A>({
   graph,
   bookmarkView,
   setBookmarkView,
-} : BookmarkToggleConfig<T, S, A>) {
+}: BookmarkToggleConfig<T, S, A>) {
   if (graph === undefined) {
     return null;
   }
 
   return (
-
-    <div className='custom-control custom-switch'>
+    <div className="custom-control custom-switch">
       <input
-        type='checkbox'
-        className='custom-control-input'
-        id='customSwitches'
+        type="checkbox"
+        className="custom-control-input"
+        id="customSwitches"
         checked={bookmarkView}
-        onChange= {() => { setBookmarkView(!bookmarkView); }}
+        onChange={() => {
+          setBookmarkView(!bookmarkView);
+        }}
         readOnly
       />
-      <label className='custom-control-label' htmlFor='customSwitches'>
-         Show bookmarked
+      <label className="custom-control-label" htmlFor="customSwitches">
+        Show bookmarked
       </label>
     </div>
-
   );
 }
 

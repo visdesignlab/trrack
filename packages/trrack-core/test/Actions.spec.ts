@@ -1,10 +1,10 @@
+import { ActionType } from '../src';
+import { isChildNode, Meta } from '../src/Types/Nodes';
 import {
   initialState,
   setupProvenanceAndAction,
   setupTodoManager,
 } from './helper';
-import { ActionType, getState } from '../src';
-import { Meta, isChildNode } from '../src/Types/Nodes';
 
 describe('action object is valid', () => {
   const { action } = setupProvenanceAndAction(initialState);
@@ -18,11 +18,11 @@ describe('apply action should work properly', () => {
   it('should throw error when applying action without setting label', () => {
     const { provenance, action } = setupProvenanceAndAction(
       initialState,
-      false,
+      false
     );
 
     expect(() => provenance.apply(action())).toThrowError(
-      new Error('Please specify a label for the action'),
+      new Error('Please specify a default label when you create the action')
     );
   });
 
@@ -33,6 +33,16 @@ describe('apply action should work properly', () => {
     provenance.apply(action());
 
     expect(provenance.current.label).toBe(label);
+  });
+
+  it('new node should have correct custom label', () => {
+    const { provenance, action } = setupProvenanceAndAction(initialState);
+    const label = 'Increase counter by 1';
+    const customLabel = 'Custom';
+    action.setLabel(label);
+    provenance.apply(action(), customLabel);
+
+    expect(provenance.current.label).toBe(customLabel);
   });
 
   it('new node should have correct action type', () => {
@@ -47,17 +57,16 @@ describe('apply action should work properly', () => {
   it('should increment counter value by 1', () => {
     const { provenance, action } = setupProvenanceAndAction(initialState);
 
-    const originalValue = getState(provenance.graph, provenance.current)
-      .counter;
+    const originalValue = provenance.getState(provenance.current).counter;
     provenance.apply(action.setLabel('Increase Counter')());
-    const newValue = getState(provenance.graph, provenance.current).counter;
+    const newValue = provenance.getState(provenance.current).counter;
 
     expect(newValue - originalValue).toEqual(1);
   });
 
   it('should change message according to argument', () => {
     const { provenance, changeMessageAction } = setupProvenanceAndAction(
-      initialState,
+      initialState
     );
 
     const msg = 'Hello, World!';
@@ -88,7 +97,7 @@ describe('apply action should work properly', () => {
     const { provenance, action } = setupProvenanceAndAction(initialState);
 
     provenance.apply(
-      action.setLabel('Increment Counter').setEventType('IncreaseCounter')(),
+      action.setLabel('Increment Counter').setEventType('IncreaseCounter')()
     );
 
     const currentNode = provenance.current;
@@ -108,7 +117,7 @@ describe('apply action should work properly', () => {
         title: 'Task 1',
         description: 'This is a test task',
         status: 'incomplete',
-      }),
+      })
     );
     expect('diffs' in provenance.current).toEqual(true);
   });
@@ -122,7 +131,7 @@ describe('apply action should work properly', () => {
         title: 'Task 1',
         description: 'This is a test task',
         status: 'incomplete',
-      }),
+      })
     );
 
     expect('state' in provenance.current).toEqual(true);

@@ -25,9 +25,7 @@ import {
   symbolStar,
 } from 'd3';
 
-import React, {
-  ReactChild, useEffect, useState, useCallback,
-} from 'react';
+import React, { ReactChild, useEffect, useState, useCallback } from 'react';
 import { NodeGroup } from 'react-move';
 import { Popup, Tab } from 'semantic-ui-react';
 
@@ -135,18 +133,18 @@ function ProvVis<T, S extends string, A>({
       }
 
       if (
-        child.actionType === 'Ephemeral'
-        && child.children.length === 1
-        && (nodeMap[child.parent].actionType !== 'Ephemeral'
-          || nodeMap[child.parent].children.length > 1)
+        child.actionType === 'Ephemeral' &&
+        child.children.length === 1 &&
+        (nodeMap[child.parent].actionType !== 'Ephemeral' ||
+          nodeMap[child.parent].children.length > 1)
       ) {
         const group: string[] = [];
         let curr = child;
         while (curr.actionType === 'Ephemeral') {
           group.push(curr.id);
           if (
-            curr.children.length === 1
-            && nodeMap[curr.children[0]].actionType === 'Ephemeral'
+            curr.children.length === 1 &&
+            nodeMap[curr.children[0]].actionType === 'Ephemeral'
           ) {
             curr = nodeMap[curr.children[0]] as DiffNode<T, S, A>;
           } else {
@@ -168,7 +166,7 @@ function ProvVis<T, S extends string, A>({
   }
 
   function setDefaultConfig<E extends string>(
-    types: Set<string>,
+    types: Set<string>
   ): EventConfig<E> {
     const symbols = [
       symbol()
@@ -227,7 +225,7 @@ function ProvVis<T, S extends string, A>({
   }
 
   const [expandedClusterList, setExpandedClusterList] = useState<string[]>(
-    Object.keys(bundleMap),
+    Object.keys(bundleMap)
   );
 
   if (!eventConfig && eventTypes.size > 0 && eventTypes.size < 8) {
@@ -255,16 +253,16 @@ function ProvVis<T, S extends string, A>({
   }
 
   const strat = stratify<ProvenanceNode<T, S, A>>()
-    .id((d) => d.id)
-    .parentId((d) => {
+    .id(d => d.id)
+    .parentId(d => {
       if (d.id === root) return null;
 
       if (isChildNode(d)) {
         // If you are a unexpanded bundle, find your parent by going straight up.
         if (
-          bundleMap
-          && Object.keys(bundleMap).includes(d.id)
-          && !expandedClusterList.includes(d.id)
+          bundleMap &&
+          Object.keys(bundleMap).includes(d.id) &&
+          !expandedClusterList.includes(d.id)
         ) {
           let curr = d;
 
@@ -273,13 +271,13 @@ function ProvVis<T, S extends string, A>({
             const localCurr = curr;
 
             if (
-              !bundledNodes.includes(localCurr.parent)
-              || Object.keys(bundleMap).includes(localCurr.parent)
+              !bundledNodes.includes(localCurr.parent) ||
+              Object.keys(bundleMap).includes(localCurr.parent)
             ) {
               return localCurr.parent;
             }
 
-            const temp = copyList.filter((c) => c.id === localCurr.parent)[0];
+            const temp = copyList.filter(c => c.id === localCurr.parent)[0];
 
             if (isChildNode(temp)) {
               curr = temp;
@@ -301,10 +299,10 @@ function ProvVis<T, S extends string, A>({
         }
 
         if (
-          bundledNodes.includes(d.parent)
-          && bundleMap
-          && !Object.keys(bundleMap).includes(d.parent)
-          && !allExpanded
+          bundledNodes.includes(d.parent) &&
+          bundleMap &&
+          !Object.keys(bundleMap).includes(d.parent) &&
+          !allExpanded
         ) {
           return collapsedParent;
         }
@@ -327,10 +325,10 @@ function ProvVis<T, S extends string, A>({
     }
 
     if (
-      bundledNodes.includes(nodeList[i].id)
-      && !allExpanded
-      && bundleMap
-      && !Object.keys(bundleMap).includes(nodeList[i].id)
+      bundledNodes.includes(nodeList[i].id) &&
+      !allExpanded &&
+      bundleMap &&
+      !Object.keys(bundleMap).includes(nodeList[i].id)
     ) {
       nodeList.splice(i, 1);
       i--;
@@ -344,7 +342,7 @@ function ProvVis<T, S extends string, A>({
   const stratifiedList: StratifiedList<T, S, A> = stratifiedTree.descendants();
   const stratifiedMap: StratifiedMap<T, S, A> = {};
 
-  stratifiedList.forEach((c) => {
+  stratifiedList.forEach(c => {
     stratifiedMap[c.id!] = c;
   });
   treeLayout(stratifiedMap, current, root);
@@ -371,10 +369,10 @@ function ProvVis<T, S extends string, A>({
     if (eventConfig) {
       const { eventType } = node.metadata;
       if (
-        eventType
-        && eventType in eventConfig
-        && eventType !== 'Root'
-        && eventConfig[eventType].regularGlyph
+        eventType &&
+        eventType in eventConfig &&
+        eventType !== 'Root' &&
+        eventConfig[eventType].regularGlyph
       ) {
         return eventConfig[eventType].regularGlyph;
       }
@@ -480,7 +478,7 @@ function ProvVis<T, S extends string, A>({
         <g id={'globalG'} transform={translate(shiftLeft, topOffset)}>
           <NodeGroup
             data={links}
-            keyAccessor={(link) => `${link.source.id}${link.target.id}`}
+            keyAccessor={link => `${link.source.id}${link.target.id}`}
             {...linkTransitions(
               xOffset,
               yOffset,
@@ -488,12 +486,12 @@ function ProvVis<T, S extends string, A>({
               backboneGutter - gutter,
               duration,
               annotationOpen,
-              annotationHeight,
+              annotationHeight
             )}
           >
-            {(linkArr) => (
+            {linkArr => (
               <>
-                {linkArr.map((link) => {
+                {linkArr.map(link => {
                   const { key, state } = link;
 
                   return (
@@ -512,7 +510,7 @@ function ProvVis<T, S extends string, A>({
           </NodeGroup>
           <NodeGroup
             data={stratifiedList}
-            keyAccessor={(d) => d.id}
+            keyAccessor={d => d.id}
             {...nodeTransitions(
               xOffset,
               yOffset,
@@ -520,12 +518,12 @@ function ProvVis<T, S extends string, A>({
               backboneGutter - gutter,
               duration,
               annotationOpen,
-              annotationHeight,
+              annotationHeight
             )}
           >
-            {(nodes) => (
+            {nodes => (
               <>
-                {nodes.map((node) => {
+                {nodes.map(node => {
                   const { data: d, key, state } = node;
                   const popupTrigger = (
                     <g
@@ -616,7 +614,7 @@ function ProvVis<T, S extends string, A>({
           </NodeGroup>
           <NodeGroup
             data={keys}
-            keyAccessor={(key) => `${key}`}
+            keyAccessor={key => `${key}`}
             {...bundleTransitions(
               xOffset,
               verticalSpace,
@@ -628,17 +626,17 @@ function ProvVis<T, S extends string, A>({
               stratifiedList,
               annotationOpen,
               annotationHeight,
-              bundleMap,
+              bundleMap
             )}
           >
-            {(bundle) => (
+            {bundle => (
               <>
-                {bundle.map((b) => {
+                {bundle.map(b => {
                   const { key, state } = b;
                   if (
-                    bundleMap === undefined
-                    || (stratifiedMap[b.key] as any).width !== 0
-                    || state.validity === false
+                    bundleMap === undefined ||
+                    (stratifiedMap[b.key] as any).width !== 0 ||
+                    state.validity === false
                   ) {
                     return null;
                   }
@@ -648,7 +646,7 @@ function ProvVis<T, S extends string, A>({
                       key={key}
                       transform={translate(
                         state.x - gutter + 5,
-                        state.y - clusterVerticalSpace / 2,
+                        state.y - clusterVerticalSpace / 2
                       )}
                     >
                       <rect
@@ -678,7 +676,11 @@ function ProvVis<T, S extends string, A>({
       render: () => <Tab.Pane attached={false}>{graphTabView}</Tab.Pane>,
     },
     {
-      menuItem: { key: 'Bookmarks/Annotations', icon: 'bookmark', content: 'Bookmarks/Annotations' },
+      menuItem: {
+        key: 'Bookmarks/Annotations',
+        icon: 'bookmark',
+        content: 'Bookmarks/Annotations',
+      },
       render: () => <Tab.Pane attached={false}>{bookmarkTabView}</Tab.Pane>,
     },
   ];

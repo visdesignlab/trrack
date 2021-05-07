@@ -34,10 +34,10 @@ export function ProvVisCreator<T, S extends string, A>(
   node: Element,
   prov: Provenance<T, S, A>,
   callback?: (id: NodeID) => void,
-  buttons: boolean = true,
-  ephemeralUndo: boolean = false,
+  buttons = true,
+  ephemeralUndo = false,
   fauxRoot: NodeID = prov.graph.root,
-  config: Partial<ProvVisConfig> = {},
+  config: Partial<ProvVisConfig> = {}
 ) {
   prov.addGlobalObserver(() => {
     ReactDOM.render(
@@ -51,7 +51,7 @@ export function ProvVisCreator<T, S extends string, A>(
         undoRedoButtons={true}
         ephemeralUndo={ephemeralUndo}
       />,
-      node,
+      node
     );
   });
 
@@ -66,7 +66,7 @@ export function ProvVisCreator<T, S extends string, A>(
       undoRedoButtons={true}
       ephemeralUndo={ephemeralUndo}
     />,
-    node,
+    node
   );
 }
 
@@ -74,7 +74,7 @@ export function UndoRedoButtonCreator<T, S extends string, A>(
   node: Element,
   graph: ProvenanceGraph<T, S, A>,
   undoCallback: () => void,
-  redoCallback: () => void,
+  redoCallback: () => void
 ) {
   ReactDOM.render(
     <UndoRedoButton
@@ -82,6 +82,6 @@ export function UndoRedoButtonCreator<T, S extends string, A>(
       undoCallback={undoCallback}
       redoCallback={redoCallback}
     />,
-    node,
+    node
   );
 }

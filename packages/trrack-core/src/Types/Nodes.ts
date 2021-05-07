@@ -1,9 +1,10 @@
 /* eslint-disable no-shadow */
-import { Diff, applyChange } from 'deep-diff';
+import { applyChange, Diff } from 'deep-diff';
 import { toJS } from 'mobx';
+import deepCopy from '../Utils/DeepCopy';
 import { ActionType } from './Action';
 import { ProvenanceGraph } from './ProvenanceGraph';
-import deepCopy from '../Utils/DeepCopy';
+import { JsonValue } from './Serializers';
 
 export type DiffExport<L, R = L> = Diff<L, R>;
 
@@ -42,8 +43,8 @@ export interface BaseNode<S> {
   bookmarked: boolean;
 }
 
-export interface RootNode<T, S> extends BaseNode<S> {
-  state: T;
+export interface RootNode<S> extends BaseNode<S> {
+  state: JsonValue;
 }
 
 export interface ChildNode<S, A> extends BaseNode<S> {
@@ -51,21 +52,18 @@ export interface ChildNode<S, A> extends BaseNode<S> {
   artifacts: Artifacts<A>;
 }
 
-export interface StateNode<T, S, A> extends RootNode<T, S>, ChildNode<S, A> {}
+export interface StateNode<S, A> extends RootNode<S>, ChildNode<S, A> {}
 
-export interface DiffNode<T, S, A> extends ChildNode<S, A> {
-  diffs: Diff<T>[];
+export interface DiffNode<S, A> extends ChildNode<S, A> {
+  diffs: Diff<JsonValue>[];
   lastStateNode: NodeID;
 }
 
-export type ProvenanceNode<T, S, A> =
-  | RootNode<T, S>
-  | StateNode<T, S, A>
-  | DiffNode<T, S, A>;
+export type ProvenanceNode<S, A> = RootNode<S> | StateNode<S, A> | DiffNode<S, A>;
 
-export type Nodes<T, S, A> = { [key: string]: ProvenanceNode<T, S, A> };
+export type Nodes<S, A> = { [key: string]: ProvenanceNode<S, A> };
 
-export type CurrentNode<T, S, A> = ProvenanceNode<T, S, A>;
+export type CurrentNode<S, A> = ProvenanceNode<S, A>;
 
 /**
  * Function for checking if a node is a state node.
@@ -76,9 +74,7 @@ export type CurrentNode<T, S, A> = ProvenanceNode<T, S, A>;
  * Extra is a way to store customized metadata.
  * @param _opts: Given node to check if it is a state node.
  */
-export function isStateNode<T, S, A>(
-  node: ProvenanceNode<T, S, A>,
-): node is StateNode<T, S, A> {
+export function isStateNode<S, A>(node: ProvenanceNode<S, A>): node is StateNode<S, A> {
   return 'parent' in node && 'state' in node;
 }
 
@@ -91,9 +87,7 @@ export function isStateNode<T, S, A>(
  * Extra is a way to store customized metadata.
  * @param _opts: Given node to check if it is a diff node.
  */
-export function isDiffNode<T, S, A>(
-  node: ProvenanceNode<T, S, A>,
-): node is DiffNode<T, S, A> {
+export function isDiffNode<S, A>(node: ProvenanceNode<S, A>): node is DiffNode<S, A> {
   return 'diffs' in node;
 }
 
@@ -106,9 +100,9 @@ export function isDiffNode<T, S, A>(
  *  Extra is a way to store customized metadata.
  * @param _opts: Given node to check if it is a child node.
  */
-export function isChildNode<T, S, A>(
-  node: ProvenanceNode<T, S, A>,
-): node is DiffNode<T, S, A> | StateNode<T, S, A> {
+export function isChildNode<S, A>(
+  node: ProvenanceNode<S, A>,
+): node is DiffNode<S, A> | StateNode<S, A> {
   return 'parent' in node;
 }
 
@@ -121,9 +115,7 @@ export function isChildNode<T, S, A>(
  * Extra is a way to store customized metadata.
  * @param _opts: Given node to check if it is root.
  */
-export function isRootNode<T, S, A>(
-  node: ProvenanceNode<T, S, A>,
-): node is RootNode<T, S> {
+export function isRootNode<S, A>(node: ProvenanceNode<S, A>): node is RootNode<S> {
   return node.label === 'Root';
 }
 
@@ -137,22 +129,18 @@ export function isRootNode<T, S, A>(
  * @param graph: Provenance Graph which we are searching for node in
  * @param _opts: Node which we want the state of
  */
-export function getState<T, S, A>(
-  graph: ProvenanceGraph<T, S, A>,
-  node: ProvenanceNode<T, S, A>,
-  // eslint-disable-next-line no-unused-vars
-  deserializer: (t: any) => T,
-): T {
+export function getState<S, A>(
+  graph: ProvenanceGraph<S, A>,
+  node: ProvenanceNode<S, A>,
+): JsonValue {
   if (isRootNode(node) || isStateNode(node)) {
     return toJS(node.state);
   }
 
   // eslint-disable-next-line no-underscore-dangle
-  const _state = toJS(
-    (graph.nodes[node.lastStateNode] as StateNode<T, S, A>).state,
-  );
+  const _state = toJS((graph.nodes[node.lastStateNode] as StateNode<S, A>).state);
 
-  const state = deepCopy(_state, deserializer);
+  const state = deepCopy(_state);
 
   // what is this for?
   node.diffs.forEach((diff) => {

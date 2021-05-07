@@ -67,7 +67,7 @@ function BackboneNode<T, S extends string, A>({
   const [annotateText, setAnnotateText] = useState(
     prov.getLatestAnnotation(node.id)?.annotation
       ? prov.getLatestAnnotation(node.id)?.annotation!
-      : '',
+      : ''
   );
 
   const handleCheck = () => {
@@ -130,18 +130,18 @@ function BackboneNode<T, S extends string, A>({
     }
   }
 
-  let label: string = '';
-  let annotate: string = '';
+  let label = '';
+  let annotate = '';
 
   // console.log(bundleMap)
   // console.log(nodeMap[node.id]);
 
   if (
-    bundleMap
-    && Object.keys(bundleMap).includes(node.id)
-    && node.actionType === 'Ephemeral'
-    && expandedClusterList
-    && !expandedClusterList.includes(node.id)
+    bundleMap &&
+    Object.keys(bundleMap).includes(node.id) &&
+    node.actionType === 'Ephemeral' &&
+    expandedClusterList &&
+    !expandedClusterList.includes(node.id)
   ) {
     if (node.metadata && node.metadata.eventType) {
       label = `[${bundleMap[node.id].bunchedNodes.length}] ${
@@ -155,9 +155,9 @@ function BackboneNode<T, S extends string, A>({
   }
 
   if (
-    node.artifacts
-    && node.artifacts.annotations.length > 0
-    && annotationOpen !== nodeMap[node.id].depth
+    node.artifacts &&
+    node.artifacts.annotations.length > 0 &&
+    annotationOpen !== nodeMap[node.id].depth
   ) {
     annotate = node.artifacts.annotations[0].annotation;
   }
@@ -177,7 +177,7 @@ function BackboneNode<T, S extends string, A>({
           {dropDownAdded ? (
             <text
               style={cursorStyle}
-              onClick={(e) => nodeClicked(node, e)}
+              onClick={e => nodeClicked(node, e)}
               fontSize={17}
               fill={'rgb(248, 191, 132)'}
               textAnchor="middle"
@@ -227,7 +227,7 @@ function BackboneNode<T, S extends string, A>({
           ,
           <text
             style={cursorStyle}
-            onClick={(e) => {
+            onClick={e => {
               prov.setBookmark(node.id, !prov.getBookmark(node.id));
 
               e.stopPropagation();
@@ -249,8 +249,8 @@ function BackboneNode<T, S extends string, A>({
             style={cursorStyle}
             onClick={() => {
               if (
-                annotationOpen === -1
-                || nodeMap[node.id].depth !== annotationOpen
+                annotationOpen === -1 ||
+                nodeMap[node.id].depth !== annotationOpen
               ) {
                 setAnnotationOpen(nodeMap[node.id].depth);
               } else {
@@ -280,7 +280,7 @@ function BackboneNode<T, S extends string, A>({
           {dropDownAdded ? (
             <text
               style={cursorStyle}
-              onClick={(e) => nodeClicked(node, e)}
+              onClick={e => nodeClicked(node, e)}
               fontSize={17}
               fill={'rgb(248, 191, 132)'}
               textAnchor="middle"
@@ -324,22 +324,22 @@ function BackboneNode<T, S extends string, A>({
             labelG
           )}
 
-          {annotationOpen !== -1
-          && nodeMap[node.id].depth === annotationOpen ? (
-              <g transform="translate(15, 25)">
-                <foreignObject width="175" height="80" x="0" y="0">
-                  <div>
-                    <textarea
-                      style={{ maxWidth: 130, resize: 'none' }}
-                      onChange={handleInputChange}
-                      value={annotateText}
-                    />
-                    <button onClick={handleCheck}>Annotate</button>
+          {annotationOpen !== -1 &&
+          nodeMap[node.id].depth === annotationOpen ? (
+            <g transform="translate(15, 25)">
+              <foreignObject width="175" height="80" x="0" y="0">
+                <div>
+                  <textarea
+                    style={{ maxWidth: 130, resize: 'none' }}
+                    onChange={handleInputChange}
+                    value={annotateText}
+                  />
+                  <button onClick={handleCheck}>Annotate</button>
 
-                    <button onClick={handleClose}>Close</button>
-                  </div>
+                  <button onClick={handleClose}>Close</button>
+                </div>
 
-                  {/* <Input size='massive' icon='close' onChange={handleInputChange}
+                {/* <Input size='massive' icon='close' onChange={handleInputChange}
                   defaultValue={annotateText.current} placeholder="Edit Annotation" action>
                     <input />
                     <Button color="green" type="submit" onClick={handleCheck}>
@@ -349,11 +349,11 @@ function BackboneNode<T, S extends string, A>({
                       <Icon name="close"/>
                     </Button>
                   </Input> */}
-                </foreignObject>
-              </g>
-            ) : (
-              <g></g>
-            )}
+              </foreignObject>
+            </g>
+          ) : (
+            <g></g>
+          )}
         </>
       )}
     </Animate>
@@ -373,8 +373,8 @@ function BackboneNode<T, S extends string, A>({
 
       if (exemptCopy.includes(innerNode.id)) {
         exemptCopy.splice(
-          exemptCopy.findIndex((d) => d === innerNode.id),
-          1,
+          exemptCopy.findIndex(d => d === innerNode.id),
+          1
         );
       } else {
         exemptCopy.push(innerNode.id);

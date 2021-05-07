@@ -40,12 +40,12 @@ function BookmarkListView<T, S extends string, A>({
   return (
     <NodeGroup
       data={bookmarks}
-      keyAccessor={(d) => d.label}
+      keyAccessor={d => d.label}
       {...BookmarkTransitions(xOffset, yOffset, bookmarks)}
     >
-      {(innerBookmarks) => (
+      {innerBookmarks => (
         <>
-          {innerBookmarks.map((bookmark) => {
+          {innerBookmarks.map(bookmark => {
             const { data: d, key, state } = bookmark;
 
             return (

@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import firebase from 'firebase/app';
+import 'firebase/database';
 import { ProvenanceGraph } from '../Types/ProvenanceGraph';
 
-import 'firebase/database';
-
 export function initializeFirebase(config: any) {
-  const app: firebase.app.App = firebase.apps.length === 0
-    ? firebase.initializeApp(config)
-    : firebase.app();
+  const app: firebase.app.App =
+    firebase.apps.length === 0 ? firebase.initializeApp(config) : firebase.app();
 
   const db = firebase.database(app);
 
@@ -20,7 +21,7 @@ export function initializeFirebase(config: any) {
 export function logToFirebase(rtd: firebase.database.Database) {
   const addedNodes: string[] = [];
 
-  return (graph: ProvenanceGraph<any, any, any>) => {
+  return (graph: ProvenanceGraph<any, any>) => {
     const path = `${graph.root}`;
     const nodes = Object.keys(graph.nodes);
     const nodeToAdd: string[] = [];
