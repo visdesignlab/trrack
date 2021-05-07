@@ -44,27 +44,27 @@ export default function createAction<T, Args extends unknown[] = unknown[], S = 
     };
   };
 
-  actionObject.setLabel = function(label: string) {
+  actionObject.setLabel = function (label: string) {
     _label = label;
     return this;
   };
 
-  actionObject.setActionType = function(actionType: ActionType) {
+  actionObject.setActionType = function (actionType: ActionType) {
     _actionType = actionType;
     return this;
   };
 
-  actionObject.saveStateMode = function(mode: ActionSaveStateMode) {
+  actionObject.saveStateMode = function (mode: ActionSaveStateMode) {
     _stateSaveMode = mode;
     return this;
   };
 
-  actionObject.setEventType = function(evtType: S) {
+  actionObject.setEventType = function (evtType: S) {
     _eventType = evtType;
     return this;
   };
 
-  actionObject.setMetaData = function(m: Meta) {
+  actionObject.setMetaData = function (m: Meta) {
     _meta = m;
     return this;
   };

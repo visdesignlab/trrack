@@ -2,8 +2,7 @@
 import { Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
-import { Popup, Icon } from 'semantic-ui-react';
-
+import { Popup } from 'semantic-ui-react';
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
 import translate from '../Utils/translate';
@@ -15,7 +14,7 @@ interface BackboneNodeProps<T, S extends string, A> {
   iconOnly: boolean;
   current: boolean;
   duration: number;
-  node: StateNode<T, S, A>;
+  node: StateNode<S, A>;
   radius: number;
   strokeWidth: number;
   textSize: number;
@@ -30,8 +29,8 @@ interface BackboneNodeProps<T, S extends string, A> {
   clusterLabels: boolean;
   editAnnotations: boolean;
   eventConfig?: EventConfig<S>;
-  popupContent?: (nodeId: StateNode<T, S, A>) => ReactChild;
-  annotationContent?: (nodeId: StateNode<T, S, A>) => ReactChild;
+  popupContent?: (nodeId: StateNode<S, A>) => ReactChild;
+  annotationContent?: (nodeId: StateNode<S, A>) => ReactChild;
   expandedClusterList?: string[];
 }
 
@@ -177,7 +176,7 @@ function BackboneNode<T, S extends string, A>({
           {dropDownAdded ? (
             <text
               style={cursorStyle}
-              onClick={e => nodeClicked(node, e)}
+              onClick={(e) => nodeClicked(node, e)}
               fontSize={17}
               fill={'rgb(248, 191, 132)'}
               textAnchor="middle"
@@ -227,7 +226,7 @@ function BackboneNode<T, S extends string, A>({
           ,
           <text
             style={cursorStyle}
-            onClick={e => {
+            onClick={(e) => {
               prov.setBookmark(node.id, !prov.getBookmark(node.id));
 
               e.stopPropagation();
@@ -280,7 +279,7 @@ function BackboneNode<T, S extends string, A>({
           {dropDownAdded ? (
             <text
               style={cursorStyle}
-              onClick={e => nodeClicked(node, e)}
+              onClick={(e) => nodeClicked(node, e)}
               fontSize={17}
               fill={'rgb(248, 191, 132)'}
               textAnchor="middle"
@@ -359,7 +358,7 @@ function BackboneNode<T, S extends string, A>({
     </Animate>
   );
 
-  function labelClicked(innerNode: ProvenanceNode<T, S, A>) {
+  function labelClicked(innerNode: ProvenanceNode<S, A>) {
     if (annotationOpen === nodeMap[innerNode.id].depth && annotationContent) {
       setAnnotationOpen(-1);
     } else if (annotationContent) {
@@ -367,13 +366,13 @@ function BackboneNode<T, S extends string, A>({
     }
   }
 
-  function nodeClicked(innerNode: ProvenanceNode<T, S, A>, event: any) {
+  function nodeClicked(innerNode: ProvenanceNode<S, A>, event: any) {
     if (bundleMap && Object.keys(bundleMap).includes(innerNode.id)) {
       const exemptCopy: string[] = Array.from(exemptList);
 
       if (exemptCopy.includes(innerNode.id)) {
         exemptCopy.splice(
-          exemptCopy.findIndex(d => d === innerNode.id),
+          exemptCopy.findIndex((d) => d === innerNode.id),
           1
         );
       } else {

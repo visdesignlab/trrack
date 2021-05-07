@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
+import { NodeID, Provenance, ProvenanceGraph } from '@visdesignlab/trrack';
+import { configure } from 'mobx';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provenance, ProvenanceGraph, NodeID } from '@visdesignlab/trrack';
-import { configure } from 'mobx';
+import { BundleMap } from '../Utils/BundleMap';
+import { EventConfig } from '../Utils/EventConfig';
 import ProvVis from './ProvVis';
 import UndoRedoButton from './UndoRedoButton';
-import { EventConfig } from '../Utils/EventConfig';
-import { BundleMap } from '../Utils/BundleMap';
 
 export interface ProvVisConfig {
   eventConfig: EventConfig<any>;
@@ -72,7 +72,7 @@ export function ProvVisCreator<T, S extends string, A>(
 
 export function UndoRedoButtonCreator<T, S extends string, A>(
   node: Element,
-  graph: ProvenanceGraph<T, S, A>,
+  graph: ProvenanceGraph<S, A>,
   undoCallback: () => void,
   redoCallback: () => void
 ) {

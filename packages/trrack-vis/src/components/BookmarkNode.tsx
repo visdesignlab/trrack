@@ -1,13 +1,12 @@
 import { StateNode } from '@visdesignlab/trrack';
 import React from 'react';
 import { Animate } from 'react-move';
-
 import { EventConfig } from '../Utils/EventConfig';
 import { treeColor } from './Styles';
 
 interface BookmarkNodeProps<T, S extends string, A> {
   current: boolean;
-  node: StateNode<T, S, A>;
+  node: StateNode<S, A>;
   nodeMap: any;
   editAnnotations: boolean;
   eventConfig?: EventConfig<S>;

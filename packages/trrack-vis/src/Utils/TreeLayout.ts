@@ -1,11 +1,11 @@
-import { HierarchyNode } from 'd3';
 import { ProvenanceNode } from '@visdesignlab/trrack';
+import { HierarchyNode } from 'd3';
 import { StratifiedMap } from '../components/ProvVis';
 
 export type TreeNode = HierarchyNode<unknown>;
 
 export interface ExtendedHierarchyNode<T, S, A>
-  extends HierarchyNode<ProvenanceNode<T, S, A>> {
+  extends HierarchyNode<ProvenanceNode<S, A>> {
   column: number;
 }
 
