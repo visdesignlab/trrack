@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.11](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.10...@visdesignlab/trrack-vis@2.0.0-alpha.11) (2021-05-07)
+
+
+### Bug Fixes
+
+* Trrackvis style fixes ([b78db15](https://github.com/visdesignlab/trrack-vis/commit/b78db155373a7b667ce45a801a0c55b05aea5617))
+
+
+
+
+
 # [2.0.0-alpha.10](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.9...@visdesignlab/trrack-vis@2.0.0-alpha.10) (2021-05-07)
 
 
