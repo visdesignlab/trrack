@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.10](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.9...@visdesignlab/trrack-vis@2.0.0-alpha.10) (2021-05-07)
+
+
+### Features
+
+* Serializing support ([27a7f0f](https://github.com/visdesignlab/trrack-vis/commit/27a7f0fada3b68a045d6a8b6dcfe5ece0b49ac8a))
+
+
+
+
+
 # [2.0.0-alpha.9](https://github.com/visdesignlab/trrack-vis/compare/@visdesignlab/trrack-vis@2.0.0-alpha.8...@visdesignlab/trrack-vis@2.0.0-alpha.9) (2020-12-16)
 
 **Note:** Version bump only for package @visdesignlab/trrack-vis
