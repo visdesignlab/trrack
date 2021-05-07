@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.10](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.9...@visdesignlab/trrack@2.0.0-alpha.10) (2021-05-07)
+
+
+### Bug Fixes
+
+* defaultDeserialzer ([48cead8](https://github.com/visdesignlab/trrack/commit/48cead87e58e5ff7aec198cf569cc50cc0a9ef6f))
+
+
+
+
+
 # [2.0.0-alpha.9](https://github.com/visdesignlab/trrack/compare/@visdesignlab/trrack@2.0.0-alpha.8...@visdesignlab/trrack@2.0.0-alpha.9) (2021-05-07)
 
 
