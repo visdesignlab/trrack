@@ -5,10 +5,16 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['airbnb-base', 'eslint:recommended', 'plugin:import/typescript'],
+  extends: [
+    'eslint:recommended',
+    'plugin:import/typescript',
+    'plugin:@typescript-eslint/recommended',
+    'prettier/@typescript-eslint',
+    'plugin:prettier/recommended',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 12,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
@@ -21,6 +27,5 @@ module.exports = {
     'no-param-reassign': 0,
     'import/no-cycle': 0,
     'no-use-before-define': 'off',
-    'prettier/prettier': 'off',
   },
 };
