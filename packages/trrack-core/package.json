@@ -33,12 +33,6 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "prettier": {
-    "semi": true,
-    "trailingComma": "all",
-    "singleQuote": true,
-    "arrowParens": "always"
-  },
   "jest": {
     "coveragePathIgnorePatterns": [
       "/node_modules/",

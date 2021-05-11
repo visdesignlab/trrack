@@ -4,5 +4,8 @@
       "path": "."
     }
   ],
-  "settings": {}
+  "settings": {
+    "eslint.packageManager": "yarn",
+    "eslint.workingDirectories": ["./packages/trrack-core/", "./packages/trrack-vis/"]
+  }
 }

@@ -156,3 +156,4 @@ storybook-static/
 !tsdx.config.js
 !.prettierrc.js
 !.eslintrc.js
+!lint-staged.config.js
