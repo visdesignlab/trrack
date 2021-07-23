@@ -119,8 +119,12 @@ export default function initProvenance<T, S, A = void>(
     },
     addObserver<P>(expression: ObserverExpression<T, P>, effect: ObserverEffect<P>) {
       reaction(
-        () => expression(state.get()),
-        (current, previous) => effect(current, previous),
+        () => {
+          return JSON.stringify(expression(state.get()));
+        },
+        (current, previous) => {
+          return effect(JSON.parse(current), JSON.parse(previous));
+        },
       );
     },
     goToNode(id: NodeID) {
