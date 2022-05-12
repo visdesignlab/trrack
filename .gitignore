@@ -31,3 +31,7 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+# npm
+yarn.lock
+package-json.lock
