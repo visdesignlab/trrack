@@ -15,9 +15,10 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "dev": "tsdx watch",
+    "dev": "tsdx watch --no-clean",
     "build": "tsdx build",
     "test": "tsdx test",
+    "test:watch": "tsdx test --watch",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
@@ -47,10 +48,16 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
+    "@types/uuid": "^8.3.4",
+    "eslint-config-custom": "*",
     "husky": "^8.0.1",
     "size-limit": "^7.0.8",
+    "tsconfig": "*",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }

@@ -1,0 +1,31 @@
+{
+  "folders": [
+    {
+      "name": "✨ trrack-monorepo",
+      "path": "."
+    },
+    {
+      "name": "🚀 docs",
+      "path": "apps/docs"
+    },
+    {
+      "name": "🚀 pure-react-example",
+      "path": "apps/pure-react-example"
+    },
+    {
+      "name": "📦 @trrack/core",
+      "path": "packages/core"
+    },
+    {
+      "name": "📦 eslint-config-custom",
+      "path": "packages/eslint-config-acme"
+    },
+    {
+      "name": "📦 tsconfig",
+      "path": "packages/tsconfig"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "✨ trrack-monorepo/node_modules/typescript/lib"
+  }
+}
