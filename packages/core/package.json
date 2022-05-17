@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "dev": "tsdx watch --no-clean",
+    "dev": "tsdx watch --noClean",
     "build": "tsdx build",
     "test": "tsdx test",
     "test:watch": "tsdx test --watch",

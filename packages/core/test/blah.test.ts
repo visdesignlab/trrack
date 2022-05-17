@@ -1,6 +1,6 @@
-import { createProvenanceGraph, PROV_VERSION } from '../src';
-import { initializeActionFunctionRegistry } from '../src/action-registry/registry';
-import { initializeProvenance } from '../src/provenance/initialize';
+import { createProvenanceGraph, initializeTrrack, PROV_VERSION } from '../src';
+import { initializeActionFunctionRegistryTracker } from '../src/action/registry/tracker';
+import { Action } from '../src/action/types';
 
 describe('Graph Creation', () => {
   const graph = createProvenanceGraph();
@@ -34,23 +34,39 @@ describe('Graph Creation', () => {
 });
 
 describe('Graph Traverser', () => {
-  const afr = initializeActionFunctionRegistry();
+  const afrTracker = initializeActionFunctionRegistryTracker();
 
-  afr.register('hello', async (name: string) => `Hello, World! from ${name}`);
+  let a = 0;
 
-  const provenance = initializeProvenance(afr);
-  provenance.addNewNode('hello', 'Add 10');
-  // provenance.addNewNode('World', 'Add 101');
-  // provenance.addNewNode('Add 102');
-  // provenance.addNewNode('Add 103');
+  afrTracker.register(
+    'add_to_a',
+    (toAdd: number) => (a += toAdd),
+    (toRemove: number) => (a -= toRemove)
+  );
+
+  const provenance = initializeTrrack(afrTracker);
+
+  function getAddAction(toAdd: number): Action {
+    return {
+      registry_name: 'add_to_a',
+      label: `Adding ${toAdd}`,
+      do: {
+        args: [toAdd],
+      },
+      undo: {
+        args: [toAdd],
+      },
+    };
+  }
+
+  provenance.applyAction(getAddAction(1));
+  provenance.applyAction(getAddAction(31));
+  provenance.applyAction(getAddAction(2));
 
   provenance.undo();
   provenance.undo();
   provenance.undo();
-
-  // provenance.addNewNode('Add 111');
-  // provenance.addNewNode('Add 112');
-  // provenance.addNewNode('Add 113');
 
   provenance.print();
+  console.log({ a });
 });

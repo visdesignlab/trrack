@@ -1,12 +1,12 @@
 {
   "folders": [
     {
-      "name": "✨ trrack-monorepo",
-      "path": "."
-    },
-    {
       "name": "🚀 docs",
       "path": "apps/docs"
+    },
+    {
+      "name": "✨ trrack-monorepo",
+      "path": "."
     },
     {
       "name": "🚀 pure-react-example",
