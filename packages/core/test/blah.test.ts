@@ -1,72 +1,33 @@
-import { createProvenanceGraph, initializeTrrack, PROV_VERSION } from '../src';
-import { initializeActionFunctionRegistryTracker } from '../src/action/registry/tracker';
-import { Action } from '../src/action/types';
-
-describe('Graph Creation', () => {
-  const graph = createProvenanceGraph();
-
-  it('Graph is created', () => {
-    expect(graph).toBeTruthy();
-  });
-
-  describe('Graph is correct', () => {
-    it('Graph has correct version', () => {
-      expect(graph.PROV_VERSION).toEqual(PROV_VERSION);
-    });
-
-    it('Graph has one node', () => {
-      expect(Object.values(graph.nodes)).toHaveLength(1);
-    });
-
-    const node = Object.values(graph.nodes)[0];
-    it('The node is root', () => {
-      expect(node.type).toBe('RootNode');
-    });
-
-    it('Graph root points to actual root', () => {
-      expect(graph.root).toEqual(node.id);
-    });
-
-    it('Graph current is set to root', () => {
-      expect(graph.current).toEqual(node.id);
-    });
-  });
-});
+import { ActionRegistry } from '../src/action';
+import { RegistryEntry } from '../src/action/registry';
+import { Trrack } from '../src/tracker/trrack';
 
 describe('Graph Traverser', () => {
-  const afrTracker = initializeActionFunctionRegistryTracker();
+  it('should be true', () => {
+    const actionRegistry = ActionRegistry.create({
+      increment: RegistryEntry.create({
+        action(count: number) {
+          return count + 1;
+        },
+        inverse(count: number) {
+          return count - 1;
+        },
+      }),
+    });
 
-  let a = 0;
+    const trrack = Trrack.initialize(actionRegistry);
 
-  afrTracker.register(
-    'add_to_a',
-    (toAdd: number) => (a += toAdd),
-    (toRemove: number) => (a -= toRemove)
-  );
+    trrack.apply({
+      name: 'increment',
+      label: 'Increase by one',
+      doArgs: [1],
+      undoArgs: [2],
+    });
 
-  const provenance = initializeTrrack(afrTracker);
+    console.log(JSON.stringify(trrack.getSerializedGraph(), null, 2));
 
-  function getAddAction(toAdd: number): Action {
-    return {
-      registry_name: 'add_to_a',
-      label: `Adding ${toAdd}`,
-      do: {
-        args: [toAdd],
-      },
-      undo: {
-        args: [toAdd],
-      },
-    };
-  }
+    console.log(JSON.stringify(trrack.getSerializedGraph(), null, 2));
 
-  provenance.applyAction(getAddAction(1));
-  provenance.applyAction(getAddAction(31));
-  provenance.applyAction(getAddAction(2));
-
-  provenance.undo();
-  provenance.undo();
-  provenance.undo();
-
-  provenance.print();
-  console.log({ a });
+    expect(actionRegistry).toBeTruthy();
+  });
 });

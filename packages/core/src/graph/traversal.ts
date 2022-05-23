@@ -1,4 +1,6 @@
-import { GraphTraversalRecord } from '../tracker';
+import { INode } from './nodes';
+import { RootNode } from './nodes/rootnode';
+import { INonRootNode } from './nodes/types';
 
 /**
  * Actual LCA algorithm
@@ -7,30 +9,29 @@ import { GraphTraversalRecord } from '../tracker';
  * @param graphRecord Level and parent list of graph records
  * @returns least common ancestor of both current and destination nodes
  */
-function LCA(
-  current: string,
-  destination: string,
-  graphRecord: GraphTraversalRecord
-) {
+function LCA(current: INode, destination: INode) {
   let [source, target] = [current, destination];
-  if (graphRecord.levelList[source] > graphRecord.levelList[target]) {
+
+  if (source.level > target.level) {
     [source, target] = [target, source];
   }
 
-  let diff = graphRecord.levelList[target] - graphRecord.levelList[source];
+  let diff = target.level - source.level;
 
   while (diff !== 0) {
-    target = graphRecord.parentList[target];
-    diff -= 1;
+    if (RootNode.isNonRootNode(target)) {
+      target = target.parent;
+      diff -= 1;
+    }
   }
 
-  if (source === target) {
+  if (source.id === target.id) {
     return source;
   }
 
-  while (source !== target) {
-    source = graphRecord.parentList[source];
-    target = graphRecord.parentList[target];
+  while (source.id !== target.id) {
+    if (RootNode.isNonRootNode(source)) source = source.parent;
+    if (RootNode.isNonRootNode(target)) target = target.parent;
   }
 
   return source;
@@ -40,30 +41,29 @@ function LCA(
  * Determine a path between current and destination using LCA algorithm.
  * @param current The node the graph currently is at.
  * @param destination The node we want to go to.
- * @param graphRecord Level and Parent list to determine LCA.
  * @returns A string of node ids which indicate the path.
  */
-export function getPathToNode(
-  current: string,
-  destination: string,
-  graphRecord: GraphTraversalRecord
-) {
-  const lca = LCA(current, destination, graphRecord);
+export function getPathToNode(current: INode, destination: INode) {
+  const lca = LCA(current, destination);
 
-  const pathFromSourceToLca: string[] = [];
-  const pathFromTargetToLca: string[] = [];
+  const pathFromSourceToLca: INode[] = [];
+  const pathFromTargetToLca: INode[] = [];
 
   let [source, target] = [current, destination];
 
   while (source !== lca) {
     pathFromSourceToLca.push(source);
-    source = graphRecord.parentList[source];
+    if (RootNode.isNonRootNode(source)) {
+      source = source.parent;
+    }
   }
   pathFromSourceToLca.push(source);
 
   while (target !== lca) {
     pathFromTargetToLca.push(target);
-    target = graphRecord.parentList[target];
+    if (RootNode.isNonRootNode(target)) {
+      target = <INonRootNode>target.parent;
+    }
   }
 
   const path = [...pathFromSourceToLca, ...pathFromTargetToLca.reverse()];
@@ -78,14 +78,10 @@ export function getPathToNode(
  * @returns True if we are going up in the provenance graph, else return false.
  * Throw an error if both the nodes are disconnected
  */
-export function isNextNodeUp(
-  source: string,
-  target: string,
-  graphRecord: GraphTraversalRecord
-): boolean {
-  if (graphRecord.parentList[source] === target) {
+export function isNextNodeUp(source: INode, target: INode): boolean {
+  if (RootNode.isNonRootNode(source) && source.parent.id === target.id) {
     return true;
-  } else if (graphRecord.parentList[target] === source) {
+  } else if (RootNode.isNonRootNode(target) && target.parent.id === source.id) {
     return false;
   }
 

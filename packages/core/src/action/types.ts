@@ -1,10 +1,6 @@
-export type Action = {
-  registry_name: string;
+export type Action<K, DoArgs extends unknown[], UndoArgs extends unknown[]> = {
+  name: K;
   label: string;
-  do: {
-    args: any[];
-  };
-  undo: {
-    args: any[];
-  };
+  doArgs: DoArgs;
+  undoArgs: UndoArgs;
 };
