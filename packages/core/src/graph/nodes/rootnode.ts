@@ -14,6 +14,6 @@ export class RootNode extends ARootNode implements IRootNode {
   }
 
   static isNonRootNode(node: INode): node is INonRootNode {
-    return node.type === 'RootNode';
+    return node.type !== 'RootNode';
   }
 }

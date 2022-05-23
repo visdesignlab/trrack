@@ -1,7 +1,8 @@
 import { Action, ActionRegistry } from '../action';
-import { ActionNode, ProvenanceGraph } from '../graph';
+import { ActionNode, CurrentChangeListener, ProvenanceGraph } from '../graph';
 import { RootNode } from '../graph/nodes/rootnode';
 import { INode } from '../graph/nodes/types';
+import { getPathToNode, isNextNodeUp } from '../graph/traversal';
 
 type RegistryType<R> = R extends ActionRegistry<infer T> ? T : never;
 
@@ -18,11 +19,11 @@ export class Trrack<T extends ActionRegistry<any>> {
     return new Trrack(reg);
   }
 
-  private get current() {
+  get current() {
     return this.graph.current;
   }
 
-  private get root() {
+  get root() {
     return this.graph.root;
   }
 
@@ -44,97 +45,89 @@ export class Trrack<T extends ActionRegistry<any>> {
     return newNode;
   }
 
+  to(node: string | INode) {
+    const target =
+      typeof node === 'string' ? this.graph.getNodeById(node) : node;
+
+    const path = getPathToNode(this.current, target);
+
+    const actionsToExecute: {
+      action: Action<any, any, any>;
+      direction: 'up' | 'down';
+    }[] = [];
+
+    for (let i = 0; i < path.length - 1; ++i) {
+      const currentNode = path[i];
+      const nextNode = path[i + 1];
+
+      const isGoingUp = isNextNodeUp(currentNode, nextNode);
+
+      if (isGoingUp) {
+        const action = ActionNode.isActionNode(currentNode)
+          ? currentNode.action
+          : null;
+
+        if (!action) {
+          throw new Error('Something went wrong in traversal');
+        }
+
+        actionsToExecute.push({
+          direction: 'up',
+          action,
+        });
+      } else {
+        const action = ActionNode.isActionNode(nextNode)
+          ? nextNode.action
+          : null;
+
+        if (!action) {
+          throw new Error('Something went wrong in traversal');
+        }
+
+        actionsToExecute.push({
+          direction: 'down',
+          action,
+        });
+      }
+    }
+
+    actionsToExecute.forEach(({ action, direction }) => {
+      const actionFunction = this.registry.get(action.name);
+      direction === 'up'
+        ? actionFunction.inverse(action)
+        : actionFunction.apply(action);
+    });
+
+    this.graph.changeCurrent(node, 'to');
+  }
+
   getSerializedGraph() {
     return this.graph.toJSON();
   }
 
   undo() {
-    if (RootNode.isNonRootNode(this.current))
-      this.graph.current = this.current.parent;
+    if (
+      RootNode.isNonRootNode(this.current) &&
+      this.current.id === this.root.id
+    )
+      console.warn('Already at root');
+    if (RootNode.isNonRootNode(this.current)) this.to(this.current.parent);
   }
 
   redo() {
-    if (this.current.children.length > 0)
-      this.graph.current = this.current.children[0];
+    if (this.current.children.length > 0) this.to(this.current.children[0]);
+    else console.warn('Already at latest');
+  }
+
+  listenCurrentChanged(func: CurrentChangeListener) {
+    this.graph.addCurrentChangeListener(func);
+    func('to');
+  }
+
+  clearListener() {
+    this.graph.currentChangeListeners = [];
   }
 }
-
-// export function initializeTrrack(registry: ActionFunctionRegistry<any>) {
-//   return {
-//     applyAction(action: Action, skipFirst: boolean = false) {
-//       const results = skipFirst ? null : registryTracker.applyDo(action);
-
-//       const newNode = addNewActionNode(
-//         action.label,
-//         action,
-//         this.current,
-//         results
-//       );
-
-//       graphRecord.addEdge(this.current.id, newNode.id);
-//       graphRecord.setLevel(this.current.id, newNode.id);
-
-//       this.graph.nodes[newNode.id] = newNode;
-//       this.graph.current = newNode.id;
-
-//       return results;
-//     },
-//     goToNode(id: string) {
-//       if (!this.graph.nodes[id])
-//         throw new Error(`Node with id ${id} not found.`);
-
-//       const path = getPathToNode(this.graph.current, id, graphRecord);
-
-//       const functionsToApply: {
-//         action: Action;
-//         direction: 'up' | 'down';
-//       }[] = [];
-
-//       for (let i = 0; i < path.length - 1; ++i) {
-//         const currentNode = this.graph.nodes[path[i]] as ActionNode;
-//         const nextNode = this.graph.nodes[path[i + 1]] as ActionNode;
-
-//         const isGoingUp = isNextNodeUp(
-//           currentNode.id,
-//           nextNode.id,
-//           graphRecord
-//         );
-
-//         if (isGoingUp) {
-//           functionsToApply.push({
-//             action: currentNode.action,
-//             direction: 'up',
-//           });
-//         } else {
-//           functionsToApply.push({
-//             action: nextNode.action,
-//             direction: 'down',
-//           });
-//         }
-//       }
-
-//       functionsToApply.forEach(({ action, direction }) => {
-//         if (direction === 'up') {
-//           registryTracker.applyUndo(action);
-//         } else {
-//           registryTracker.applyDo(action);
-//         }
-//       });
-
-//       const node = this.graph.nodes[id];
-//       this.graph.current = node.id;
-//     },
-//     print() {
-//       console.table(
-//         Object.values(this.graph.nodes).map((d: any) =>
-//           d.id === this.current.id
-//             ? `(-) ${d.label} - ${d.id}`
-//             : `${d.label} - ${d.id}`
-//         )
-//       );
-//     },
-//   };
-// }
 
 type TreeNode = Omit<INode, 'children' | 'name'> & {
   name: string;

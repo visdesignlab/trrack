@@ -14,4 +14,10 @@ export class ActionNode<K, D extends unknown[], U extends unknown[], R>
     this.action = action;
     this.results = results;
   }
+
+  static isActionNode<K, D extends unknown[], U extends unknown[], R>(
+    node: INode
+  ): node is ActionNode<K, D, U, R> {
+    return node.type === 'ActionNode';
+  }
 }

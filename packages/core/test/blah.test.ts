@@ -24,9 +24,25 @@ describe('Graph Traverser', () => {
       undoArgs: [2],
     });
 
-    console.log(JSON.stringify(trrack.getSerializedGraph(), null, 2));
+    trrack.apply({
+      name: 'increment',
+      label: 'Increase by one',
+      doArgs: [1],
+      undoArgs: [2],
+    });
 
-    console.log(JSON.stringify(trrack.getSerializedGraph(), null, 2));
+    trrack.apply({
+      name: 'increment',
+      label: 'Increase by one',
+      doArgs: [1],
+      undoArgs: [2],
+    });
+
+    console.log(trrack.getSerializedGraph());
+
+    trrack.to(trrack.root);
+
+    console.log(trrack.getSerializedGraph());
 
     expect(actionRegistry).toBeTruthy();
   });

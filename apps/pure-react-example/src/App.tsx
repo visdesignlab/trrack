@@ -1,26 +1,63 @@
+import { Box } from '@mui/system';
+import { useEffect, useMemo, useState } from 'react';
+import Tree, { useTreeState } from 'react-hyper-tree';
 import { TreeNode } from 'react-hyper-tree/dist/helpers/node';
 
+import { Navbar } from './components/Navbar';
+import { TrrackContext, useTrrackSetup } from './store/trrack';
+import { useData } from './store/types';
+
 function App() {
-  const baseValue = 10;
+  const { data, isLoading, isError } = useData();
+  const [counter, setCounter] = useState(0);
+  const trrack = useTrrackSetup();
+  const { addAction } = trrack;
+
+  useEffect(() => {
+    addAction("increment", {
+      action() {
+        setCounter((c) => c + 1);
+      },
+      inverse() {
+        setCounter((c) => c - 1);
+      },
+    });
+
+    addAction("decrement", {
+      action() {
+        setCounter((c) => c - 1);
+      },
+      inverse() {
+        setCounter((c) => c + 1);
+      },
+    });
+  }, [addAction]);
+
+  const { required, handlers } = useTreeState({
+    data: trrack.trrack.tree,
+    id: "test",
+    defaultOpened: true,
+  });
+
+  open(required.data, trrack.trrack.current.id);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (isError) return <div>Something went wrong when fetching data.</div>;
 
   return (
-    <div style={{ padding: "1em" }}>
-      <h1>Action tracking</h1>
-      <h4>{baseValue}</h4>
-      {/* <button onClick={() => trrack.applyAction(action)}>Add</button>
-      <button onClick={() => trrack.undo()}>Undo</button>
-      <button onClick={() => trrack.redo()}>Redo</button>
-      <div style={{ margin: "1em" }}>
+    <TrrackContext.Provider value={trrack}>
+      <Box sx={{ height: "100vh", width: "100vw" }}>
+        <Navbar />
+        {counter}
         <Tree
           {...required}
           {...handlers}
           gapMode="margin"
-          setSelected={(node, isSelected) => {
-            if (isSelected) trrack.goToNode(node.id);
-          }}
-        /> 
-        </div> */}
-    </div>
+          setSelected={(node) => trrack.trrack.to(node.id)}
+        />
+      </Box>
+    </TrrackContext.Provider>
   );
 }
 

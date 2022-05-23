@@ -18,11 +18,9 @@ function LCA(current: INode, destination: INode) {
 
   let diff = target.level - source.level;
 
-  while (diff !== 0) {
-    if (RootNode.isNonRootNode(target)) {
-      target = target.parent;
-      diff -= 1;
-    }
+  while (RootNode.isNonRootNode(target) && diff !== 0) {
+    target = target.parent;
+    diff -= 1;
   }
 
   if (source.id === target.id) {
