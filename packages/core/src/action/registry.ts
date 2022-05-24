@@ -29,11 +29,11 @@ export class RegistryEntry<
   }
 
   apply(...args: Parameters<D>): ReturnType<D> {
-    return this._action.apply(this._thisArg, args);
+    return this._action.apply(this._thisArg, ...args);
   }
 
   inverse(...args: Parameters<U>): ReturnType<RegistryFunction> {
-    return this._inverse.apply(this._thisArg, args);
+    return this._inverse.apply(this._thisArg, ...args);
   }
 }
 

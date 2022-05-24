@@ -94,8 +94,8 @@ export class Trrack<T extends ActionRegistry<any>> {
     actionsToExecute.forEach(({ action, direction }) => {
       const actionFunction = this.registry.get(action.name);
       direction === 'up'
-        ? actionFunction.inverse(action)
-        : actionFunction.apply(action);
+        ? actionFunction.inverse(action.doArgs)
+        : actionFunction.apply(action.undoArgs);
     });
 
     this.graph.changeCurrent(node, 'to');

@@ -4,6 +4,7 @@ import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { useEffect } from 'react';
 
 import { useTrrack } from '../store/trrack';
+import { Task } from '../store/types';
 
 export function Navbar() {
   const { trrack, addAction, isAtLatest, isAtRoot } = useTrrack();
@@ -30,29 +31,23 @@ export function Navbar() {
             sx={{ margin: "0.2em" }}
             variant="contained"
             onClick={() => {
+              const taskNumber = Math.floor(Math.random() * 100);
+
+              const task: Task = {
+                id: Date.now().toString(),
+                createdOn: Date.now(),
+                desc: `Task ${Math.floor(Math.random() * 100)}`,
+                completed: false,
+              };
               trrack.apply({
-                name: "increment",
-                label: "Increase",
-                doArgs: [],
-                undoArgs: [],
+                name: "add",
+                label: `Add task: ${taskNumber}`,
+                doArgs: [task],
+                undoArgs: [task],
               });
             }}
           >
-            Increment
-          </Button>
-          <Button
-            sx={{ margin: "0.2em" }}
-            variant="contained"
-            onClick={() => {
-              trrack.apply({
-                name: "add_random",
-                label: "Random",
-                doArgs: [],
-                undoArgs: [],
-              });
-            }}
-          >
-            Add Random Vis
+            Add Random Task
           </Button>
           <Button
             sx={{ margin: "0.2em" }}

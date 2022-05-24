@@ -3,11 +3,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import { INode } from '../../../../packages/core/src/graph/nodes/types';
 
-type GenericAction = <T extends unknown[]>(...args: T) => any;
+type GenericAction<T extends any[]> = (...args: T) => any;
 
 type TrrackActionSetter = {
-  action: GenericAction;
-  inverse: GenericAction;
+  action: GenericAction<any>;
+  inverse: GenericAction<any>;
 };
 
 type ActionSetterMap = {
