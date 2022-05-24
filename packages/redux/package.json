@@ -1,10 +1,10 @@
 {
-  "name": "@trrack/core",
+  "name": "@trrack/redux",
   "author": "Kiran Gadhave",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/core.esm.js",
+  "module": "dist/redux.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -18,7 +18,6 @@
     "dev": "tsdx watch --noClean",
     "build": "tsdx build",
     "test": "tsdx test",
-    "test:watch": "tsdx test --watch",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
@@ -38,26 +37,25 @@
   },
   "size-limit": [
     {
-      "path": "dist/core.cjs.production.min.js",
+      "path": "dist/redux.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/core.esm.js",
+      "path": "dist/redux.esm.js",
       "limit": "10 KB"
     }
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
-    "@types/uuid": "^8.3.4",
     "eslint-config-custom": "*",
-    "tsconfig": "*",
     "husky": "^8.0.1",
     "size-limit": "^7.0.8",
+    "tsconfig": "*",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "uuid": "^8.3.2"
+    "@trrack/core": "*"
   }
 }

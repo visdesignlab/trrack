@@ -1,20 +1,24 @@
 {
   "folders": [
     {
-      "name": "🚀 docs",
-      "path": "apps/docs"
-    },
-    {
       "name": "✨ trrack-monorepo",
       "path": "."
     },
     {
-      "name": "🚀 pure-react-example",
-      "path": "apps/pure-react-example"
-    },
-    {
       "name": "📦 @trrack/core",
       "path": "packages/core"
+    },
+    {
+      "name": "📦 @trrack/redux",
+      "path": "packages/redux"
+    },
+    {
+      "name": "🚀 docs",
+      "path": "apps/docs"
+    },
+    {
+      "name": "🚀 pure-react-example",
+      "path": "apps/pure-react-example"
     },
     {
       "name": "📦 eslint-config-custom",
