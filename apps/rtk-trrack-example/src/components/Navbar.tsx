@@ -9,8 +9,6 @@ import { AppDispatch, trrack } from '../store/store';
 export const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  console.log("Rerender");
-
   return (
     <>
       <AppBar sx={{ bgcolor: "white" }}>
