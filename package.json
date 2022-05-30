@@ -8,15 +8,16 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "dev:all": "turbo run dev --parallel",
+    "dev:rtk": "turbo run dev --parallel --filter=./packages/* --filter=rtk-trrack-example",
     "lint": "turbo run lint",
-    "test": "turbo run test --parallel",
-    "test:watch": "turbo run test --parallel -- --watch",
+    "test": "turbo run test --parallel --filter=./packages/*",
+    "test:watch": "turbo run test --parallel --filter=./packages/* -- --watch",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "prettier": "latest",
-    "turbo": "latest"
+    "prettier": "^2.6.2",
+    "turbo": "^1.2.11"
   },
   "engines": {
     "npm": ">=7.0.0",
@@ -24,6 +25,8 @@
   },
   "packageManager": "yarn@1.22.18",
   "resolutions": {
-    "**/typescript": "^4.6.4"
+    "**/typescript": "^4.6.4",
+    "**/@typescript-eslint/eslint-plugin": "^5.26.0",
+    "**/@typescript-eslint/parser": "^5.26.0"
   }
 }
