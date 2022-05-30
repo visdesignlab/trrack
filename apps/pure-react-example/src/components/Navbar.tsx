@@ -1,24 +1,12 @@
 import RedoIcon from '@mui/icons-material/Redo';
 import UndoIcon from '@mui/icons-material/Undo';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
-import { useEffect } from 'react';
 
 import { useTrrack } from '../store/trrack';
 import { Task } from '../store/types';
 
 export function Navbar() {
-  const { trrack, addAction, isAtLatest, isAtRoot } = useTrrack();
-
-  useEffect(() => {
-    addAction("add_random", {
-      action() {
-        console.log("Add random");
-      },
-      inverse() {
-        console.log("Undo random");
-      },
-    });
-  }, [addAction]);
+  const { trrack, isAtLatest, isAtRoot } = useTrrack();
 
   return (
     <>
