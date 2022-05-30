@@ -36,9 +36,11 @@ export class Trrack<T extends ActionRegistry<any>> {
     K extends keyof R,
     D extends Parameters<R[K]['apply']>,
     U extends Parameters<R[K]['inverse']>
-  >(action: Action<K, D, U>) {
+  >(action: Action<K, D, U>, skip: boolean = false) {
     // Execute the action first.
-    const results = this.registry.get(action.name).apply(action.doArgs);
+    const results = skip
+      ? null
+      : this.registry.get(action.name).apply(action.doArgs);
     const newNode = new ActionNode(this.current, action, results);
     this.graph.addNode(newNode);
 
@@ -94,8 +96,8 @@ export class Trrack<T extends ActionRegistry<any>> {
     actionsToExecute.forEach(({ action, direction }) => {
       const actionFunction = this.registry.get(action.name);
       direction === 'up'
-        ? actionFunction.inverse(action.doArgs)
-        : actionFunction.apply(action.undoArgs);
+        ? actionFunction.inverse(action.undoArgs)
+        : actionFunction.apply(action.doArgs);
     });
 
     this.graph.changeCurrent(node, 'to');
