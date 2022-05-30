@@ -18,6 +18,7 @@
     "dev": "tsdx watch --noClean",
     "build": "tsdx build",
     "test": "tsdx test",
+    "test:watch": "tsdx test --watch",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
@@ -46,16 +47,17 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^7.0.8",
     "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "@size-limit/preset-small-lib": "^7.0.8",
     "husky": "^8.0.1",
     "size-limit": "^7.0.8",
-    "tsconfig": "*",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typescript": "^4.6.4"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.1",
     "@trrack/core": "*"
   }
 }

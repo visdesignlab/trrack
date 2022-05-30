@@ -1,7 +1,9 @@
-import { sum } from '../src';
+import { trrackableStore } from '../src';
 
 describe('blah', () => {
   it('works', () => {
-    expect(sum(1, 1)).toEqual(2);
+    const a = trrackableStore.toString();
+    console.log({ a });
+    expect(a).toBeTruthy();
   });
 });
