@@ -191,7 +191,7 @@ export const importState = action(
       importedState,
       'Import',
       'Regular',
-      (null as unknown) as S,
+      null as unknown as S,
       {},
     );
 
