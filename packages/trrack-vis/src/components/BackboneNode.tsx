@@ -4,7 +4,7 @@ import React, { ReactChild, useState } from 'react';
 import { Animate } from 'react-move';
 import { Popup } from 'semantic-ui-react';
 import { BundleMap } from '../Utils/BundleMap';
-import { EventConfig } from '../Utils/EventConfig';
+import { EventConfig } from '../Utils/IconConfig';
 import translate from '../Utils/translate';
 import { treeColor } from './Styles';
 

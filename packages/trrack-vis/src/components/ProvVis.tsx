@@ -29,7 +29,7 @@ import { NodeGroup } from 'react-move';
 import { Popup, Tab } from 'semantic-ui-react';
 import { style } from 'typestyle';
 import { BundleMap } from '../Utils/BundleMap';
-import { EventConfig } from '../Utils/EventConfig';
+import { EventConfig } from '../Utils/IconConfig';
 import findBundleParent from '../Utils/findBundleParent';
 import translate from '../Utils/translate';
 import { treeLayout } from '../Utils/TreeLayout';

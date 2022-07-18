@@ -4,7 +4,7 @@ import { configure } from 'mobx';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BundleMap } from '../Utils/BundleMap';
-import { EventConfig } from '../Utils/EventConfig';
+import { EventConfig } from '../Utils/IconConfig';
 import ProvVis from './ProvVis';
 import UndoRedoButton from './UndoRedoButton';
 

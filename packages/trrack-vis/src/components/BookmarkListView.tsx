@@ -1,7 +1,7 @@
 import { NodeID, ProvenanceGraph } from '@visdesignlab/trrack';
 import React from 'react';
 import { NodeGroup } from 'react-move';
-import { EventConfig } from '../Utils/EventConfig';
+import { EventConfig } from '../Utils/IconConfig';
 import translate from '../Utils/translate';
 import BookmarkNode from './BookmarkNode';
 import BookmarkTransitions from './BookmarkTransitions';
