@@ -3,6 +3,6 @@ import {
   ProvVisCreator,
   UndoRedoButtonCreator,
 } from './components/ProvVisCreator';
-import { Config, EventConfig } from './Utils/EventConfig';
+import { Config, IconConfig } from './Utils/IconConfig';
 
-export { ProvVis, EventConfig, Config, ProvVisCreator, UndoRedoButtonCreator };
+export { ProvVis, IconConfig, Config, ProvVisCreator, UndoRedoButtonCreator };

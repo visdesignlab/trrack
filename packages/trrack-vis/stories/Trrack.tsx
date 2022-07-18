@@ -8,6 +8,7 @@ import {
 } from '@visdesignlab/trrack';
 import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 import { ProvVis } from '../src/componentsNew/ProvVis';
+import { AddTaskGlyph, ChangeTaskGlyph } from './Nodes';
 
 interface Task {
   key: number;
@@ -37,9 +38,17 @@ interface Props {
 
 const BaseComponent: FC<Props> = (props) => {
   const goToNode = (nodeId: NodeID) => {
-    console.log(nodeId);
     props.provenance.goToNode(nodeId);
   };
+
+  const bookmarkNode = (nodeId: NodeID) => {
+    props.provenance.setBookmark(nodeId, !props.provenance.getBookmark(nodeId));
+  };
+
+  const annotateNode = (nodeId: NodeID, annotation: string) => {
+    props.provenance.addAnnotation(annotation, nodeId);
+  };
+
   return (
     <>
       <div
@@ -52,10 +61,25 @@ const BaseComponent: FC<Props> = (props) => {
       >
         <ProvVis
           root={props.provenance.graph.root}
-          changeCurrent={goToNode}
-          current={props.current}
+          currentNode={props.current}
           nodeMap={props.provenance.graph.nodes}
-          ephemeralUndo={false}
+          config={{
+            changeCurrent: goToNode,
+            bookmarkNode: bookmarkNode,
+            annotateNode: annotateNode,
+            // iconConfig: {
+            //   'Add Task': {
+            //     glyph: <AddTaskGlyph />,
+            //     hoverGlyph: <AddTaskGlyph size={17} />,
+            //     currentGlyph: <AddTaskGlyph size={20} />,
+            //   },
+            //   'Change Task': {
+            //     glyph: <ChangeTaskGlyph />,
+            //     hoverGlyph: <ChangeTaskGlyph size={17} />,
+            //     currentGlyph: <ChangeTaskGlyph size={20} />,
+            //   },
+            // },
+          }}
         />
       </div>
       <div

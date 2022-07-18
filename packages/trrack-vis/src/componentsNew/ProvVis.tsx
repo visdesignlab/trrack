@@ -1,88 +1,56 @@
-import {
-  DiffNode,
-  isChildNode,
-  NodeID,
-  Nodes,
-  Provenance,
-  ProvenanceNode,
-  StateNode,
-} from '@visdesignlab/trrack';
-import {
-  HierarchyNode,
-  Numeric,
-  stratify,
-  symbol,
-  symbolCircle,
-  symbolCross,
-  symbolDiamond,
-  symbolSquare,
-  symbolStar,
-  symbolTriangle,
-  symbolWye,
-} from 'd3';
-import React, { ReactChild, useEffect, useState, useMemo } from 'react';
-import { NodeGroup } from 'react-move';
-import { Popup, Tab } from 'semantic-ui-react';
-import { style } from 'typestyle';
+import { NodeID, Nodes, Provenance, StateNode } from '@visdesignlab/trrack';
+import React, { ReactChild, useMemo } from 'react';
 import { BundleMap } from '../Utils/BundleMap';
-import { EventConfig } from '../Utils/EventConfig';
-import findBundleParent from '../Utils/findBundleParent';
-import translate from '../Utils/translate';
-import { treeLayout } from '../Utils/TreeLayout';
+import { IconConfig } from '../Utils/IconConfig';
 import { Tree } from './Tree';
 import { useComputeNodePosition } from './useComputeNodePosition';
 
 interface ProvVisProps<T, S extends string, A> {
   root: NodeID;
-  current: NodeID;
+  currentNode: NodeID;
   nodeMap: Nodes<S, A>;
-  bundleMap?: BundleMap;
-  config?: Partial<ProvVisConfig>;
-  eventConfig?: EventConfig<S>;
-  changeCurrent?: (id: NodeID) => void;
-  popupContent?: (nodeId: StateNode<S, A>) => ReactChild;
-  annotationContent?: (nodeId: StateNode<S, A>) => ReactChild;
-  prov?: Provenance<T, S, A>;
-  ephemeralUndo?: boolean;
+  config?: Partial<ProvVisConfig<S, A>>;
 }
 
-export interface ProvVisConfig {
-  backboneGutter: number;
+export interface ProvVisConfig<S extends string, A> {
   gutter: number;
   verticalSpace: number;
   marginTop: number;
   marginLeft: number;
   animationDuration: number;
+  annotationHeight: number;
   nodeAndLabelGap: number;
   labelWidth: number;
+  iconConfig: IconConfig<S, A> | null;
+  changeCurrent: (id: NodeID) => void;
+  bookmarkNode: (id: NodeID) => void;
+  annotateNode: (id: NodeID, annotation: string) => void;
 }
 
-const defaultConfig: ProvVisConfig = {
-  gutter: 15,
-  backboneGutter: 20,
+const defaultConfig: ProvVisConfig<any, any> = {
+  gutter: 25,
   verticalSpace: 50,
   marginTop: 50,
   marginLeft: 50,
   animationDuration: 500,
+  annotationHeight: 150,
   nodeAndLabelGap: 20,
   labelWidth: 150,
+  iconConfig: null,
+  changeCurrent: () => null,
+  bookmarkNode: () => null,
+  annotateNode: () => null,
 };
 
 export function ProvVis<T, S extends string, A>({
   nodeMap,
   root,
-  current,
-  changeCurrent,
+  currentNode,
   config,
-  bundleMap = {},
-  eventConfig,
-  popupContent,
-  annotationContent,
-  prov,
 }: ProvVisProps<T, S, A>) {
   const { stratifiedMap: nodePositions, links } = useComputeNodePosition(
     nodeMap,
-    current,
+    currentNode,
     root
   );
 
@@ -90,14 +58,12 @@ export function ProvVis<T, S extends string, A>({
     return { ...defaultConfig, ...config };
   }, []);
 
-  console.log(nodePositions);
-
   return (
     <Tree
       nodes={nodePositions}
-      changeCurrent={changeCurrent}
       links={links}
       config={mergedConfig}
+      currentNode={currentNode}
     />
   );
 }
