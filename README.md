@@ -1,3 +1,6 @@
+> This version of Trrack has been archived. Please refer to https://github.com/Trrack/trrackjs for the latest updates and releases.
+> This archival only affects the github repository. The npm versions of trrack are still available at `@visdesignlab/trrack`.
+
 # The Trrack Provenance Tracking Library
 
 Trrack is a library to create and track provenance (history) in web-based apps. Trrack allows you to create and maintain a non-linear provenance graph representing the history of the state of your visualization. Through this graph, you can easily implement complete action recovery, as well as store custom metadata and annotations.
