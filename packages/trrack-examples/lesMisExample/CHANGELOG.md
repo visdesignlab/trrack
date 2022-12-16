@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/visdesignlab/trrack/compare/example-lesmis@1.1.0-alpha.9...example-lesmis@1.1.0) (2022-12-16)
+
+**Note:** Version bump only for package example-lesmis
+
+
+
+
+
 # [1.1.0-alpha.9](https://github.com/visdesignlab/trrack/compare/example-lesmis@1.1.0-alpha.8...example-lesmis@1.1.0-alpha.9) (2021-05-07)
 
 **Note:** Version bump only for package example-lesmis
