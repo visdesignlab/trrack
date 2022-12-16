@@ -12,7 +12,7 @@
     "url": "https://github.com/visdesignlab/trrack.git"
   },
   "main": "dist/index.js",
-  "module": "dist/trrack_dev.esm.js",
+  "module": "dist/trrack.esm.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
   "files": [

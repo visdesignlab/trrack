@@ -1,17 +1,10 @@
+// @ts-nocheck
 /* eslint-disable no-plusplus */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-unused-vars */
-import {
-  DiffNode,
-  isChildNode,
-  NodeID,
-  Nodes,
-  Provenance,
-  ProvenanceNode,
-  StateNode,
-} from '@visdesignlab/trrack';
+import { DiffNode, isChildNode, NodeID, Nodes, Provenance, ProvenanceNode, StateNode } from '@visdesignlab/trrack';
 import {
   HierarchyNode,
   stratify,
@@ -28,6 +21,7 @@ import React, { ReactChild, useEffect, useState } from 'react';
 import { NodeGroup } from 'react-move';
 import { Popup, Tab } from 'semantic-ui-react';
 import { style } from 'typestyle';
+
 import { BundleMap } from '../Utils/BundleMap';
 import { EventConfig } from '../Utils/EventConfig';
 import findBundleParent from '../Utils/findBundleParent';

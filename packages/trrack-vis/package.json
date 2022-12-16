@@ -4,7 +4,7 @@
   "description": "",
   "keywords": [],
   "main": "dist/index.js",
-  "module": "dist/trrack-vis.esm.js",
+  "module": "dist/trrackvis.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",

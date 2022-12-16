@@ -2,7 +2,7 @@ name: Publish & Deploy
 on:
     push:
         branches:
-            - master
+            - main
 jobs:
     publish-core:
         name: Publish trrack-core
@@ -15,18 +15,18 @@ jobs:
             - uses: actions/checkout@v2
               with:
                   fetch-depth: 0
-            
+
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v1
               with:
                 node-version: ${{ matrix.node-version }}
-     
+
             - name: Fetch all
               run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-            
+
             - name: Install Packages
               run: yarn bootstrap
-     
+
             - name: Build Libraries
               run: yarn build
 
@@ -46,7 +46,7 @@ jobs:
               run: |
                   cp -r ./packages/trrack-core/docs ./build/trrack-docs
                   cp -r ./packages/trrack-vis/docs ./build/trrack-vis-docs
-            
+
             - name: Copy index
               run: cp ./packages/trrack-examples/index.html ./build/
 
