@@ -62,5 +62,9 @@
     "commitizen": {
       "path": "./node_modules/git-cz"
     }
+  },
+  "resolutions": {
+    "@types/react": "16.9.51",
+    "@types/react-dom": "16.9.8"
   }
 }
