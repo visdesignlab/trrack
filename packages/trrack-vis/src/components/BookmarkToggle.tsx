@@ -3,7 +3,7 @@ import { ProvenanceGraph } from '@visdesignlab/trrack';
 import React from 'react';
 
 export interface BookmarkToggleConfig<T, S extends string, A> {
-  graph?: ProvenanceGraph<T, S, A>;
+  graph?: ProvenanceGraph<any, any>;
   bookmarkView: boolean;
   // eslint-disable-next-line no-unused-vars
   setBookmarkView: (b: boolean) => void;
