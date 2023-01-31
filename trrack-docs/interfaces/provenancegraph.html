@@ -59,24 +59,42 @@
 					<a href="provenancegraph.html">ProvenanceGraph</a>
 				</li>
 			</ul>
-			<h1>Interface ProvenanceGraph&lt;T, S, A&gt;</h1>
+			<h1>Interface ProvenanceGraph&lt;S, A&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<dl class="tsd-comment-tags">
+						<dt>template</dt>
+						<dd><p>Represents the given state of an application as defined in initProvenance.</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>T</h4>
-					</li>
-					<li>
 						<h4>S</h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents the given event types in your application.
+								Event types are used to differentiate between different actions that create nodes.</p>
+							</div>
+						</div>
 					</li>
 					<li>
 						<h4>A</h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents the given &quot;extra&quot; type for storing metadata.
+								Extra is a way to store customized metadata.</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</section>
@@ -96,6 +114,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="provenancegraph.html#current" class="tsd-kind-icon">current</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="provenancegraph.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="provenancegraph.html#nodes" class="tsd-kind-icon">nodes</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="provenancegraph.html#root" class="tsd-kind-icon">root</a></li>
 							</ul>
@@ -111,17 +130,27 @@
 					<div class="tsd-signature tsd-kind-icon">current<span class="tsd-signature-symbol">:</span> <a href="../globals.html#nodeid" class="tsd-signature-type">NodeID</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-core/src/Types/ProvenanceGraph.ts#L5">Types/ProvenanceGraph.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/d5c3514/packages/trrack-core/src/Types/ProvenanceGraph.ts#L12">Types/ProvenanceGraph.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/d5c3514/packages/trrack-core/src/Types/ProvenanceGraph.ts#L14">Types/ProvenanceGraph.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="nodes" class="tsd-anchor"></a>
 					<h3>nodes</h3>
-					<div class="tsd-signature tsd-kind-icon">nodes<span class="tsd-signature-symbol">:</span> <a href="../globals.html#nodes" class="tsd-signature-type">Nodes</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">nodes<span class="tsd-signature-symbol">:</span> <a href="../globals.html#nodes" class="tsd-signature-type">Nodes</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-core/src/Types/ProvenanceGraph.ts#L4">Types/ProvenanceGraph.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/d5c3514/packages/trrack-core/src/Types/ProvenanceGraph.ts#L11">Types/ProvenanceGraph.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -131,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">root<span class="tsd-signature-symbol">:</span> <a href="../globals.html#nodeid" class="tsd-signature-type">NodeID</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/7cc92a6/packages/trrack-core/src/Types/ProvenanceGraph.ts#L6">Types/ProvenanceGraph.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/visdesignlab/trrack/blob/d5c3514/packages/trrack-core/src/Types/ProvenanceGraph.ts#L13">Types/ProvenanceGraph.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -154,6 +183,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="provenancegraph.html#current" class="tsd-kind-icon">current</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="provenancegraph.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="provenancegraph.html#nodes" class="tsd-kind-icon">nodes</a>
